@@ -2,6 +2,8 @@ import React, { forwardRef, useContext } from 'react';
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
+
 import { TableContext } from './TableContext';
 
 import { cellMark, removeCellFocusClassName } from './utils/func';
@@ -39,7 +41,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
     const { 
         originData,
         rootRef,
-        rootDataInfo, 
+        rootDataInfo,
         setRootDataInfo,
         refNode,
         focusableCellId,
@@ -58,7 +60,6 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
         data: originData,
         spyElement: rootRef.current,
         rootDataInfo,
-        setRootDataInfo,
         refNode,
         focusableCellId,
         setFocusableCellId,
@@ -84,7 +85,10 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
                     if (node) {
                         const _row = node.dataset.tableRow;
                         const _col = node.dataset.tableCol;
-                        refNode.current.set(cellMark(_row, _col), node);
+                        if (typeof _row !== 'undefined' && typeof _col !== 'undefined') {
+                            refNode.current.set(cellMark(_row, _col), node);
+                        }
+                        
                     }
 
                 }}

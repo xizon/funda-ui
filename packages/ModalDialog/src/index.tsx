@@ -13,6 +13,7 @@ import {
 } from 'funda-utils/dist/cjs/bodyScrollLock';
 
 
+
 declare global {
     interface Window {
         curVideo?: any;
@@ -90,10 +91,14 @@ export type ModalDialogProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onLoad?: (openFunc: any, closeFunc: any) => void;
-    onOpen?: (e: any, callback: any) => void;
-    onClose?: (e: any) => void;
-    onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
+    onLoad?: (openFunc: () => void, closeFunc: () => void) => void;
+    onOpen?: (e: React.MouseEvent<HTMLElement> | null, callback: () => void) => void;
+    onClose?: (e: React.MouseEvent<HTMLElement> | null) => void;
+    onSubmit?: (e: React.MouseEvent<HTMLButtonElement>, callback: () => void, incomingData: string | null | undefined) => void;
+    /**
+     * Called when Enter key is pressed while modal is open
+     */
+    onPressEnter?: (callback: () => void) => void;
 };
 
 const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.ForwardedRef<ModalDialogRef>) => {
@@ -132,7 +137,8 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         onClose,
         onSubmit,
         id,
-        children
+        children,
+        onPressEnter
     } = props;
 
 
@@ -186,7 +192,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
 
 
     //
-    function handleCloseWin(e: any) {
+    function handleCloseWin(e: React.MouseEvent<HTMLElement> | null) {
         if (typeof e !== 'undefined' && e !== null) {
             e.preventDefault();
 
@@ -206,7 +212,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
     }
 
 
-    function handleOpenWin(e: any) {
+    function handleOpenWin(e: React.MouseEvent<HTMLElement> | null) {
         if (typeof e !== 'undefined' && e !== null) {
             e.preventDefault();
 
@@ -217,12 +223,10 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
         openAction();
 
         //
-        const callback = (e: any) => {
-            return () => {
-                handleCloseWin(e);
-            }
+        const callback = () => {
+            handleCloseWin(e);
         };
-        onOpen?.(e, callback(e));
+        onOpen?.(e, callback);
     }
 
     function closeAction() {
@@ -428,6 +432,23 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
 
     }, [show, data, modalRef.current]);   // When show`` defaults to true, `modalRef.current` will be null
 
+    // 监听回车键
+    useEffect(() => {
+        if (!modalShow || !onPressEnter) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+                const callback = () => {
+                    handleCloseWin(null);
+                };
+                onPressEnter?.(callback);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [modalShow, onPressEnter]);
+
     return (
         <>
             {triggerContent ? <>
@@ -468,7 +489,7 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
                                     }}
                                 >
                                     <h5 className={`modal-title ${modalTitleClassName || ''}`}>{heading || ''}</h5>
-                                    {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={handleCloseWin}></button> : null}
+                                    {!closeDisabled ? <button type="button" className={enableVideo ? 'btn-close btn-close-white' : 'btn-close'} data-close="1" onClick={(e) => handleCloseWin(e)}></button> : null}
 
                                 </div>
                             </>}
@@ -500,15 +521,13 @@ const ModalDialog = forwardRef((props: ModalDialogProps, externalRef: React.Forw
                             {closeBtnLabel || submitBtnLabel ? <>
                                 <div className={`modal-footer ${modalFooterClassName || ''}`}>
 
-                                    {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={handleCloseWin} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
+                                    {!closeDisabled ? <>{closeBtnLabel ? <button data-close="1" onClick={(e) => handleCloseWin(e)} type="button" className={closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'}>{closeBtnLabel}</button> : null}</> : null}
 
-                                    {submitBtnLabel ? <button data-confirm="1" data-incoming-data={`${incomingData}`} onClick={(e: any) => {
-                                        const callback = (e: any) => {
-                                            return () => {
-                                                handleCloseWin(e);
-                                            }
+                                    {submitBtnLabel ? <button data-confirm="1" data-incoming-data={`${incomingData}`} onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                        const callback = () => {
+                                            handleCloseWin(e);
                                         };
-                                        onSubmit?.(e, callback(e), incomingData);
+                                        onSubmit?.(e, callback, incomingData);
                                     }} type="button" className={submitBtnClassName ? submitBtnClassName : 'btn btn-primary'}>{submitBtnLabel}</button> : null}
                                 </div>
                             </> : null}

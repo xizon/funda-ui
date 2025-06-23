@@ -159,7 +159,10 @@ export function tableElemScrolledInit(root: HTMLDivElement, w: number) {
 
 
 export function cellMark(row: number | string | undefined, col: number | string | undefined) {
-    return `cell-${row}-${col}`;
+    const isNegative = (num: number) => {
+        return num < 0;
+    };
+    return `cell-${isNegative(row as number) ? 0 : row}-${isNegative(col as number) ? 0 : col}`;
 }
 
 export function removeCellFocusClassName(root: any) {
@@ -168,4 +171,12 @@ export function removeCellFocusClassName(root: any) {
             el.classList.remove('cell-focus');
         });
     }
+}
+
+export function getTableRowsColCount(root: HTMLDivElement) {
+    const rows = allRows(root);
+    return rows.map((row: HTMLTableRowElement, i: number) => ({
+        row: i,
+        colCount: row.children.length
+    }));
 }

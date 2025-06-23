@@ -1925,10 +1925,31 @@ export default () => {
                 tableClassName="table table-bordered"
                 data={tableData}
                 keyboardFocusable
-                onCellKeyPressed={(classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => {
+                onCellKeyPressed={(
+                    classname: string, 
+                    elem: HTMLTableCellElement, 
+                    event: React.KeyboardEvent<Element>,
+                    isLeftEdge: boolean,
+                    isRightEdge: boolean,
+                    isTopEdge: boolean,
+                    isBottomEdge: boolean 
+                ) => {
                     console.log(classname, elem, event);
+
+                    if (isLeftEdge) {
+                        console.log('isLeftEdge: ', isLeftEdge);
+                    }
+                    if (isRightEdge) {
+                        console.log('isRightEdge: ', isRightEdge);
+                    }
+                    if (isTopEdge) {
+                        console.log('isTopEdge: ', isTopEdge);
+                    }
+                    if (isBottomEdge) {
+                        console.log('isBottomEdge: ', isBottomEdge);
+                    }
                 }}
-                onCellPressEnter={(classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => {
+                onCellPressEnter={(classname: string, elem: HTMLTableCellElement, event: React.KeyboardEvent<Element>) => {
                     console.log(classname, elem, event);
                 }}
 
@@ -2091,7 +2112,7 @@ import { Table } from 'funda-ui/Table';
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
-| `contentRef` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.setFocusableCell(row: number, col: number);`: Sets the focus of a cell, typically when `keyboardFocusable` is enabled</li><li>`ref.current.clearAllCellFocus();`: Remove the focus status of all cells</li></ol> | - |
+| `contentRef` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.setFocusableCell(row: number, col: number);`: Sets the focus of a cell, typically when `keyboardFocusable` is enabled</li><li>`ref.current.clearAllCellFocus();`: Remove the focus status of all cells</li><li>`ref.current.forceFocusCell(row: number, col: number);`: Force focus on a cell. **After forcing focus, you can use the keyboard to listen directly**</li><li>`ref.current.getCellElement(row: number, col: number);`: Returns the current cell HTML element</li><li>`ref.current.triggerCellKeyPressed(event: React.KeyboardEvent<Element>);`: Expose handleKeyPressed for external usage, This allows calling handleKeyPressed programmatically from outside, such as with a custom onCellKeyPressed method.</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the table wrapper. | - |
 | `tableClassName` | string | `table` | The class name of the table wrapper. | - |
 | `data` | Array | - | Array of objects, where each object represents one item - row in table. such as `[{name:'David',friend:'Jone',condition:'GOOD'},{name:'Chuckie',friend:'Jone',condition:'BAD'}]` <blockquote>Enable it to enable some special features</blockquote> | - |
@@ -2111,11 +2132,12 @@ import { Table } from 'funda-ui/Table';
 | `onChangeRowSelect` | function  | - | Call a function when the selection box for the current row is changed. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `rowSelectable` is "true"</blockquote> | - |
 | `onRowDrag` | function  | - | As each row is dragged, it returns two functions. dragStart, dragEnd, they represent the callback events of drag start and drag end respectively. For example: `onRowDrag={(dragStart,dragEnd)=>{if(dragStart!==null)dragStart((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragStart: ',el,order,data);});if(dragEnd!==null)dragEnd((el:HTMLTableRowElement,order:number[],data:any[])=>{console.log('dragEnd: ',el,order,data);});}}`. <blockquote>It is valid when `rowDraggable` is "true"</blockquote> | - |
 | `onColSort` | function  | - | Call a function when the column sorting succeeds. It returns one callback value which is the fetched data (**Array**). <blockquote>It is valid when `colSortable` is "true"</blockquote> | - |
-| `onCellKeyPressed` | function  | - | It fires when use keyboard arrow keys. It returns three callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The last is the KeyboardEvent (**KeyboardEvent**)</li></ol> <blockquote>It is valid when `keyboardFocusable` is "true"</blockquote> | - |
-| `onCellPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns three callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The last is the KeyboardEvent (**KeyboardEvent**)</li></ol> | - |
+| `onCellKeyPressed` | function  | - | It fires when use keyboard arrow keys. It returns seven callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The third is the KeyboardEvent (**React.KeyboardEvent**)</li><li>The fourth is whether the cell is at the leftmost edge (**Boolean**, `isLeftEdge`)</li><li>The fifth is whether the cell is at the rightmost edge (**Boolean**, `isRightEdge`)</li><li>The sixth is whether the cell is at the topmost edge (**Boolean**, `isTopEdge`)</li><li>The seventh is whether the cell is at the bottommost edge (**Boolean**, `isBottomEdge`)</li></ol> <blockquote>It is valid when `keyboardFocusable` is "true"</blockquote> | - |
+| `onCellPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns three callback values. <br /> <ol><li>The first is the cell classname (**String**)</li><li>The second is the current cell (**HTMLTableCellElement**)</li><li>The last is the KeyboardEvent (**React.KeyboardEvent**)</li></ol> | - |
 
 
 👉🏼 JSON configuration properties of the `data` => It can be any array of objects in JSON format.
+
 
 
 ### Table Body

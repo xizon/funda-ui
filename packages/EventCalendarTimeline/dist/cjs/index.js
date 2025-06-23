@@ -1496,7 +1496,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onClose = props.onClose,
             onSubmit = props.onSubmit,
             id = props.id,
-            children = props.children;
+            children = props.children,
+            onPressEnter = props.onPressEnter;
           var DEPTH = depth || 1055; // the default value same as bootstrap
           var M_WIDTH = fullscreen ? undefined : typeof maxWidth === 'function' ? maxWidth() : maxWidth ? maxWidth : undefined;
           var M_HEIGHT = typeof minHeight === 'function' ? minHeight() : minHeight ? minHeight : undefined;
@@ -1574,12 +1575,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             openAction();
 
             //
-            var callback = function callback(e) {
-              return function () {
-                handleCloseWin(e);
-              };
+            var callback = function callback() {
+              handleCloseWin(e);
             };
-            onOpen === null || onOpen === void 0 ? void 0 : onOpen(e, callback(e));
+            onOpen === null || onOpen === void 0 ? void 0 : onOpen(e, callback);
           }
           function closeAction() {
             // pause video without controls
@@ -1739,6 +1738,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             };
           }, [show, data, modalRef.current]); // When show`` defaults to true, `modalRef.current` will be null
 
+          // 监听回车键
+          (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+            if (!modalShow || !onPressEnter) return;
+            var handleKeyDown = function handleKeyDown(e) {
+              if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+                var _callback = function _callback() {
+                  handleCloseWin(null);
+                };
+                onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(_callback);
+              }
+            };
+            window.addEventListener('keydown', handleKeyDown);
+            return function () {
+              window.removeEventListener('keydown', handleKeyDown);
+            };
+          }, [modalShow, onPressEnter]);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, triggerContent ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: triggerClassName ? triggerClassName : 'd-inline w-auto',
             ref: triggerRef,
@@ -1780,7 +1795,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             type: "button",
             className: enableVideo ? 'btn-close btn-close-white' : 'btn-close',
             "data-close": "1",
-            onClick: handleCloseWin
+            onClick: function onClick(e) {
+              return handleCloseWin(e);
+            }
           }) : null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             className: "".concat(enableVideo ? 'modal-body m-0 p-0' : 'modal-body', " ").concat(modalBodyClassName || '')
           }, enableVideo ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1793,19 +1810,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             className: "modal-footer ".concat(modalFooterClassName || '')
           }, !closeDisabled ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, closeBtnLabel ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
             "data-close": "1",
-            onClick: handleCloseWin,
+            onClick: function onClick(e) {
+              return handleCloseWin(e);
+            },
             type: "button",
             className: closeBtnClassName ? closeBtnClassName : 'btn btn-secondary'
           }, closeBtnLabel) : null) : null, submitBtnLabel ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
             "data-confirm": "1",
             "data-incoming-data": "".concat(incomingData),
             onClick: function onClick(e) {
-              var callback = function callback(e) {
-                return function () {
-                  handleCloseWin(e);
-                };
+              var callback = function callback() {
+                handleCloseWin(e);
               };
-              onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback(e), incomingData);
+              onSubmit === null || onSubmit === void 0 ? void 0 : onSubmit(e, callback, incomingData);
             },
             type: "button",
             className: submitBtnClassName ? submitBtnClassName : 'btn btn-primary'

@@ -70,10 +70,14 @@ export declare type ModalDialogProps = {
     /** This function is called whenever the data is updated.
      *  Exposes the JSON format data about the option as an argument.
      */
-    onLoad?: (openFunc: any, closeFunc: any) => void;
-    onOpen?: (e: any, callback: any) => void;
-    onClose?: (e: any) => void;
-    onSubmit?: (e: any, callback: any, incomingData: string | null | undefined) => void;
+    onLoad?: (openFunc: () => void, closeFunc: () => void) => void;
+    onOpen?: (e: React.MouseEvent<HTMLElement> | null, callback: () => void) => void;
+    onClose?: (e: React.MouseEvent<HTMLElement> | null) => void;
+    onSubmit?: (e: React.MouseEvent<HTMLButtonElement>, callback: () => void, incomingData: string | null | undefined) => void;
+    /**
+     * Called when Enter key is pressed while modal is open
+     */
+    onPressEnter?: (callback: () => void) => void;
 };
 declare const ModalDialog: React.ForwardRefExoticComponent<ModalDialogProps & React.RefAttributes<ModalDialogRef>>;
 export default ModalDialog;

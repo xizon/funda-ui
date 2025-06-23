@@ -2,66 +2,94 @@
  * Listens for changes in the pressed state of a given key
  * 
  * @usage:
+ *
+ const App = () => {
+     const keyboardFocusable = true;
+     const rootRef = useRef<any>(null);
+     // Effective element movement on keystroke
+ 
+     const refNode = useRef(new Map<string, HTMLTableElement>());
+     const [focusableCellId, setFocusableCellId] = useState<string>('');
+ 
+     // Count the number of columns per row
+     const rootDataInfo = {"totalRow":2,"totalCol":[{"row":0,"colCount":6},{"row":1,"colCount":6},{"row":2,"colCount":6}]};
 
-const App = () => {
+     // Example: handle cell key press with edge detection
+     const handleCellKeyPressed = (
+         classname: string,
+         elem: HTMLTableCellElement,
+         event: React.KeyboardEvent<Element>,
+         isLeftEdge: boolean,
+         isRightEdge: boolean,
+         isTopEdge: boolean,
+         isBottomEdge: boolean
+     ) => {
+         if (isLeftEdge) {
+             // Handle when at the leftmost cell
+         }
+         if (isRightEdge) {
+             // Handle when at the rightmost cell
+         }
+         if (isTopEdge) {
+             // Handle when at the topmost cell
+         }
+         if (isBottomEdge) {
+             // Handle when at the bottommost cell
+         }
+         // Your business logic here
+     };
 
-    const keyboardFocusable = true;
-    const rootRef = useRef<any>(null);
-    
-    // effective element movement on keystroke
-    const [rootDataInfo, setRootDataInfo] = useState<null | {totalRow: number}>(null);
-    const refNode = useRef(new Map<string, HTMLTableElement>());
-    const [focusableCellId, setFocusableCellId] = useState<string>('');
+     const { handleKeyPressed } = useTableKeyPress({
+         enabled: keyboardFocusable,
+         data: [{ a: 1, b: 2, c: 3 }],
+         spyElement: rootRef.current,
+         rootDataInfo,
+         refNode,
+         focusableCellId,
+         setFocusableCellId,
+         onCellKeyPressed: handleCellKeyPressed,
+         onCellPressEnter: () => {},
+     }, [rootRef]);
 
-    const { handleKeyPressed } = useTableKeyPress({
-        enabled: keyboardFocusable,
-        data: [{a: 1, b: 2, c: 3}],
-        spyElement: rootRef.current,
-        rootDataInfo,
-        setRootDataInfo,
-        refNode,
-        focusableCellId,
-        setFocusableCellId,
-        onCellKeyPressed,
-        onCellPressEnter,
-    }, [rootRef]);
-    
-
-    return (
-        <div 
-            ref={rootRef} 
-            tabIndex={-1}
-            onKeyDown={handleKeyPressed}  // require "tabIndex" attribute
-        >Test</div>
-    );
-};
-
+     return (
+         <div
+             ref={rootRef}
+             tabIndex={-1}
+             onKeyDown={handleKeyPressed} // require "tabIndex" attribute
+         >Test</div>
+     );
+ };
  */
-import { useEffect, useCallback, KeyboardEvent } from "react";
+import { useEffect, useCallback, KeyboardEvent, useRef } from "react";
 
 import { initOrderProps, initRowColProps, cellMark, removeCellFocusClassName } from '../func';
 
 export interface UseTableKeyPressProps {
     enabled?: boolean;
-    data: any[];
+    data?: any[];
     spyElement?: any;
-    rootDataInfo: null | {totalRow: number}; 
-    setRootDataInfo: (s: null | {totalRow: number}) => void;
+    rootDataInfo: null | { totalRow: number; totalCol: { row: number; colCount: number }[] };
     refNode: any;
     focusableCellId: string;
     setFocusableCellId: (s: string) => void;
-    onCellKeyPressed: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
-    onCellPressEnter: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
+    onCellKeyPressed?: (
+        classname: string,
+        elem: HTMLTableCellElement,
+        event: KeyboardEvent<Element>,
+        isLeftEdge: boolean,
+        isRightEdge: boolean,
+        isTopEdge: boolean,
+        isBottomEdge: boolean
+    ) => void;
+    onCellPressEnter?: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent<Element>) => void;
     onKeyDown?: (e: any) => void;
 }
-
 
 const useTableKeyPress = ({
     enabled,
     data,
     spyElement,
     rootDataInfo,
-    setRootDataInfo,
     refNode,
     focusableCellId,
     setFocusableCellId,
@@ -69,10 +97,16 @@ const useTableKeyPress = ({
     onCellPressEnter,
     onKeyDown
 }: UseTableKeyPressProps, deps: any[]) => {
+    const focusableCellIdRef = useRef(focusableCellId);
+    useEffect(() => {
+        focusableCellIdRef.current = focusableCellId;
+    }, [focusableCellId]);
    
     const handleKeyPressed = useCallback( async (event: KeyboardEvent<HTMLTableCellElement>) => {
         const key = event.code;
 
+   
+        // If Enter is pressed and keyboard navigation is disabled, just trigger onCellPressEnter
         if ((key === 'Enter' || key === 'NumpadEnter') && !enabled) {
             const currentCell = event.target as HTMLTableCellElement;
             const row = Number(currentCell.getAttribute('data-table-row'));
@@ -82,50 +116,99 @@ const useTableKeyPress = ({
             return;
         }
 
+        // Guard: Only proceed if all required data and enabled flag are valid
         if (!Array.isArray(data) || rootDataInfo === null || spyElement === null || typeof enabled === 'undefined' || enabled === false) return;
 
-        const oldCellSignal = focusableCellId?.replace('cell-', '').split('-');
+
+        // Parse the current focused cell's row and column
+        const oldCellSignal = focusableCellIdRef.current?.replace('cell-', '').split('-');
         let _row = Number(oldCellSignal[0]);
         let _col = Number(oldCellSignal[1]);
 
 
+        // Move function to handle arrow key navigation
         const move = (key: string) => {
-  
+            let isLeftEdge = false;
+            let isRightEdge = false;
+            let isTopEdge = false;
+            let isBottomEdge = false;
+            let maxCol = 0;
+            if (rootDataInfo && Array.isArray(rootDataInfo.totalCol)) {
+                const rowInfo = rootDataInfo.totalCol.find(r => r.row === _row);
+                if (rowInfo) {
+                    maxCol = rowInfo.colCount;
+                }
+            }
             switch (key) {
                 case 'ArrowLeft':
                 case 'Numpad4':
-                    _col = _col - 1 < 0 ? 0 : _col - 1;
-                break;
+                    if (_col - 1 < 0) {
+                        isLeftEdge = true;
+                        _col = 0;
+                    } else {
+                        _col = _col - 1;
+                    }
+                    break;
                 case 'ArrowRight':
-                case 'Numpad6':
-                    _col = _col + 1 > data.length - 1 ? data.length -1 : _col + 1;
-                break;
+                case 'Numpad6': {
+                    if (_col + 1 > maxCol - 1) {
+                        isRightEdge = true;
+                        _col = maxCol - 1;
+                    } else {
+                        _col = _col + 1;
+                    }
+                    break;
+                }
                 case 'ArrowUp':
                 case 'Numpad8':
-                    _row =  _row - 1 < 0 ? 0 : _row - 1;
-                break;
+                    if (_row - 1 < 0) {
+                        isTopEdge = true;
+                        _row = 0;
+                    } else {
+                        _row = _row - 1;
+                    }
+                    break;
                 case 'ArrowDown':
                 case 'Numpad2':
-                    _row = _row + 1 > rootDataInfo.totalRow - 1 ? rootDataInfo.totalRow - 1 : _row + 1;
-                break;
+
+     
+                    if (_row + 1 > rootDataInfo.totalRow - 1) {
+                        isBottomEdge = true;
+                        _row = rootDataInfo.totalRow - 1;
+                    } else {
+                        _row = _row + 1;
+                    }
+                    break;
             }
 
+             
+
             const nextCellSignal: string = cellMark(_row, _col);
-            
-            // focus current cell
+            // Focus the current cell
             removeCellFocusClassName(spyElement);
-            spyElement.querySelector(`.${nextCellSignal}`)?.classList.add('cell-focus');
 
+
+            const targetCell = refNode.current.get(nextCellSignal);
+            if (typeof targetCell !== 'undefined') {
+                targetCell.classList.add('cell-focus');
+            }
             
-            //
+     
             setFocusableCellId(nextCellSignal);
-
-            // callback
-            onCellKeyPressed?.(nextCellSignal, refNode.current.get(nextCellSignal), event);
+            // Callback with edge detection
+            onCellKeyPressed?.(
+                nextCellSignal,
+                refNode.current.get(nextCellSignal),
+                event,
+                isLeftEdge,
+                isRightEdge,
+                isTopEdge,
+                isBottomEdge
+            );
             onKeyDown?.(event);
-
         };
       
+        // Handle arrow key navigation
         if (key === 'ArrowLeft' || key === 'Numpad4') {
             move('ArrowLeft');
         }
@@ -134,7 +217,6 @@ const useTableKeyPress = ({
             move('ArrowRight');
         }
 
-      
         if (key === 'ArrowUp' || key === 'Numpad8') {
             move('ArrowUp');
         }
@@ -143,32 +225,30 @@ const useTableKeyPress = ({
             move('ArrowDown');
         }
 
+        // Handle Enter key
         if (key === 'Enter' || key === 'NumpadEnter') {
             const nextCellSignal: string = cellMark(_row, _col);
             onCellPressEnter?.(nextCellSignal, refNode.current.get(nextCellSignal), event);
         }        
 
-    }, [focusableCellId]);
+    }, [focusableCellId, rootDataInfo, data]);
 
     useEffect(() => {
         if (enabled) {
-
-            // Initialize custom props of table elements
+            // Initialize custom props of table elements (only once)
             initOrderProps(spyElement);
             initRowColProps(spyElement);
-
-            // Update cell ids
-            if (Array.isArray(data)) {
-                setRootDataInfo({
-                    totalRow: data.length
-                });
-            }
         }
     }, [enabled, spyElement, ...deps]);
 
-
     return {
-        handleKeyPressed
+        handleKeyPressed,
+        
+        /**
+         * Expose handleKeyPressed for external usage, e.g., via contentRef in Table component.
+         * This allows calling handleKeyPressed programmatically from outside, such as with a custom onCellKeyPressed method.
+         */
+        triggerCellKeyPressed: handleKeyPressed,
     };
 };
 

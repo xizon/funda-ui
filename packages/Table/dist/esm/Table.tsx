@@ -8,7 +8,8 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import { TableProvider } from './TableContext';
 import useTableResponsive from './utils/hooks/useTableResponsive';
 import useTableDraggable from './utils/hooks/useTableDraggable';
-import { cellMark, removeCellFocusClassName, initRowColProps } from './utils/func';
+import useTableKeyPress from './utils/hooks/useTableKeyPress';
+import { cellMark, removeCellFocusClassName, initRowColProps, getTableRowsColCount } from './utils/func';
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
     // content ref
@@ -49,8 +50,16 @@ export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
 
     // key press
     keyboardFocusable?: boolean;
-    onCellKeyPressed?: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
-    onCellPressEnter?: (classname: string, elem: HTMLTableCellElement, event: KeyboardEvent) => void;
+    onCellKeyPressed?: (
+        classname: string,
+        elem: HTMLTableCellElement,
+        event: React.KeyboardEvent<Element>,
+        isLeftEdge: boolean,
+        isRightEdge: boolean,
+        isTopEdge: boolean,
+        isBottomEdge: boolean
+    ) => void;
+    onCellPressEnter?: (classname: string, elem: HTMLTableCellElement, event: React.KeyboardEvent<Element>) => void;
     
 }
 
@@ -113,7 +122,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
     const [selectedItems, setSelectedItems] = useState<any>(new Set());
     
     // effective element movement on keystroke
-    const [rootDataInfo, setRootDataInfo] = useState<null | {totalRow: number}>(null);
+    const [rootDataInfo, setRootDataInfo] = useState<null | {totalRow: number; totalCol: {row: number; colCount: number}[];}>(null);
     const refNode = useRef(new Map<string, HTMLTableElement>());
     const [focusableCellId, setFocusableCellId] = useState<string>('');
 
@@ -150,6 +159,30 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         onRowDrag: onRowDrag
     }, [data, rootRef]);
 
+    const tableKeyPress = useTableKeyPress({
+        enabled: keyboardFocusable,
+        data: data,
+        spyElement: rootRef.current,
+        rootDataInfo,
+        refNode,
+        focusableCellId,
+        setFocusableCellId,
+        onCellKeyPressed,
+        onCellPressEnter,
+    }, [data, rootRef, rootDataInfo, refNode, focusableCellId]);
+
+    const updateFocusableCell = (row: number, col: number) => {
+            
+        setFocusableCellId(cellMark(row, col));
+
+        // Find and focus the cell element
+        const targetCell = refNode.current.get(cellMark(row, col)) as HTMLElement;
+
+        if (typeof targetCell !== 'undefined') {
+            removeCellFocusClassName(rootRef.current);
+            targetCell.classList.add('cell-focus');
+        }
+    };
 
     // initialize context
     useEffect(() => {
@@ -174,36 +207,53 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         if (rootRef.current) {
             // Initialize custom props of table elements
             initRowColProps(rootRef.current);
+
+            // Count the number of columns per row
+            const totalCol = getTableRowsColCount(rootRef.current);
+            setRootDataInfo({
+                totalRow: Array.isArray(data) ? data.length : 0,
+                totalCol
+            });
+
+            // Initialize the focused index
+            if (keyboardFocusable) {
+                updateFocusableCell(0, 0);
+            }
+            
         }
     }, [data]); // Re-run when data changes
 
 
     // exposes the following methods
     useImperativeHandle(contentRef, () => ({
-        setFocusableCell: (row: number, col: number) => {
-            
-            setFocusableCellId(cellMark(row, col));
-
-            // Find and focus the cell element
-            const cellElement = rootRef.current?.querySelector(`.${cellMark(row, col)}`);
-            if (cellElement) {
-                removeCellFocusClassName(rootRef.current);
-                cellElement.focus(); // !!!Required
-                cellElement.classList.add('cell-focus');
-            }
-        },
+        setFocusableCell: updateFocusableCell,
         clearAllCellFocus: () => {
             if (rootRef.current) {
                 removeCellFocusClassName(rootRef.current);
                 
-                const focusedCells = rootRef.current.querySelectorAll('td:focus, th:focus');
+                const focusedCells = rootRef.current.querySelectorAll('td.cell-focus, th.cell-focus');
                 focusedCells.forEach((cell: any) => {
                     if (typeof cell.blur === 'function') cell.blur();
                     if (cell.classList) cell.classList.remove('cell-focus');
                 });
             }
         },
-    }), [rootRef]);
+        getCellElement: (row: number, col: number) => {
+            // Find and focus the cell element
+            const targetCell = refNode.current.get(cellMark(row, col)) as HTMLElement;
+            return typeof targetCell !== 'undefined' ? targetCell : null;
+        },
+        forceFocusCell: (row: number, col: number) => {
+            // Find and focus the cell element
+            const targetCell = refNode.current.get(cellMark(row, col)) as HTMLElement;
+
+            if (typeof targetCell !== 'undefined') {
+                // After forcing focus, you can use the keyboard to listen directly
+                targetCell.focus(); 
+            }
+        },
+        triggerCellKeyPressed: tableKeyPress.triggerCellKeyPressed
+    }), [rootRef, data, rootDataInfo]);
 
     return (
         <>

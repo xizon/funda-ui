@@ -655,7 +655,10 @@ function tableElemScrolledInit(root, w) {
   }
 }
 function cellMark(row, col) {
-  return "cell-".concat(row, "-").concat(col);
+  var isNegative = function isNegative(num) {
+    return num < 0;
+  };
+  return "cell-".concat(isNegative(row) ? 0 : row, "-").concat(isNegative(col) ? 0 : col);
 }
 function removeCellFocusClassName(root) {
   if (root) {
@@ -663,6 +666,15 @@ function removeCellFocusClassName(root) {
       el.classList.remove('cell-focus');
     });
   }
+}
+function getTableRowsColCount(root) {
+  var rows = allRows(root);
+  return rows.map(function (row, i) {
+    return {
+      row: i,
+      colCount: row.children.length
+    };
+  });
 }
 ;// CONCATENATED MODULE: ./src/utils/hooks/useTableResponsive.tsx
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -1026,6 +1038,236 @@ function useTableDraggable(_ref, deps) {
   };
 }
 /* harmony default export */ const hooks_useTableDraggable = (useTableDraggable);
+;// CONCATENATED MODULE: ./src/utils/hooks/useTableKeyPress.tsx
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function useTableKeyPress_toConsumableArray(arr) { return useTableKeyPress_arrayWithoutHoles(arr) || useTableKeyPress_iterableToArray(arr) || useTableKeyPress_unsupportedIterableToArray(arr) || useTableKeyPress_nonIterableSpread(); }
+function useTableKeyPress_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function useTableKeyPress_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useTableKeyPress_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useTableKeyPress_arrayLikeToArray(o, minLen); }
+function useTableKeyPress_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function useTableKeyPress_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return useTableKeyPress_arrayLikeToArray(arr); }
+function useTableKeyPress_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+/**
+ * Listens for changes in the pressed state of a given key
+ * 
+ * @usage:
+ *
+ const App = () => {
+     const keyboardFocusable = true;
+     const rootRef = useRef<any>(null);
+     // Effective element movement on keystroke
+ 
+     const refNode = useRef(new Map<string, HTMLTableElement>());
+     const [focusableCellId, setFocusableCellId] = useState<string>('');
+ 
+     // Count the number of columns per row
+     const rootDataInfo = {"totalRow":2,"totalCol":[{"row":0,"colCount":6},{"row":1,"colCount":6},{"row":2,"colCount":6}]};
+
+     // Example: handle cell key press with edge detection
+     const handleCellKeyPressed = (
+         classname: string,
+         elem: HTMLTableCellElement,
+         event: React.KeyboardEvent<Element>,
+         isLeftEdge: boolean,
+         isRightEdge: boolean,
+         isTopEdge: boolean,
+         isBottomEdge: boolean
+     ) => {
+         if (isLeftEdge) {
+             // Handle when at the leftmost cell
+         }
+         if (isRightEdge) {
+             // Handle when at the rightmost cell
+         }
+         if (isTopEdge) {
+             // Handle when at the topmost cell
+         }
+         if (isBottomEdge) {
+             // Handle when at the bottommost cell
+         }
+         // Your business logic here
+     };
+
+     const { handleKeyPressed } = useTableKeyPress({
+         enabled: keyboardFocusable,
+         data: [{ a: 1, b: 2, c: 3 }],
+         spyElement: rootRef.current,
+         rootDataInfo,
+         refNode,
+         focusableCellId,
+         setFocusableCellId,
+         onCellKeyPressed: handleCellKeyPressed,
+         onCellPressEnter: () => {},
+     }, [rootRef]);
+
+     return (
+         <div
+             ref={rootRef}
+             tabIndex={-1}
+             onKeyDown={handleKeyPressed} // require "tabIndex" attribute
+         >Test</div>
+     );
+ };
+ */
+
+
+var useTableKeyPress = function useTableKeyPress(_ref, deps) {
+  var enabled = _ref.enabled,
+    data = _ref.data,
+    spyElement = _ref.spyElement,
+    rootDataInfo = _ref.rootDataInfo,
+    refNode = _ref.refNode,
+    focusableCellId = _ref.focusableCellId,
+    setFocusableCellId = _ref.setFocusableCellId,
+    onCellKeyPressed = _ref.onCellKeyPressed,
+    onCellPressEnter = _ref.onCellPressEnter,
+    onKeyDown = _ref.onKeyDown;
+  var focusableCellIdRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(focusableCellId);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    focusableCellIdRef.current = focusableCellId;
+  }, [focusableCellId]);
+  var handleKeyPressed = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)( /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+      var _focusableCellIdRef$c;
+      var key, currentCell, row, col, nextCellSignal, oldCellSignal, _row, _col, move, _nextCellSignal;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            key = event.code; // If Enter is pressed and keyboard navigation is disabled, just trigger onCellPressEnter
+            if (!((key === 'Enter' || key === 'NumpadEnter') && !enabled)) {
+              _context.next = 8;
+              break;
+            }
+            currentCell = event.target;
+            row = Number(currentCell.getAttribute('data-table-row'));
+            col = Number(currentCell.getAttribute('data-table-col'));
+            nextCellSignal = cellMark(row, col);
+            onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(nextCellSignal, refNode.current.get(nextCellSignal), event);
+            return _context.abrupt("return");
+          case 8:
+            if (!(!Array.isArray(data) || rootDataInfo === null || spyElement === null || typeof enabled === 'undefined' || enabled === false)) {
+              _context.next = 10;
+              break;
+            }
+            return _context.abrupt("return");
+          case 10:
+            // Parse the current focused cell's row and column
+            oldCellSignal = (_focusableCellIdRef$c = focusableCellIdRef.current) === null || _focusableCellIdRef$c === void 0 ? void 0 : _focusableCellIdRef$c.replace('cell-', '').split('-');
+            _row = Number(oldCellSignal[0]);
+            _col = Number(oldCellSignal[1]); // Move function to handle arrow key navigation
+            move = function move(key) {
+              var isLeftEdge = false;
+              var isRightEdge = false;
+              var isTopEdge = false;
+              var isBottomEdge = false;
+              var maxCol = 0;
+              if (rootDataInfo && Array.isArray(rootDataInfo.totalCol)) {
+                var rowInfo = rootDataInfo.totalCol.find(function (r) {
+                  return r.row === _row;
+                });
+                if (rowInfo) {
+                  maxCol = rowInfo.colCount;
+                }
+              }
+              switch (key) {
+                case 'ArrowLeft':
+                case 'Numpad4':
+                  if (_col - 1 < 0) {
+                    isLeftEdge = true;
+                    _col = 0;
+                  } else {
+                    _col = _col - 1;
+                  }
+                  break;
+                case 'ArrowRight':
+                case 'Numpad6':
+                  {
+                    if (_col + 1 > maxCol - 1) {
+                      isRightEdge = true;
+                      _col = maxCol - 1;
+                    } else {
+                      _col = _col + 1;
+                    }
+                    break;
+                  }
+                case 'ArrowUp':
+                case 'Numpad8':
+                  if (_row - 1 < 0) {
+                    isTopEdge = true;
+                    _row = 0;
+                  } else {
+                    _row = _row - 1;
+                  }
+                  break;
+                case 'ArrowDown':
+                case 'Numpad2':
+                  if (_row + 1 > rootDataInfo.totalRow - 1) {
+                    isBottomEdge = true;
+                    _row = rootDataInfo.totalRow - 1;
+                  } else {
+                    _row = _row + 1;
+                  }
+                  break;
+              }
+              var nextCellSignal = cellMark(_row, _col);
+              // Focus the current cell
+              removeCellFocusClassName(spyElement);
+              var targetCell = refNode.current.get(nextCellSignal);
+              if (typeof targetCell !== 'undefined') {
+                targetCell.classList.add('cell-focus');
+              }
+              setFocusableCellId(nextCellSignal);
+              // Callback with edge detection
+              onCellKeyPressed === null || onCellKeyPressed === void 0 ? void 0 : onCellKeyPressed(nextCellSignal, refNode.current.get(nextCellSignal), event, isLeftEdge, isRightEdge, isTopEdge, isBottomEdge);
+              onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event);
+            }; // Handle arrow key navigation
+            if (key === 'ArrowLeft' || key === 'Numpad4') {
+              move('ArrowLeft');
+            }
+            if (key === 'ArrowRight' || key === 'Numpad6') {
+              move('ArrowRight');
+            }
+            if (key === 'ArrowUp' || key === 'Numpad8') {
+              move('ArrowUp');
+            }
+            if (key === 'ArrowDown' || key === 'Numpad2') {
+              move('ArrowDown');
+            }
+
+            // Handle Enter key
+            if (key === 'Enter' || key === 'NumpadEnter') {
+              _nextCellSignal = cellMark(_row, _col);
+              onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(_nextCellSignal, refNode.current.get(_nextCellSignal), event);
+            }
+          case 19:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee);
+    }));
+    return function (_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }(), [focusableCellId, rootDataInfo, data]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (enabled) {
+      // Initialize custom props of table elements (only once)
+      initOrderProps(spyElement);
+      initRowColProps(spyElement);
+    }
+  }, [enabled, spyElement].concat(useTableKeyPress_toConsumableArray(deps)));
+  return {
+    handleKeyPressed: handleKeyPressed,
+    /**
+     * Expose handleKeyPressed for external usage, e.g., via contentRef in Table component.
+     * This allows calling handleKeyPressed programmatically from outside, such as with a custom onCellKeyPressed method.
+     */
+    triggerCellKeyPressed: handleKeyPressed
+  };
+};
+/* harmony default export */ const hooks_useTableKeyPress = (useTableKeyPress);
 ;// CONCATENATED MODULE: ./src/Table.tsx
 var _excluded = ["contentRef", "children", "wrapperClassName", "tableClassName", "bordered", "colGroup", "cellAutoWidth", "colSortable", "onColSort", "rowDraggable", "onRowDrag", "responsive", "enhancedResponsive", "enhancedResponsiveWithScrollBar", "data", "filterFields", "filterControlClassName", "filterControlPlaceholder", "filterLabel", "onChangeFilter", "dataSelected", "rowSelectable", "onChangeRowSelect", "keyboardFocusable", "onCellKeyPressed", "onCellPressEnter"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -1037,6 +1279,7 @@ function Table_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "und
 function Table_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -1126,6 +1369,27 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     handleDragEnd = _useTableDraggable.handleDragEnd,
     handledragOver = _useTableDraggable.handledragOver,
     handleTbodyEnter = _useTableDraggable.handleTbodyEnter;
+  var tableKeyPress = hooks_useTableKeyPress({
+    enabled: keyboardFocusable,
+    data: data,
+    spyElement: rootRef.current,
+    rootDataInfo: rootDataInfo,
+    refNode: refNode,
+    focusableCellId: focusableCellId,
+    setFocusableCellId: setFocusableCellId,
+    onCellKeyPressed: onCellKeyPressed,
+    onCellPressEnter: onCellPressEnter
+  }, [data, rootRef, rootDataInfo, refNode, focusableCellId]);
+  var updateFocusableCell = function updateFocusableCell(row, col) {
+    setFocusableCellId(cellMark(row, col));
+
+    // Find and focus the cell element
+    var targetCell = refNode.current.get(cellMark(row, col));
+    if (typeof targetCell !== 'undefined') {
+      removeCellFocusClassName(rootRef.current);
+      targetCell.classList.add('cell-focus');
+    }
+  };
 
   // initialize context
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
@@ -1148,36 +1412,51 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
     if (rootRef.current) {
       // Initialize custom props of table elements
       initRowColProps(rootRef.current);
+
+      // Count the number of columns per row
+      var totalCol = getTableRowsColCount(rootRef.current);
+      setRootDataInfo({
+        totalRow: Array.isArray(data) ? data.length : 0,
+        totalCol: totalCol
+      });
+
+      // Initialize the focused index
+      if (keyboardFocusable) {
+        updateFocusableCell(0, 0);
+      }
     }
   }, [data]); // Re-run when data changes
 
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
     return {
-      setFocusableCell: function setFocusableCell(row, col) {
-        var _rootRef$current;
-        setFocusableCellId(cellMark(row, col));
-
-        // Find and focus the cell element
-        var cellElement = (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.querySelector(".".concat(cellMark(row, col)));
-        if (cellElement) {
-          removeCellFocusClassName(rootRef.current);
-          cellElement.focus(); // !!!Required
-          cellElement.classList.add('cell-focus');
-        }
-      },
+      setFocusableCell: updateFocusableCell,
       clearAllCellFocus: function clearAllCellFocus() {
         if (rootRef.current) {
           removeCellFocusClassName(rootRef.current);
-          var focusedCells = rootRef.current.querySelectorAll('td:focus, th:focus');
+          var focusedCells = rootRef.current.querySelectorAll('td.cell-focus, th.cell-focus');
           focusedCells.forEach(function (cell) {
             if (typeof cell.blur === 'function') cell.blur();
             if (cell.classList) cell.classList.remove('cell-focus');
           });
         }
-      }
+      },
+      getCellElement: function getCellElement(row, col) {
+        // Find and focus the cell element
+        var targetCell = refNode.current.get(cellMark(row, col));
+        return typeof targetCell !== 'undefined' ? targetCell : null;
+      },
+      forceFocusCell: function forceFocusCell(row, col) {
+        // Find and focus the cell element
+        var targetCell = refNode.current.get(cellMark(row, col));
+        if (typeof targetCell !== 'undefined') {
+          // After forcing focus, you can use the keyboard to listen directly
+          targetCell.focus();
+        }
+      },
+      triggerCellKeyPressed: tableKeyPress.triggerCellKeyPressed
     };
-  }, [rootRef]);
+  }, [rootRef, data, rootDataInfo]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(TableProvider, {
     value: {
       originData: data,
@@ -1257,175 +1536,6 @@ var TableBody = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
   }), children));
 });
 /* harmony default export */ const src_TableBody = (TableBody);
-;// CONCATENATED MODULE: ./src/utils/hooks/useTableKeyPress.tsx
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function useTableKeyPress_toConsumableArray(arr) { return useTableKeyPress_arrayWithoutHoles(arr) || useTableKeyPress_iterableToArray(arr) || useTableKeyPress_unsupportedIterableToArray(arr) || useTableKeyPress_nonIterableSpread(); }
-function useTableKeyPress_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function useTableKeyPress_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return useTableKeyPress_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return useTableKeyPress_arrayLikeToArray(o, minLen); }
-function useTableKeyPress_iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function useTableKeyPress_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return useTableKeyPress_arrayLikeToArray(arr); }
-function useTableKeyPress_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-/**
- * Listens for changes in the pressed state of a given key
- * 
- * @usage:
-
-const App = () => {
-
-    const keyboardFocusable = true;
-    const rootRef = useRef<any>(null);
-    
-    // effective element movement on keystroke
-    const [rootDataInfo, setRootDataInfo] = useState<null | {totalRow: number}>(null);
-    const refNode = useRef(new Map<string, HTMLTableElement>());
-    const [focusableCellId, setFocusableCellId] = useState<string>('');
-
-    const { handleKeyPressed } = useTableKeyPress({
-        enabled: keyboardFocusable,
-        data: [{a: 1, b: 2, c: 3}],
-        spyElement: rootRef.current,
-        rootDataInfo,
-        setRootDataInfo,
-        refNode,
-        focusableCellId,
-        setFocusableCellId,
-        onCellKeyPressed,
-        onCellPressEnter,
-    }, [rootRef]);
-    
-
-    return (
-        <div 
-            ref={rootRef} 
-            tabIndex={-1}
-            onKeyDown={handleKeyPressed}  // require "tabIndex" attribute
-        >Test</div>
-    );
-};
-
- */
-
-
-var useTableKeyPress = function useTableKeyPress(_ref, deps) {
-  var enabled = _ref.enabled,
-    data = _ref.data,
-    spyElement = _ref.spyElement,
-    rootDataInfo = _ref.rootDataInfo,
-    setRootDataInfo = _ref.setRootDataInfo,
-    refNode = _ref.refNode,
-    focusableCellId = _ref.focusableCellId,
-    setFocusableCellId = _ref.setFocusableCellId,
-    onCellKeyPressed = _ref.onCellKeyPressed,
-    onCellPressEnter = _ref.onCellPressEnter,
-    onKeyDown = _ref.onKeyDown;
-  var handleKeyPressed = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)( /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-      var key, currentCell, row, col, nextCellSignal, oldCellSignal, _row, _col, move, _nextCellSignal;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            key = event.code;
-            if (!((key === 'Enter' || key === 'NumpadEnter') && !enabled)) {
-              _context.next = 8;
-              break;
-            }
-            currentCell = event.target;
-            row = Number(currentCell.getAttribute('data-table-row'));
-            col = Number(currentCell.getAttribute('data-table-col'));
-            nextCellSignal = cellMark(row, col);
-            onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(nextCellSignal, refNode.current.get(nextCellSignal), event);
-            return _context.abrupt("return");
-          case 8:
-            if (!(!Array.isArray(data) || rootDataInfo === null || spyElement === null || typeof enabled === 'undefined' || enabled === false)) {
-              _context.next = 10;
-              break;
-            }
-            return _context.abrupt("return");
-          case 10:
-            oldCellSignal = focusableCellId === null || focusableCellId === void 0 ? void 0 : focusableCellId.replace('cell-', '').split('-');
-            _row = Number(oldCellSignal[0]);
-            _col = Number(oldCellSignal[1]);
-            move = function move(key) {
-              var _spyElement$querySele;
-              switch (key) {
-                case 'ArrowLeft':
-                case 'Numpad4':
-                  _col = _col - 1 < 0 ? 0 : _col - 1;
-                  break;
-                case 'ArrowRight':
-                case 'Numpad6':
-                  _col = _col + 1 > data.length - 1 ? data.length - 1 : _col + 1;
-                  break;
-                case 'ArrowUp':
-                case 'Numpad8':
-                  _row = _row - 1 < 0 ? 0 : _row - 1;
-                  break;
-                case 'ArrowDown':
-                case 'Numpad2':
-                  _row = _row + 1 > rootDataInfo.totalRow - 1 ? rootDataInfo.totalRow - 1 : _row + 1;
-                  break;
-              }
-              var nextCellSignal = cellMark(_row, _col);
-
-              // focus current cell
-              removeCellFocusClassName(spyElement);
-              (_spyElement$querySele = spyElement.querySelector(".".concat(nextCellSignal))) === null || _spyElement$querySele === void 0 ? void 0 : _spyElement$querySele.classList.add('cell-focus');
-
-              //
-              setFocusableCellId(nextCellSignal);
-
-              // callback
-              onCellKeyPressed === null || onCellKeyPressed === void 0 ? void 0 : onCellKeyPressed(nextCellSignal, refNode.current.get(nextCellSignal), event);
-              onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event);
-            };
-            if (key === 'ArrowLeft' || key === 'Numpad4') {
-              move('ArrowLeft');
-            }
-            if (key === 'ArrowRight' || key === 'Numpad6') {
-              move('ArrowRight');
-            }
-            if (key === 'ArrowUp' || key === 'Numpad8') {
-              move('ArrowUp');
-            }
-            if (key === 'ArrowDown' || key === 'Numpad2') {
-              move('ArrowDown');
-            }
-            if (key === 'Enter' || key === 'NumpadEnter') {
-              _nextCellSignal = cellMark(_row, _col);
-              onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(_nextCellSignal, refNode.current.get(_nextCellSignal), event);
-            }
-          case 19:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function (_x) {
-      return _ref2.apply(this, arguments);
-    };
-  }(), [focusableCellId]);
-  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (enabled) {
-      // Initialize custom props of table elements
-      initOrderProps(spyElement);
-      initRowColProps(spyElement);
-
-      // Update cell ids
-      if (Array.isArray(data)) {
-        setRootDataInfo({
-          totalRow: data.length
-        });
-      }
-    }
-  }, [enabled, spyElement].concat(useTableKeyPress_toConsumableArray(deps)));
-  return {
-    handleKeyPressed: handleKeyPressed
-  };
-};
-/* harmony default export */ const hooks_useTableKeyPress = (useTableKeyPress);
 ;// CONCATENATED MODULE: ./src/TableCell.tsx
 function TableCell_typeof(obj) { "@babel/helpers - typeof"; return TableCell_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, TableCell_typeof(obj); }
 var TableCell_excluded = ["children", "active", "nowrap", "activeClassName", "className", "colSpan", "style", "scope", "onClick", "onKeyDown"];
@@ -1473,7 +1583,6 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
       data: originData,
       spyElement: rootRef.current,
       rootDataInfo: rootDataInfo,
-      setRootDataInfo: setRootDataInfo,
       refNode: refNode,
       focusableCellId: focusableCellId,
       setFocusableCellId: setFocusableCellId,
@@ -1495,7 +1604,9 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
       if (node) {
         var _row = node.dataset.tableRow;
         var _col = node.dataset.tableCol;
-        refNode.current.set(cellMark(_row, _col), node);
+        if (typeof _row !== 'undefined' && typeof _col !== 'undefined') {
+          refNode.current.set(cellMark(_row, _col), node);
+        }
       }
     },
     colSpan: colSpan,
