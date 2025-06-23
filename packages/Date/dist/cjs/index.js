@@ -5425,6 +5425,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     e.target.select();
     resetDefauleValueExist();
 
+    // Automatically pop up a pop-up window
+    if (enableEntireAreaPopup) {
+      handleShow();
+    }
+
     // If there is no valid default value in the input field, 
     // onChange should be triggered only after the resetDefauleValueExist() function is processed
     if (!dateDefaultValueExist) {
@@ -5838,6 +5843,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+
+        // Auto focus to next input if year is 4 digits
+        if (_val.length === 4) {
+          var nextInput = splitInputs.current.get(splitInputsIds[1]);
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        }
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_DATE : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
       ref: function ref(node) {
@@ -5877,6 +5891,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+
+        // Auto focus to next input if month is 2 digits
+        if (_val.length === 2) {
+          var nextInput = splitInputs.current.get(splitInputsIds[2]);
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        }
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_DATE : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
       ref: function ref(node) {
@@ -5921,6 +5944,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
+
+        // Auto focus to next input if day is 2 digits
+        if (_val.length === 2) {
+          var nextInput = splitInputs.current.get(splitInputsIds[3]);
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        }
       }
     }, attributes)), "\xA0") : null, COM_HAS_TIME ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
       ref: function ref(node) {
@@ -5957,6 +5989,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([_val, splitVals[4], splitVals[5]]);
+
+        // Auto focus to next input if hour is 2 digits
+        if (_val.length === 2) {
+          var nextInput = splitInputs.current.get(splitInputsIds[4]);
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        }
       }
     }, attributes)), dateDefaultValueExist ? DELIMITER_TIME : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
       ref: function ref(node) {
@@ -5993,6 +6034,15 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([splitVals[3], _val, splitVals[5]]);
+
+        // Auto focus to next input if minute is 2 digits
+        if (_val.length === 2) {
+          var nextInput = splitInputs.current.get(splitInputsIds[5]);
+          if (nextInput) {
+            nextInput.focus();
+            nextInput.select();
+          }
+        }
       }
     }, attributes)), COM_NO_SECONDS ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, dateDefaultValueExist ? DELIMITER_TIME : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
       ref: function ref(node) {
@@ -6029,6 +6079,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         setDateVal(_date);
         setChangedVal(_full);
         setTimeVal([splitVals[3], splitVals[4], _val]);
+        // No auto focus for the last input (seconds)
       }
     }, attributes))) : null) : null), propExist(iconRight) ? tools() : null),
     style: style

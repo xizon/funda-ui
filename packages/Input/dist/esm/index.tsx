@@ -7,6 +7,7 @@ import { actualPropertyValue, getTextTop } from 'funda-utils/dist/cjs/inputsCalc
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 
 
+
 export type InputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

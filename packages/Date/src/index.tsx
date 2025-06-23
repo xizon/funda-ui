@@ -29,7 +29,6 @@ import { isNumeric } from 'funda-utils/dist/cjs/math';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 import Calendar from './Calendar';
 
 
@@ -644,6 +643,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         
         resetDefauleValueExist();
 
+        // Automatically pop up a pop-up window
+        if (enableEntireAreaPopup) {
+            handleShow();
+        }
+
         // If there is no valid default value in the input field, 
         // onChange should be triggered only after the resetDefauleValueExist() function is processed
         if (!dateDefaultValueExist) {
@@ -1093,11 +1097,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             if (_val !== '' && !isValidYear(_val) && isNumeric(_val) && Number(_val) > 9999) _val = '9999';
                                             if (_val !== '' && !isValidYear(_val) && !isNumeric(_val)) _val = `${getCurrentYear()}`;
 
-
                                             const _date = `${_val}-${splitVals[1]}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-
-                               
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
@@ -1109,7 +1110,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             setChangedVal(_full);
                                             setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
 
-                                            
+                                            // Auto focus to next input if year is 4 digits
+                                            if (_val.length === 4) {
+                                                const nextInput = splitInputs.current.get(splitInputsIds[1]);
+                                                if (nextInput) {
+                                                    (nextInput as HTMLInputElement).focus();
+                                                    (nextInput as HTMLInputElement).select();
+                                                }
+                                            }
                                         }}
                                         {...attributes}
                                     />
@@ -1142,12 +1150,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             }
                                             if (_val !== '' && !isValidMonth(_val) && !isNumeric(_val)) _val = `${getCurrentMonth()}`;
 
-
-
                                             const _date = `${splitVals[0]}-${_val}-${splitVals[2]}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-
-                   
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
@@ -1158,7 +1162,15 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             setDateVal(_date);
                                             setChangedVal(_full);
                                             setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
-                                            
+
+                                            // Auto focus to next input if month is 2 digits
+                                            if (_val.length === 2) {
+                                                const nextInput = splitInputs.current.get(splitInputsIds[2]);
+                                                if (nextInput) {
+                                                    (nextInput as HTMLInputElement).focus();
+                                                    (nextInput as HTMLInputElement).select();
+                                                }
+                                            }
                                         }}
                                         {...attributes}
                                     />
@@ -1199,12 +1211,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             }
                                             if (_val !== '' && !isValidDay(_val) && !isNumeric(_val)) _val = `${getCurrentDay()}`;
 
-
                                             const _date = `${splitVals[0]}-${splitVals[1]}-${_val}`;
                                             const _full = `${_date} ${splitVals[3]}:${splitVals[4]}:${splitVals[5]}`;
-
-
-
 
                                             onChange?.(inputRef.current, valueResConverter(_full), isValidDate(_full), getAllSplittingInputs());
                                             setSplitVals((prevState: string[]) => {
@@ -1216,7 +1224,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             setChangedVal(_full);
                                             setTimeVal([splitVals[3], splitVals[4], splitVals[5]]);
 
-                                            
+                                            // Auto focus to next input if day is 2 digits
+                                            if (_val.length === 2) {
+                                                const nextInput = splitInputs.current.get(splitInputsIds[3]);
+                                                if (nextInput) {
+                                                    (nextInput as HTMLInputElement).focus();
+                                                    (nextInput as HTMLInputElement).select();
+                                                }
+                                            }
                                         }}
                                         {...attributes}
                                     />
@@ -1266,7 +1281,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             setChangedVal(_full);
                                             setTimeVal([_val, splitVals[4], splitVals[5]]);
 
-                                            
+                                            // Auto focus to next input if hour is 2 digits
+                                            if (_val.length === 2) {
+                                                const nextInput = splitInputs.current.get(splitInputsIds[4]);
+                                                if (nextInput) {
+                                                    (nextInput as HTMLInputElement).focus();
+                                                    (nextInput as HTMLInputElement).select();
+                                                }
+                                            }
                                         }}
                                         {...attributes}
                                     />
@@ -1314,7 +1336,14 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                             setChangedVal(_full);
                                             setTimeVal([splitVals[3], _val, splitVals[5]]);
 
-                                            
+                                            // Auto focus to next input if minute is 2 digits
+                                            if (_val.length === 2) {
+                                                const nextInput = splitInputs.current.get(splitInputsIds[5]);
+                                                if (nextInput) {
+                                                    (nextInput as HTMLInputElement).focus();
+                                                    (nextInput as HTMLInputElement).select();
+                                                }
+                                            }
                                         }}
                                         {...attributes}
                                     />
@@ -1364,7 +1393,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                 setDateVal(_date);
                                                 setChangedVal(_full);
                                                 setTimeVal([splitVals[3], splitVals[4], _val]);
-                                                    
+                                                // No auto focus for the last input (seconds)
                                             }}
                                             {...attributes}
                                         />
