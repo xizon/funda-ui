@@ -892,7 +892,8 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     arrowBtnContainerClassName = props.arrowBtnContainerClassName,
     increaseIcon = props.increaseIcon,
     decreaseIcon = props.decreaseIcon,
-    hideArrowButton = props.hideArrowButton,
+    _props$hideArrowButto = props.hideArrowButton,
+    hideArrowButton = _props$hideArrowButto === void 0 ? false : _props$hideArrowButto,
     requiredLabel = props.requiredLabel,
     disabled = props.disabled,
     required = props.required,
@@ -923,7 +924,6 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     attributes = _objectWithoutProperties(props, _excluded);
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default()();
   var idRes = id || uniqueID;
-  var HIDE_ARROW = typeof hideArrowButton === 'undefined' ? false : hideArrowButton;
   var rootRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var valRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value || ''),
@@ -1093,13 +1093,13 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "position-relative"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupWrapperClassName, 'input-group position-relative z-1'), {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupWrapperClassName, 'input-group position-relative z-1 d-flex align-items-stretch'), {
       'has-left-content': propExist(iconLeft),
       'has-right-content': propExist(iconRight) || propExist(units)
     })
-  }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconLeft)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
+  }, propExist(iconLeft) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text d-flex align-items-center')
+  }, iconLeft) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", _extends({
     ref: function ref(node) {
       valRef.current = node;
       if (typeof externalRef === 'function') {
@@ -1112,9 +1112,7 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     type: "text",
     inputMode: decimalPlaces > 0 ? 'decimal' : 'numeric' // numeric | decimal
     ,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control'), {
-      'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
-    }),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlClassName, 'form-control')),
     id: idRes,
     name: name,
     min: min || null,
@@ -1131,20 +1129,16 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     required: required || null,
     readOnly: readOnly || null,
     style: style
-  }, attributes)), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text')
-  }, iconRight)) : null, required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "position-absolute end-0 top-0 my-2 mx-2 me-3 pe-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "text-danger"
-  }, "*"))) : ''), HIDE_ARROW ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(arrowBtnContainerClassName, 'btn-group-vertical position-absolute top-0 end-0 h-100 z-3 border-start'),
+  }, attributes)), propExist(units) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text d-flex align-items-center')
+  }, units) : null, propExist(iconRight) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(controlGroupTextClassName, 'input-group-text d-flex align-items-center')
+  }, iconRight) : null, hideArrowButton ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(arrowBtnContainerClassName, 'btn-group-vertical d-flex flex-column justify-content-center align-items-center border border-start-0 rounded-end'),
     role: "group"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     type: "button",
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[0] : undefined, 'btn btn-sm border-0 border-bottom py-0 lh-1 flex-fill'),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[0] : undefined, 'btn btn-sm border-0 border-bottom py-0 lh-1 flex-fill')),
     tabIndex: -1,
     onClick: handleIncrement,
     disabled: disabled || null
@@ -1164,7 +1158,7 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     height: "24"
   })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     type: "button",
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[1] : undefined, 'btn btn-sm border-0 py-0 lh-1 flex-fill'),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[1] : undefined, 'btn btn-sm border-0 py-0 lh-1 flex-fill')),
     tabIndex: -1,
     onClick: handleDecrement,
     disabled: disabled || null
@@ -1182,7 +1176,11 @@ var NumberInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)
     fill: "none",
     width: "24",
     height: "24"
-  })))))))));
+  }))))))), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "position-absolute end-0 top-0 my-2 mx-2 me-3 pe-3 z-1"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    className: "text-danger"
+  }, "*"))) : '')));
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NumberInput);
 })();

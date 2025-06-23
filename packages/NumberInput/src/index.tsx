@@ -63,7 +63,7 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
         arrowBtnContainerClassName,
         increaseIcon,
         decreaseIcon,
-        hideArrowButton,
+        hideArrowButton = false,
         requiredLabel,
         disabled,
         required,
@@ -93,7 +93,6 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
 
     const uniqueID = useComId();
     const idRes = id || uniqueID;
-    const HIDE_ARROW = typeof hideArrowButton === 'undefined' ? false : hideArrowButton;
     const rootRef = useRef<any>(null);
     const valRef = useRef<any>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
@@ -288,16 +287,22 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
 
                 <div className="position-relative">
 
-                    {/* INPUT GROUP*/}
-                    <div className={combinedCls(
-                        clsWrite(controlGroupWrapperClassName, 'input-group position-relative z-1'),
-                        {
-                            'has-left-content': propExist(iconLeft),
-                            'has-right-content': propExist(iconRight) || propExist(units)
-                        }
-                    )}>
-                        {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
+                    {/* FLEX INPUT GROUP: Use flexbox to align input, units, iconRight, and arrow buttons */}
+                    <div
+                        className={combinedCls(
+                            clsWrite(controlGroupWrapperClassName, 'input-group position-relative z-1 d-flex align-items-stretch'),
+                            {
+                                'has-left-content': propExist(iconLeft),
+                                'has-right-content': propExist(iconRight) || propExist(units)
+                            }
+                        )}
+                    >
+                        {/* Left icon, if present */}
+                        {propExist(iconLeft) ? (
+                            <span className={clsWrite(controlGroupTextClassName, 'input-group-text d-flex align-items-center')}>{iconLeft}</span>
+                        ) : null}
 
+                        {/* Main input field */}
                         <input
                             ref={(node) => {
                                 valRef.current = node;
@@ -307,15 +312,11 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
                                     externalRef.current = node;
                                 }
                             }}
-
                             tabIndex={tabIndex || 0}
                             type="text"
-                            inputMode={decimalPlaces > 0 ? 'decimal' : 'numeric' }   // numeric | decimal
+                            inputMode={decimalPlaces > 0 ? 'decimal' : 'numeric'}   // numeric | decimal
                             className={combinedCls(
-                                clsWrite(controlClassName, 'form-control'),
-                                {
-                                    'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units)
-                                }
+                                clsWrite(controlClassName, 'form-control')
                             )}
                             id={idRes}
                             name={name}
@@ -335,50 +336,78 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
                             style={style}
                             {...attributes}
                         />
-                        {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
-                        {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
 
-                        {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2 me-3 pe-3"><span className="text-danger">*</span></span>}</> : ''}
+                        {/* Units, if present */}
+                        {propExist(units) ? (
+                            <span className={clsWrite(controlGroupTextClassName, 'input-group-text d-flex align-items-center')}>{units}</span>
+                        ) : null}
+
+                        {/* Right icon, if present */}
+                        {propExist(iconRight) ? (
+                            <span className={clsWrite(controlGroupTextClassName, 'input-group-text d-flex align-items-center')}>{iconRight}</span>
+                        ) : null}
+
+
+                        {/* ARROW GROUP*/}
+                        {hideArrowButton ? null : <>
+                            <span 
+                                className={clsWrite(
+                                    arrowBtnContainerClassName,
+                                    'btn-group-vertical d-flex flex-column justify-content-center align-items-center border border-start-0 rounded-end',
+                                )}
+                                role="group"
+                                >
+                                <button
+                                    type="button"
+                                    className={combinedCls(
+                                        clsWrite(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[0] : undefined, 'btn btn-sm border-0 border-bottom py-0 lh-1 flex-fill')
+                                    )}
+                                    tabIndex={-1}
+                                    onClick={handleIncrement}
+                                    disabled={disabled || null}
+                                >
+                                    <span>{increaseIcon || <svg width={13} fill="#000000" viewBox="0 0 24 24">
+                                        <path d="M18.5,15.5l-6-7l-6,7H18.5z" />
+                                        <rect fill="none" width="24" height="24" />
+                                        <rect fill="none" width="24" height="24" />
+                                    </svg>}</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className={combinedCls(
+                                        clsWrite(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[1] : undefined, 'btn btn-sm border-0 py-0 lh-1 flex-fill')
+                                    )}
+                                    tabIndex={-1}
+                                    onClick={handleDecrement}
+                                    disabled={disabled || null}
+                                >
+                                    <span>{decreaseIcon || <svg width={13} fill="#000000" viewBox="0 0 24 24">
+                                        <path d="M6.5,8.5l6,7l6-7H6.5z"/>
+                                        <rect fill="none" width="24" height="24" />
+                                        <rect fill="none" width="24" height="24" />
+                                    </svg>}</span>
+                                </button>
+                            </span>
+                        </>}
+                        {/* /ARROW GROUP*/}
 
                     </div>
-                    
-                    {/* /INPUT GROUP*/}
+                    {/* /FLEX INPUT GROUP*/}
 
-                    
-                    
-                    {/* ARROW GROUP*/}
-                    {HIDE_ARROW ? null : <>
-                        <span className={clsWrite(arrowBtnContainerClassName, 'btn-group-vertical position-absolute top-0 end-0 h-100 z-3 border-start')} role="group">
-                            <button
-                                type="button"
-                                className={clsWrite(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[0] : undefined, 'btn btn-sm border-0 border-bottom py-0 lh-1 flex-fill')}
-                                tabIndex={-1}
-                                onClick={handleIncrement}
-                                disabled={disabled || null}
-                            >
-                                <span>{increaseIcon || <svg width={13} fill="#000000" viewBox="0 0 24 24">
-                                    <path d="M18.5,15.5l-6-7l-6,7H18.5z" />
-                                    <rect fill="none" width="24" height="24" />
-                                    <rect fill="none" width="24" height="24" />
-                                </svg>}</span>
-                            </button>
 
-                            <button
-                                type="button"
-                                className={clsWrite(Array(arrowBtnClassName) && arrowBtnClassName ? arrowBtnClassName[1] : undefined, 'btn btn-sm border-0 py-0 lh-1 flex-fill')}
-                                tabIndex={-1}
-                                onClick={handleDecrement}
-                                disabled={disabled || null}
-                            >
-                                <span>{decreaseIcon || <svg width={13} fill="#000000" viewBox="0 0 24 24">
-                                    <path d="M6.5,8.5l6,7l6-7H6.5z"/>
-                                    <rect fill="none" width="24" height="24" />
-                                    <rect fill="none" width="24" height="24" />
-                                </svg>}</span>
-                            </button>
-                        </span>
-                    </>}
-                    {/* /ARROW GROUP*/}
+                    {/* Required label, if present */}
+                    {required ? (
+                        <>
+                            {requiredLabel || requiredLabel === '' ? requiredLabel : (
+                                <span className="position-absolute end-0 top-0 my-2 mx-2 me-3 pe-3 z-1">
+                                    <span className="text-danger">*</span>
+                                </span>
+                            )}
+                        </>
+                    ) : ''}
+
+
                 </div>
 
 
