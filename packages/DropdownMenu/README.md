@@ -144,11 +144,11 @@ export default () => {
                         hyperlinkClassName="dropdown-item"
                         triggerButton={true}
                         triggerClassName="btn btn-sm p-0"
-                        triggerContent={`Text 1 <i class="fa-solid fa-caret-down"></i>`}
+                        triggerContent={`Text 1 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="6,8 18,8 12,16" /></svg>`}
                         name="app-ddmenu-2"
                         options={[
-                            { label: `Text 1 <i class="fa-solid fa-caret-down"></i>`, value: 'value-1' },
-                            { label: `Text 2 <i class="fa-solid fa-caret-down"></i>`, value: 'value-2' }
+                            { label: `Text 1 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="6,8 18,8 12,16" /></svg>`, value: 'value-1' },
+                            { label: `Text 2 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="6,8 18,8 12,16" /></svg>`, value: 'value-2' }
                         ]}
                         onChange={(res: any, currentData: any) => {
                             console.log(currentData)

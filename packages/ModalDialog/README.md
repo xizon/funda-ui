@@ -53,17 +53,17 @@ export default () => {
                     myAppBtn?.replaceWith(myAppBtn?.cloneNode(true));   
 
                 }}
-                onSubmit={(e, closewin, data) => {
+                onSubmit={(e: React.MouseEvent<HTMLButtonElement>, closewin: () => void, data: string | null | undefined) => {
                     if (e === null) return;
                     
                     console.log('submit: ', e.target, data);
-                    e.target.disabled = true;
-                    e.target.innerHTML = '<i class="fa fa-spinner fa-spin fa-fw"></i> Loading...'
+                    (e.target as HTMLButtonElement).disabled = true;
+                    (e.target as HTMLButtonElement).innerHTML = '<i class="fa fa-spinner fa-spin fa-fw"></i> Loading...'
 
                     setTimeout(() => {
                         closewin();
-                        e.target.disabled = false;
-                        e.target.innerHTML = '<i class="fa fa-paper-plane"></i> Save</>'
+                        (e.target as HTMLButtonElement).disabled = false;
+                        (e.target as HTMLButtonElement).innerHTML = '<i class="fa fa-paper-plane"></i> Save</>'
                     },1000);
                 }}
                 closeOnlyBtn
