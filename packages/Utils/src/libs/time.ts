@@ -1,14 +1,20 @@
+
+
 /**
  * Get timeslots from starting and ending time
  * @param  {string} startTime  -  start time in format "HH:mm"
  * @param  {string} endTime  -  end time in format "HH:mm"
  * @param  {number} timeInterval  -  time interval in minutes
  * @param  {boolean} formatRange  -  if true returns ranges like "10:00 - 11:00", if false returns single times like "10:00"
+ * @param  {boolean} forceShowSeconds  -  Whether to force the display of seconds. 
+ *                                        By default, seconds are displayed only when the timeInterval is less than 1
  * @returns {string[]} Array of time slots
  * @example
 
 console.log(getTimeslots("10:00", "14:00", 60, true)); //['10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00']
 console.log(getTimeslots("10:00", "14:00", 60));   // ['10:00', '11:00', '12:00', '13:00']
+console.log(getTimeslots("10:00", "14:00", 60, false, true));   // ['10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00']
+console.log(getTimeslots("10:00", "10:07", 1.188118811881188));   // ['10:00', '10:01', '10:02', '10:03', '10:04', '10:05']
 console.log(getTimeslots("08:00:00", "08:02:00", 0.4));   // ['08:00:00', '08:00:24', '08:00:48', '08:01:12', '08:01:36', '08:02:00']
 
 */
@@ -17,7 +23,8 @@ function getTimeslots(
     startTime: string,
     endTime: string,
     timeInterval: number,
-    formatRange: boolean = false
+    formatRange: boolean = false,
+    forceShowSeconds = false
 ): string[] {
     // Parse time string to seconds
     const parseTime = (s: string): number => {
@@ -32,13 +39,22 @@ function getTimeslots(
         return str.length < max ? pad("0" + str, max) : str;
     }
 
-    // Convert seconds to HH:mm:ss
-    const convertTime = (secs: number): string => {
+    // Convert seconds to HH:mm or HH:mm:ss
+    const convertTime = (secs: number, showSeconds: boolean): string => {
         const hour = Math.floor(secs / 3600);
         const min = Math.floor((secs % 3600) / 60);
         const sec = secs % 60;
-        return pad(hour, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2);
+        if (showSeconds) {
+            return pad(hour, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2);
+        } else {
+            return pad(hour, 2) + ":" + pad(min, 2);
+        }
     }
+
+
+    // Seconds are displayed only when timeInterval < 1
+    const showSeconds = forceShowSeconds || timeInterval < 1;
+    const intervalInSeconds = showSeconds ? Math.round(timeInterval * 60) : timeInterval * 60;
 
     // Calculate time slots
     const calculateTimeSlot = (_startTime: number, _endTime: number, _timeInterval: number): string[] => {
@@ -46,10 +62,10 @@ function getTimeslots(
         let currentTime = _startTime;
         while (currentTime <= _endTime) {
             if (formatRange) {
-                const t = convertTime(currentTime) + ' - ' + convertTime(Math.min(currentTime + _timeInterval, _endTime));
+                const t = convertTime(currentTime, showSeconds) + ' - ' + convertTime(Math.min(currentTime + _timeInterval, _endTime), showSeconds);
                 timeSlots.push(t);
             } else {
-                timeSlots.push(convertTime(currentTime));
+                timeSlots.push(convertTime(currentTime, showSeconds));
             }
             currentTime += _timeInterval;
         }
@@ -58,11 +74,10 @@ function getTimeslots(
 
     const inputStartTime = parseTime(startTime);
     const inputEndTime = parseTime(endTime);
-    // If timeInterval is not an integer, treat as minutes with decimals, convert to seconds
-    const isDecimal = !Number.isInteger(timeInterval);
-    const intervalInSeconds = isDecimal ? Math.round(timeInterval * 60) : timeInterval * 60;
+
     return calculateTimeSlot(inputStartTime, inputEndTime, intervalInSeconds);
 }
+
 
 
 /**
@@ -93,7 +108,7 @@ function getMinutesBetweenTime(startTime: string, endTime: string) {
         
     if (diff < 0) { sMin -= 12 * 60; diff = eMin - sMin }
     const h = Math.floor(diff / 60),
-          m = diff % 60;
+        m = diff % 60;
     return "" + pad(h) + ":" + pad(m);
 }
 
@@ -121,7 +136,4 @@ export {
     getMinutesBetweenTime,
     convertTimeToMin
 };
-
-
-
 

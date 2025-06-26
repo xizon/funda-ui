@@ -132,7 +132,8 @@ import Tooltip from 'funda-ui/Tooltip';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `wrapperClassName` | string | `d-inline-block` | The class name of the control wrapper. | - |
+| `triggerClassName` | string | `d-inline-block` | The class name of the trigger. The Trigger will wrap around your target object | - |
+| `wrapperClassName` | string | - | The class name of the control wrapper. | - |
 | `direction` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | top | The direction of the tip. Defaults to `top`. | - |
 | `offset` | number  | 4 | Position offset of top and bottom. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |

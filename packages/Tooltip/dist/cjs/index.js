@@ -1473,7 +1473,8 @@ var useContainerDimensions = function useContainerDimensions(myRef) {
   return dimensions;
 };
 var Tooltip = function Tooltip(props) {
-  var wrapperClassName = props.wrapperClassName,
+  var triggerClassName = props.triggerClassName,
+    wrapperClassName = props.wrapperClassName,
     direction = props.direction,
     offset = props.offset,
     exceededSidePosOffset = props.exceededSidePosOffset,
@@ -1648,7 +1649,7 @@ var Tooltip = function Tooltip(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
     "data-overlay-id": "tooltip__wrapper-".concat(idRes),
-    className: "tooltip__trigger d-inline-block",
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.combinedCls)('tooltip__trigger', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.clsWrite)(triggerClassName, 'd-inline-block')),
     "data-microtip-position": direction || 'top',
     "data-microtip-size": size || 'auto',
     onMouseEnter: handleMouseEnter,

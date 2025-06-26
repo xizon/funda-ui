@@ -14,6 +14,7 @@ import { getElCSS } from 'funda-utils/dist/cjs/inputsCalculation';
 
 
 export type TooltipProps = {
+    triggerClassName?: string;
     wrapperClassName?: string;
 	/** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
 	direction?: string;
@@ -64,6 +65,7 @@ const useContainerDimensions = (myRef: any) => {
 
 const Tooltip = (props: TooltipProps) => {
     const {
+        triggerClassName,
         wrapperClassName,
         direction,
         offset,
@@ -267,7 +269,10 @@ const Tooltip = (props: TooltipProps) => {
             <div
                 ref={rootRef}
                 data-overlay-id={`tooltip__wrapper-${idRes}`}
-                className="tooltip__trigger d-inline-block"
+                className={combinedCls(
+                    'tooltip__trigger',
+                    clsWrite(triggerClassName, 'd-inline-block')
+                )}
                 data-microtip-position={direction || 'top'}
                 data-microtip-size={size || 'auto'}
                 onMouseEnter={handleMouseEnter}

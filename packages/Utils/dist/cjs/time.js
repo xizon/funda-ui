@@ -57,17 +57,22 @@ __webpack_require__.r(__webpack_exports__);
  * @param  {string} endTime  -  end time in format "HH:mm"
  * @param  {number} timeInterval  -  time interval in minutes
  * @param  {boolean} formatRange  -  if true returns ranges like "10:00 - 11:00", if false returns single times like "10:00"
+ * @param  {boolean} forceShowSeconds  -  Whether to force the display of seconds. 
+ *                                        By default, seconds are displayed only when the timeInterval is less than 1
  * @returns {string[]} Array of time slots
  * @example
 
 console.log(getTimeslots("10:00", "14:00", 60, true)); //['10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00']
 console.log(getTimeslots("10:00", "14:00", 60));   // ['10:00', '11:00', '12:00', '13:00']
+console.log(getTimeslots("10:00", "14:00", 60, false, true));   // ['10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00']
+console.log(getTimeslots("10:00", "10:07", 1.188118811881188));   // ['10:00', '10:01', '10:02', '10:03', '10:04', '10:05']
 console.log(getTimeslots("08:00:00", "08:02:00", 0.4));   // ['08:00:00', '08:00:24', '08:00:48', '08:01:12', '08:01:36', '08:02:00']
 
 */
 
 function getTimeslots(startTime, endTime, timeInterval) {
   var formatRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  var forceShowSeconds = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
   // Parse time string to seconds
   var parseTime = function parseTime(s) {
     var c = s.split(":").map(Number);
@@ -81,13 +86,21 @@ function getTimeslots(startTime, endTime, timeInterval) {
     return str.length < max ? pad("0" + str, max) : str;
   };
 
-  // Convert seconds to HH:mm:ss
-  var convertTime = function convertTime(secs) {
+  // Convert seconds to HH:mm or HH:mm:ss
+  var convertTime = function convertTime(secs, showSeconds) {
     var hour = Math.floor(secs / 3600);
     var min = Math.floor(secs % 3600 / 60);
     var sec = secs % 60;
-    return pad(hour, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2);
+    if (showSeconds) {
+      return pad(hour, 2) + ":" + pad(min, 2) + ":" + pad(sec, 2);
+    } else {
+      return pad(hour, 2) + ":" + pad(min, 2);
+    }
   };
+
+  // Seconds are displayed only when timeInterval < 1
+  var showSeconds = forceShowSeconds || timeInterval < 1;
+  var intervalInSeconds = showSeconds ? Math.round(timeInterval * 60) : timeInterval * 60;
 
   // Calculate time slots
   var calculateTimeSlot = function calculateTimeSlot(_startTime, _endTime, _timeInterval) {
@@ -95,10 +108,10 @@ function getTimeslots(startTime, endTime, timeInterval) {
     var currentTime = _startTime;
     while (currentTime <= _endTime) {
       if (formatRange) {
-        var t = convertTime(currentTime) + ' - ' + convertTime(Math.min(currentTime + _timeInterval, _endTime));
+        var t = convertTime(currentTime, showSeconds) + ' - ' + convertTime(Math.min(currentTime + _timeInterval, _endTime), showSeconds);
         timeSlots.push(t);
       } else {
-        timeSlots.push(convertTime(currentTime));
+        timeSlots.push(convertTime(currentTime, showSeconds));
       }
       currentTime += _timeInterval;
     }
@@ -106,9 +119,6 @@ function getTimeslots(startTime, endTime, timeInterval) {
   };
   var inputStartTime = parseTime(startTime);
   var inputEndTime = parseTime(endTime);
-  // If timeInterval is not an integer, treat as minutes with decimals, convert to seconds
-  var isDecimal = !Number.isInteger(timeInterval);
-  var intervalInSeconds = isDecimal ? Math.round(timeInterval * 60) : timeInterval * 60;
   return calculateTimeSlot(inputStartTime, inputEndTime, intervalInSeconds);
 }
 

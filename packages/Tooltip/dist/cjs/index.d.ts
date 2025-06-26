@@ -1,5 +1,6 @@
 import React from 'react';
 export declare type TooltipProps = {
+    triggerClassName?: string;
     wrapperClassName?: string;
     /** The direction of the tip. Defaults to `top`. Possible values are: `top`, `top-right`, `top-left`, `bottom`, `bottom-right`, `bottom-left` */
     direction?: string;

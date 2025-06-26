@@ -1936,6 +1936,35 @@ export default () => {
                 ) => {
                     console.log(classname, elem, event);
 
+
+                    // You can have a scrollable div locate visible elements in real time as you move in the direction of the keyboard
+                    /*
+                    const key = event.code;
+                    const updateScrollPos = () => {
+                        if (scrollDivRef.current === null) return;
+                        // Scroll to ".cell-focus"
+                        setTimeout(() => {
+                            const cell = scrollDivRef.current.querySelector('.cell-focus');
+                            if (cell) {
+                                (cell as HTMLElement).scrollIntoView({ block: 'nearest', behavior: 'auto' });
+                            }
+                        }, 0);
+                    };
+                    switch (key) {
+                        case 'ArrowUp':
+                        case 'Numpad8':
+                            updateScrollPos();
+                            break;
+                        case 'ArrowDown':
+                        case 'Numpad2':
+                            updateScrollPos();
+                            break;
+                    }
+                    */
+
+
+
+                    //
                     if (isLeftEdge) {
                         console.log('isLeftEdge: ', isLeftEdge);
                     }
