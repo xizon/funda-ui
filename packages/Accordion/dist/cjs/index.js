@@ -895,7 +895,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/AccordionItem.tsx
-var _excluded = ["heightObserver", "index", "animSpeed", "easeType", "arrowOnly", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "defaultActive", "title", "onToggleEv", "onTransitionEnd", "onItemCollapse", "isExpanded", "children"];
+var _excluded = ["heightObserver", "index", "animSpeed", "easeType", "arrowOnly", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "activeItem", "title", "onToggleEv", "onTransitionEnd", "onItemCollapse", "isExpanded", "children"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -920,7 +920,7 @@ var AccordionItem = function AccordionItem(props) {
     itemHeaderClassName = props.itemHeaderClassName,
     itemTriggerIcon = props.itemTriggerIcon,
     itemStyle = props.itemStyle,
-    defaultActive = props.defaultActive,
+    activeItem = props.activeItem,
     title = props.title,
     onToggleEv = props.onToggleEv,
     onTransitionEnd = props.onTransitionEnd,
@@ -964,18 +964,18 @@ var AccordionItem = function AccordionItem(props) {
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (contentWrapperRef.current && !initialHeightSet.current) {
       initialHeightSet.current = true;
-      var shouldBeExpanded = typeof defaultActive !== 'undefined' && defaultActive !== false;
+      var shouldBeExpanded = typeof activeItem !== 'undefined' && activeItem !== false;
       if (controlledExpanded === undefined) {
         setInternalExpanded(shouldBeExpanded);
       }
 
-      // Set initial height when defaultActive is true
+      // Set initial height when activeItem is true
       if (shouldBeExpanded && contentRef.current) {
         var contentHeight = contentRef.current.offsetHeight;
         contentWrapperRef.current.style.height = "".concat(contentHeight, "px");
       }
     }
-  }, [defaultActive, controlledExpanded]);
+  }, [activeItem, controlledExpanded]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (parseFloat(heightObserver) !== index) return;
 
@@ -1089,6 +1089,7 @@ var Accordion = function Accordion(props) {
   var animSpeed = duration || 200;
   var easeType = typeof alternateCollapse === 'undefined' ? EasingList['linear'] : EasingList[easing];
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var animPlaceholderRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = Accordion_slicedToArray(_useState, 2),
     animOK = _useState2[0],
@@ -1113,9 +1114,7 @@ var Accordion = function Accordion(props) {
     var $li = reactDomWrapperEl.querySelectorAll('.custom-accordion-item');
     var $allContent = reactDomWrapperEl.querySelectorAll('.custom-accordion-content__wrapper');
     var $curContent = reactDomEl.querySelector('.custom-accordion-content__wrapper');
-    var $trigger = reactDomEl.querySelector('.custom-accordion-trigger');
     if (reactDomEl.getAttribute('aria-expanded') === 'false' || reactDomEl.getAttribute('aria-expanded') === null) {
-      var _curIndex;
       setAnimOK(true);
       setTimeout(function () {
         setAnimOK(false);
@@ -1148,12 +1147,6 @@ var Accordion = function Accordion(props) {
         });
       }
       reactDomEl.setAttribute('aria-expanded', 'true');
-
-      // Call onTriggerChange if it exists in the child props
-      var childProps = (_curIndex = children[curIndex]) === null || _curIndex === void 0 ? void 0 : _curIndex.props;
-      if (typeof (childProps === null || childProps === void 0 ? void 0 : childProps.onTriggerChange) === 'function' && $trigger) {
-        childProps.onTriggerChange($trigger, true);
-      }
       anim_default()($curContent, {
         startHeight: 0,
         endHeight: $curContent.scrollHeight,
@@ -1163,14 +1156,7 @@ var Accordion = function Accordion(props) {
         animationInProgress.current = false;
       });
     } else {
-      var _curIndex2;
       reactDomEl.setAttribute('aria-expanded', 'false');
-
-      // Call onTriggerChange if it exists in the child props
-      var _childProps = (_curIndex2 = children[curIndex]) === null || _curIndex2 === void 0 ? void 0 : _curIndex2.props;
-      if (typeof (_childProps === null || _childProps === void 0 ? void 0 : _childProps.onTriggerChange) === 'function' && $trigger) {
-        _childProps.onTriggerChange($trigger, false);
-      }
 
       // Remove current item from expanded items
       setExpandedItems(function (prev) {
@@ -1191,7 +1177,7 @@ var Accordion = function Accordion(props) {
 
   // Initialize expanded items based on defaultActiveIndex or defaultActiveAll
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (defaultActiveAll && children && rootRef.current) {
+    if (defaultActiveAll && children && rootRef.current && animPlaceholderRef.current) {
       var allIndices = Array.from({
         length: children.length
       }, function (_, i) {
@@ -1202,21 +1188,18 @@ var Accordion = function Accordion(props) {
       // Actually expand all items without animation
       var $allItems = rootRef.current.querySelectorAll('.custom-accordion-item');
       Array.prototype.forEach.call($allItems, function (node, index) {
-        var _index;
-        node.setAttribute('aria-expanded', 'true');
         var $curContent = node.querySelector('.custom-accordion-content__wrapper');
-        var $trigger = node.querySelector('.custom-accordion-trigger');
-
-        // Call onTriggerChange if it exists in the child props
-        var childProps = (_index = children[index]) === null || _index === void 0 ? void 0 : _index.props;
-        if (typeof (childProps === null || childProps === void 0 ? void 0 : childProps.onTriggerChange) === 'function' && $trigger) {
-          childProps.onTriggerChange($trigger, true);
-        }
-
-        // Directly set height without animation
         if ($curContent) {
-          $curContent.style.height = "".concat($curContent.scrollHeight, "px");
+          // !!! Don't use the .custom-accordion-contentwrapper height directly, it may be more than a dozen pixels
+          $curContent.style.height = "".concat(node.querySelector('.custom-accordion-content__wrapper > .custom-accordion-content').scrollHeight, "px");
         }
+      });
+      anim_default()(animPlaceholderRef.current, {
+        startHeight: 0,
+        endHeight: 10,
+        speed: animSpeed
+      }, easeType, function () {
+        setTimeout(function () {}, animSpeed);
       });
     } else if (defaultActiveIndex !== undefined) {
       var initialExpanded = new Set();
@@ -1231,6 +1214,12 @@ var Accordion = function Accordion(props) {
     }
   }, [defaultActiveIndex, defaultActiveAll, children]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "custom-accordion-anim-placeholder",
+    style: {
+      display: 'none'
+    },
+    ref: animPlaceholderRef
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: (0,cls.combinedCls)('custom-accordion-item', (0,cls.clsWrite)(wrapperClassName, 'accordion')),
     role: "tablist",
     ref: rootRef
@@ -1245,10 +1234,11 @@ var Accordion = function Accordion(props) {
     return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement(src_AccordionItem, Accordion_extends({
       key: "item" + i,
       index: i,
+      defaultActiveAll: defaultActiveAll,
       animSpeed: animSpeed,
       arrowOnly: arrowOnly,
       heightObserver: heightObserver,
-      defaultActive: _defaultActive,
+      activeItem: _defaultActive,
       onToggleEv: handleClickItem,
       isExpanded: expandedItems.has(i) // Both controlled and uncontrolled modes are implemented
     }, childProps));

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
 export type AccordionItemProps = {
     heightObserver?: number;
     index?: number;
@@ -17,7 +18,7 @@ export type AccordionItemProps = {
     itemStyle?: React.CSSProperties;
     itemTriggerIcon?: React.ReactNode;
 	/** Set an item to activate by default */
-	defaultActive?: string | boolean | undefined;
+	activeItem?: string | boolean | undefined;
 	/** Specify a title */
 	title?: React.ReactNode;
 	/** Handling events for collapsing item */
@@ -49,7 +50,7 @@ const AccordionItem = (props: AccordionItemProps) => {
         itemHeaderClassName,
         itemTriggerIcon,
         itemStyle,
-        defaultActive,
+        activeItem,
         title,
         onToggleEv,
         onTransitionEnd,
@@ -95,18 +96,18 @@ const AccordionItem = (props: AccordionItemProps) => {
     useEffect(() => {
         if (contentWrapperRef.current && !initialHeightSet.current) {
             initialHeightSet.current = true;
-            const shouldBeExpanded = typeof defaultActive !== 'undefined' && defaultActive !== false;
+            const shouldBeExpanded = typeof activeItem !== 'undefined' && activeItem !== false;
             if (controlledExpanded === undefined) {
                 setInternalExpanded(shouldBeExpanded);
             }
             
-            // Set initial height when defaultActive is true
+            // Set initial height when activeItem is true
             if (shouldBeExpanded && contentRef.current) {
                 const contentHeight = contentRef.current.offsetHeight;
                 contentWrapperRef.current.style.height = `${contentHeight}px`;
             }
         }
-    }, [defaultActive, controlledExpanded]);
+    }, [activeItem, controlledExpanded]);
 
     useEffect(() => {
 

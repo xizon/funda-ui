@@ -5,6 +5,7 @@ import Item from './AccordionItem';
 import animateStyles from 'funda-utils/dist/cjs/anim';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
 // Adapt the easing parameters of TweenMax
 export enum EasingList {
     linear = 'linear',
@@ -55,6 +56,7 @@ const Accordion = (props: AccordionProps) => {
     const animSpeed = duration || 200;
     const easeType: string = typeof alternateCollapse === 'undefined' ? EasingList['linear'] : EasingList[easing as never];
     const rootRef = useRef<any>(null);
+    const animPlaceholderRef = useRef<HTMLDivElement>(null);
     const [animOK, setAnimOK] = useState<boolean>(false);
     const [heightObserver, setHeightObserver] = useState<number>(-1);
     const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());  // Keep track of all expanded items
@@ -74,7 +76,6 @@ const Accordion = (props: AccordionProps) => {
         const $li = reactDomWrapperEl.querySelectorAll('.custom-accordion-item');
         const $allContent = reactDomWrapperEl.querySelectorAll('.custom-accordion-content__wrapper');
         const $curContent = reactDomEl.querySelector('.custom-accordion-content__wrapper');
-        const $trigger = reactDomEl.querySelector('.custom-accordion-trigger');
 
         if (reactDomEl.getAttribute('aria-expanded') === 'false' || reactDomEl.getAttribute('aria-expanded') === null) {
             setAnimOK(true);
@@ -110,12 +111,7 @@ const Accordion = (props: AccordionProps) => {
 
             reactDomEl.setAttribute('aria-expanded', 'true');
 
-            // Call onTriggerChange if it exists in the child props
-            const childProps = (children as any[])[curIndex]?.props;
-            if (typeof childProps?.onTriggerChange === 'function' && $trigger) {
-                childProps.onTriggerChange($trigger, true);
-            }
-
+     
             animateStyles($curContent, {
                 startHeight: 0,
                 endHeight: $curContent.scrollHeight,
@@ -126,12 +122,6 @@ const Accordion = (props: AccordionProps) => {
             });
         } else {
             reactDomEl.setAttribute('aria-expanded', 'false');
-
-            // Call onTriggerChange if it exists in the child props
-            const childProps = (children as any[])[curIndex]?.props;
-            if (typeof childProps?.onTriggerChange === 'function' && $trigger) {
-                childProps.onTriggerChange($trigger, false);
-            }
 
             // Remove current item from expanded items
             setExpandedItems(prev => {
@@ -155,29 +145,32 @@ const Accordion = (props: AccordionProps) => {
 
     // Initialize expanded items based on defaultActiveIndex or defaultActiveAll
     useEffect(() => {
-        if (defaultActiveAll && children && rootRef.current) {
+        if (defaultActiveAll && children && rootRef.current && animPlaceholderRef.current) {
             const allIndices = Array.from({ length: (children as any[]).length }, (_, i) => i);
             setExpandedItems(new Set(allIndices));
             
             // Actually expand all items without animation
             const $allItems = rootRef.current.querySelectorAll('.custom-accordion-item');
-            
             Array.prototype.forEach.call($allItems, (node, index) => {
-                node.setAttribute('aria-expanded', 'true');
                 const $curContent = node.querySelector('.custom-accordion-content__wrapper');
-                const $trigger = node.querySelector('.custom-accordion-trigger');
-                
-                // Call onTriggerChange if it exists in the child props
-                const childProps = (children as any[])[index]?.props;
-                if (typeof childProps?.onTriggerChange === 'function' && $trigger) {
-                    childProps.onTriggerChange($trigger, true);
-                }
-
-                // Directly set height without animation
                 if ($curContent) {
-                    $curContent.style.height = `${$curContent.scrollHeight}px`;
+                    // !!! Don't use the .custom-accordion-contentwrapper height directly, it may be more than a dozen pixels
+                    $curContent.style.height = `${node.querySelector('.custom-accordion-content__wrapper > .custom-accordion-content').scrollHeight}px`;
                 }
             });
+
+
+            animateStyles(animPlaceholderRef.current as HTMLDivElement, {
+                startHeight: 0,
+                endHeight: 10,
+                speed: animSpeed
+            } as never, easeType, () => {
+                setTimeout(() => {
+
+                }, animSpeed);
+            });
+
+
         } else if (defaultActiveIndex !== undefined) {
             const initialExpanded = new Set<number>();
             if (Array.isArray(defaultActiveIndex)) {
@@ -191,6 +184,7 @@ const Accordion = (props: AccordionProps) => {
     
     return (
         <>
+            <div className="custom-accordion-anim-placeholder" style={{display: 'none'}} ref={animPlaceholderRef}></div>
             <div className={combinedCls(
                 'custom-accordion-item',
                 clsWrite(wrapperClassName, 'accordion')
@@ -208,10 +202,11 @@ const Accordion = (props: AccordionProps) => {
                     return <Item
                         key={"item" + i}
                         index={i}
+                        defaultActiveAll={defaultActiveAll}
                         animSpeed={animSpeed}
                         arrowOnly={arrowOnly}
                         heightObserver={heightObserver}
-                        defaultActive={_defaultActive}
+                        activeItem={_defaultActive}
                         onToggleEv={handleClickItem}
                         isExpanded={expandedItems.has(i)}   // Both controlled and uncontrolled modes are implemented
                         {...childProps}
