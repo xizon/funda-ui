@@ -3063,6 +3063,7 @@ function formatIndentVal(inputData, placeholder) {
       return String(s).replace(reVar, '').replace(/\&nbsp;/ig, '');
     });
   } else {
+    if (inputData === null) return '';
     var _txt = typeof inputData === 'string' ? inputData : inputData.toString();
     return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
   }

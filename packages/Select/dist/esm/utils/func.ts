@@ -10,6 +10,8 @@ export function formatIndentVal(inputData: any, placeholder: string) {
     if (Array.isArray(inputData)) {
         return inputData.map((s: any) => String(s).replace(reVar, '').replace(/\&nbsp;/ig, ''));
     } else {
+        if (inputData === null) return '';
+
         const _txt: any = typeof inputData === 'string' ? inputData : inputData.toString();
         return _txt.replace(reVar, '').replace(/\&nbsp;/ig, '');
     }
