@@ -116,6 +116,11 @@ class DataService {
         console.log("limit: ", limit);
         console.log("otherParam: ", otherParam);
 
+        // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+        const isSingleSpecialChar = (str) => {
+            return typeof str === 'string' && /^[^\w\s]$/.test(str);
+        };
+
         const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
 
         if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
@@ -126,6 +131,13 @@ class DataService {
 
         // Simulate request latency
         await new Promise(resolve => setTimeout(resolve, 1500));
+
+
+        if ( isSingleSpecialChar(searchStr) && searchStr !== '*') return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
 
         return {
             code: 0,
@@ -509,7 +521,6 @@ import LiveSearch from 'funda-ui/LiveSearch';
 | `winWidth` | number \| function  | `auto` | Set the container width of options. Such as: `500px` or `() => window.innerWidth/2 + 'px'`  | - |
 | `data`  <blockquote>You could use [key](https://react.dev/learn/rendering-lists#why-does-react-need-keys) instead of it</blockquote>  | any  | - | Incoming data, you can set the third parameter of `onFetch`. <blockquote>Changes in the `data` value will cause the component to re-render. It will be used when the value or content does not change when switching routes and needs to re-render the component or get the request.</blockquote> <hr /> <blockquote>!!!Note: Using `data` and `value` at the same time may cause two different parameter transfers, which will affect the final rendering. Please choose the appropriate usage based on your business. Generally speaking, if the `multiSelect` exists, it is not recommended to use the `data`.</blockquote>| - |
 | `renderOption` | function  | - | A function to render content of the option, replaces the default content of the option. It passes two parameters. <br /> <ol><li>The first is the option data (**JSON Object**)</li><li>The second is the index of the current option (**Number**)</li></ol>| - |
-| `allowSpacingRetrive` | boolean | false | Allow Spaces to return all results. <blockquote>The condition is that the database interface can retrieve whitespace data. By default, using spaces will return no results.</blockquote> | - |
 | `autoShowOptions` | boolean  | false | Force display of the option list. | - |
 | `fetchTrigger` | boolean  | false | Use search button to trigger data queries. | - |
 | `fetchNoneInfo` | string  | `No match yet` | The text of the data not fetched. <br />Only takes effect when `fetchTrigger` is *true*. | - |

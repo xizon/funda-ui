@@ -3771,6 +3771,12 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     setBlinkingPosStart = _useState24[1];
   var blinkingPosFauxRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var blinkingCursorPosDivRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+
+  // Select All status (for "Single selection")
+  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState26 = _slicedToArray(_useState25, 2),
+    userInputboxIsAllSelected = _useState26[0],
+    setUserInputboxIsAllSelected = _useState26[1];
   var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_ENTIRE_AREA_TRIGGER = typeof multiSelectEntireAreaTrigger === 'undefined' ? true : multiSelectEntireAreaTrigger;
@@ -3781,16 +3787,21 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     allItemsLabel: 'All Content ({num})',
     noneLabel: 'No items selected'
   };
-  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState27 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState26 = _slicedToArray(_useState25, 2),
-    controlArr = _useState26[0],
-    setControlArr = _useState26[1];
-  function chkValueExist(v) {
+    _useState28 = _slicedToArray(_useState27, 2),
+    controlArr = _useState28[0],
+    setControlArr = _useState28[1];
+
+  // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+  var isSingleSpecialChar = function isSingleSpecialChar(str) {
+    return typeof str === 'string' && /^[^\w\s]$/.test(str);
+  };
+  var chkValueExist = function chkValueExist(v) {
     return typeof v !== 'undefined' && v !== '';
-  }
+  };
   var listContainerHeightLimit = function listContainerHeightLimit(num) {
     var res = num;
     if (res > LIST_CONTAINER_MAX_HEIGHT) res = LIST_CONTAINER_MAX_HEIGHT;
@@ -3929,35 +3940,12 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
   //performance
   var handleChangeFetchSafe = useDebounce_default()(function (val) {
-    var _orginalData = [];
-    var update = function update(inputData) {
-      var filterRes = function filterRes() {
-        return inputData.filter(function (item) {
-          // Avoid fatal errors causing page crashes
-          var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
-          var _val = typeof val !== 'undefined' && val !== null ? val : '';
-          if ((_queryString.split(',').some(function (l) {
-            return l.charAt(0) === _val.toLowerCase();
-          }) || _queryString.split(',').some(function (l) {
-            return l.replace(/ /g, '').indexOf(_val.toLowerCase()) >= 0;
-          }) || item.label.toLowerCase().indexOf(_val.toLowerCase()) >= 0) && _val != '') {
-            return true;
-          } else {
-            return false;
-          }
-        });
-      };
-      return filterRes();
-    };
     if (fetchUpdate) {
       // update filter status
       setFilterItemsHasNoMatchData(false);
 
       // Make a request
       handleFetch(val).then(function (response) {
-        _orginalData = response;
-        var _filterRes = update(_orginalData);
-
         // pop win initalization
         setTimeout(function () {
           popwinPosInit();
@@ -3965,9 +3953,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         }, 0);
       });
     } else {
-      _orginalData = orginalData;
-      var _filterRes = update(_orginalData);
-
       // pop win initalization
       setTimeout(function () {
         popwinPosInit();
@@ -3990,7 +3975,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         _currentData,
         _defaultValues,
         _defaultLabels,
-        _filterRes2,
+        _filterRes,
         _filterResQueryValue,
         _filterResQueryLabel,
         _currentData2,
@@ -4132,19 +4117,19 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
             // STEP 3: ===========
             // If the default value is label, match value
-            _filterRes2 = [];
+            _filterRes = [];
             _filterResQueryValue = staticOptionsData.filter(function (item) {
               return item.value == defaultValue;
             });
             _filterResQueryLabel = staticOptionsData.filter(function (item) {
               return item.label == defaultValue;
             });
-            _filterRes2 = _filterResQueryValue;
-            if (_filterResQueryValue.length === 0) _filterRes2 = _filterResQueryLabel;
+            _filterRes = _filterResQueryValue;
+            if (_filterResQueryValue.length === 0) _filterRes = _filterResQueryLabel;
 
             // if the default value is Object
-            if (isObject(inputDefault) && _filterRes2.length === 0) {
-              _filterRes2 = [inputDefault];
+            if (isObject(inputDefault) && _filterRes.length === 0) {
+              _filterRes = [inputDefault];
             }
 
             // STEP 4: ===========
@@ -4156,9 +4141,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               setControlValue('');
               setControlLabel('');
             } else {
-              if (_filterRes2.length > 0) {
-                setControlValue(_filterRes2[0].value);
-                setControlLabel(formatIndentVal(_filterRes2[0].label, INDENT_LAST_PLACEHOLDER));
+              if (_filterRes.length > 0) {
+                setControlValue(_filterRes[0].value);
+                setControlLabel(formatIndentVal(_filterRes[0].label, INDENT_LAST_PLACEHOLDER));
               }
             }
 
@@ -4426,6 +4411,25 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       // Avoid fatal errors causing page crashes
       var _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
       var _val = typeof val !== 'undefined' && val !== null ? val : '';
+
+      // STEP 1
+      //========
+      // @@@ This code is triggered only if a custom request is used to update "options" @@@
+      // If the condition is true, skip the loop and move on to the next node.
+      if (fetchUpdate && _val == ' ') {
+        return;
+      }
+
+      // STEP 2
+      //========
+      // @@@ This code is triggered only if a custom request is used to update "options" @@@
+      // If the condition is true, skip the loop and move on to the next node.
+      if (fetchUpdate && _val != '' && isSingleSpecialChar(_val)) {
+        return;
+      }
+
+      // STEP 3
+      //========
       if ((_queryString.split(',').some(function (l) {
         return l.charAt(0) === _val.toLowerCase();
       }) || _queryString.split(',').some(function (l) {
@@ -4522,6 +4526,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     // update filter status
     setFilterItemsHasNoMatchData(false);
+
+    // reset Select All status (for "Single selection")
+    setUserInputboxIsAllSelected(false);
 
     // Unlocks the page
     if (LOCK_BODY_SCROLL) (0,bodyScrollLock.enableBodyScroll)(document.querySelector('body'));
@@ -5498,6 +5505,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     };
   }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
 
+  // Select all detection functions in the input box (for "Single selection")
+  function checkUserInputboxIsAllSelected(e) {
+    var input = e.target;
+    if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
+      setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
+    } else {
+      setUserInputboxIsAllSelected(false);
+    }
+  }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "custom-select__label"
   }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
@@ -5612,7 +5628,18 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
     spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck
-  }, attributes)))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+  }, attributes, {
+    // Select all detection (for "Single selection")
+    onSelect: function onSelect(e) {
+      checkUserInputboxIsAllSelected(e);
+    },
+    onKeyUp: function onKeyUp(e) {
+      checkUserInputboxIsAllSelected(e);
+    },
+    onMouseUp: function onMouseUp(e) {
+      checkUserInputboxIsAllSelected(e);
+    }
+  })))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
     ref: valueInputRef,
     tabIndex: -1,
     type: "hidden",
@@ -5642,7 +5669,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: blinkingCursorPosDivRef,
     className: (0,cls.combinedCls)('custom-select-multi__control-blinking-cursor', {
-      'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
+      'animated': generateInputFocusStr() === BLINKING_CURSOR_STR,
+      // Select all highlights (for "Single selection")
+      'selected': userInputboxIsAllSelected
     })
   }, controlTempValue || controlTempValue === '' ? controlTempValue.length === 0 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "".concat(!hideBlinkingCursor() ? 'control-placeholder' : '')

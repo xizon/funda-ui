@@ -16,6 +16,7 @@
   --cus-sel-searchbtn-hover-fill: #333;
   --cus-sel-removebtn-fill: #000;
   --cus-sel-removebtn-hover-fill: #f00;
+  --cus-sel-selected-color:#b1d0ff;
   position: relative; /* Required */
   /*------ Placeholder for input ------*/
   /*------ Arrow ------*/
@@ -85,10 +86,14 @@
   display: inline-block;
   color: var(--cus-sel-placeholder-color);
   width: 100%;
+  /* Select all highlights (for "Single selection") */
   /* Text preview */
 }
 .custom-select__wrapper .custom-select-multi__control-blinking-cursor.animated {
   animation: 1s mf-sel-blink step-end infinite;
+}
+.custom-select__wrapper .custom-select-multi__control-blinking-cursor.selected > span {
+  background-color: var(--cus-sel-selected-color);
 }
 .custom-select__wrapper .custom-select-multi__control-blinking-cursor.control-placeholder {
   color: var(--cus-sel-input-placeholder-color);

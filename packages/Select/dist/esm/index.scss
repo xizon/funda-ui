@@ -18,6 +18,7 @@
     --cus-sel-searchbtn-hover-fill: #333;
     --cus-sel-removebtn-fill: #000;
     --cus-sel-removebtn-hover-fill: #f00;
+    --cus-sel-selected-color:#b1d0ff;
 
         
     position: relative; /* Required */
@@ -114,6 +115,13 @@
         &.animated {
             animation: 1s mf-sel-blink step-end infinite;
         }
+
+
+        /* Select all highlights (for "Single selection") */
+        &.selected > span {
+           background-color: var(--cus-sel-selected-color);
+        }
+  
 
         &.control-placeholder {
             color: var(--cus-sel-input-placeholder-color);

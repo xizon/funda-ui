@@ -18,7 +18,6 @@ export declare type LiveSearchProps = {
     exceededSidePosOffset?: number;
     appearance?: string;
     isSearchInput?: boolean;
-    allowSpacingRetrive?: boolean;
     loader?: React.ReactNode;
     value?: string;
     label?: React.ReactNode | string;

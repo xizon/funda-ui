@@ -451,6 +451,11 @@ class DataService {
         console.log("(getListAwait) limit: ", limit);
         console.log("(getListAwait) otherParam: ", otherParam);
 
+        // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+        const isSingleSpecialChar = (str) => {
+            return typeof str === 'string' && /^[^\w\s]$/.test(str);
+        };
+
         const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
 
         if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
@@ -461,6 +466,13 @@ class DataService {
 
         // Simulate request latency
         await new Promise(resolve => setTimeout(resolve, 1500));
+
+
+        if ( isSingleSpecialChar(searchStr) && searchStr !== '*') return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
 
         return {
             code: 0,
@@ -665,6 +677,11 @@ class DataService {
         console.log("(getListAwait) limit: ", limit);
         console.log("(getListAwait) otherParam: ", otherParam);
 
+        // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+        const isSingleSpecialChar = (str) => {
+            return typeof str === 'string' && /^[^\w\s]$/.test(str);
+        };
+
         const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
 
         if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
@@ -675,6 +692,13 @@ class DataService {
 
         // Simulate request latency
         await new Promise(resolve => setTimeout(resolve, 1500));
+
+
+        if ( isSingleSpecialChar(searchStr) && searchStr !== '*') return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
 
         return {
             code: 0,
@@ -974,6 +998,11 @@ class DataService {
         console.log("(getListAwait) limit: ", limit);
         console.log("(getListAwait) otherParam: ", otherParam);
 
+        // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+        const isSingleSpecialChar = (str) => {
+            return typeof str === 'string' && /^[^\w\s]$/.test(str);
+        };
+
         const QUERY_STRING_PLACEHOLDER = '------';  // Invalid parameters for the first automatic request
 
         if ( searchStr === QUERY_STRING_PLACEHOLDER) return {
@@ -982,10 +1011,17 @@ class DataService {
             data: []
         };
 
-
         // Simulate request latency
         await new Promise(resolve => setTimeout(resolve, 1500));
 
+
+        if ( isSingleSpecialChar(searchStr) && searchStr !== '*') return {
+            code: 0,
+            message: 'OK',
+            data: []
+        };
+
+        
         return {
             code: 0,
             message: 'OK',

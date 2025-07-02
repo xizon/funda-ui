@@ -2802,7 +2802,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_9__);
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "allowSpacingRetrive", "loader", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "renderOption", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "exceededSidePosOffset", "appearance", "isSearchInput", "loader", "readOnly", "disabled", "required", "placeholder", "noMatchPopup", "options", "value", "label", "name", "units", "iconLeft", "iconRight", "minLength", "maxLength", "id", "autoComplete", "autoCapitalize", "spellCheck", "icon", "btnId", "fetchTrigger", "hideIcon", "renderOption", "depth", "style", "winWidth", "tabIndex", "data", "autoShowOptions", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "fetchCallback", "onClick", "onFetch", "onChange", "onKeyboardInput", "onBlur", "onPressEnter"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -2842,7 +2842,6 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     exceededSidePosOffset = props.exceededSidePosOffset,
     appearance = props.appearance,
     isSearchInput = props.isSearchInput,
-    allowSpacingRetrive = props.allowSpacingRetrive,
     loader = props.loader,
     readOnly = props.readOnly,
     disabled = props.disabled,
@@ -3001,6 +3000,11 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       cancel();
     }
   }, [isOpen, rootRef, listRef]);
+
+  // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+  var isSingleSpecialChar = function isSingleSpecialChar(str) {
+    return typeof str === 'string' && /^[^\w\s]$/.test(str);
+  };
 
   // Add function to the element that should be used as the scrollable area.
   var _useWindowScroll = funda_utils_dist_cjs_useWindowScroll__WEBPACK_IMPORTED_MODULE_5___default()({
@@ -3173,12 +3177,29 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
                 // Avoid fatal errors causing page crashes
                 var _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
                 var _val = typeof val !== 'undefined' && val !== null ? val : '';
-                if (emptyValShowAll && val === '') {
+
+                // STEP 1
+                //========
+                if (emptyValShowAll && _val === '') {
                   return true;
                 }
-                if (allowSpacingRetrive && val == ' ') {
+
+                // STEP 2
+                //========
+                // @@@ This code is triggered only if a custom request is used to update "options" @@@
+                if (query && _val == ' ') {
                   return true;
                 }
+
+                // STEP 3
+                //========
+                // @@@ This code is triggered only if a custom request is used to update "options" @@@
+                if (query && _val != '' && isSingleSpecialChar(_val)) {
+                  return true;
+                }
+
+                // STEP 4
+                //========
                 if ((_queryString.split(',').some(function (l) {
                   return l.charAt(0) === _val.toLowerCase();
                 }) || _queryString.split(',').some(function (l) {

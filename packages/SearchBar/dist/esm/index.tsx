@@ -3,8 +3,6 @@ import React, { useState, useEffect, useRef, ChangeEvent, MouseEvent, Compositio
 import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
-
-
 export type SearchBarProps = {
     wrapperClassName?: string;
     controlClassName?: string;

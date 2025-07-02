@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, KeyboardEvent, forwardRef, useImper
 
 import {
     formatIndentVal,
-    unique,
     removeItemOnce,
     optionsCustomSelectFlat,
     isObject
@@ -19,9 +18,6 @@ import {
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import useWindowScroll from 'funda-utils/dist/cjs/useWindowScroll';
-import {
-    extractContentsOfBrackets
-} from 'funda-utils/dist/cjs/extract';
 import {
     convertArrToValByBrackets
 } from 'funda-utils/dist/cjs/convert';
@@ -49,7 +45,6 @@ import {
     stripTagsAndContent
 } from 'funda-utils/dist/cjs/format-string';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
-
 
 
 
@@ -308,6 +303,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const blinkingPosFauxRef = useRef<any>(null);
     const blinkingCursorPosDivRef = useRef<any>(null);
 
+    // Select All status (for "Single selection")
+    const [userInputboxIsAllSelected, setUserInputboxIsAllSelected] = useState(false);
+
 
 
     const selectedSign = useRef<boolean>(false);
@@ -326,9 +324,17 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         values: []
     });
 
-    function chkValueExist(v: any) {
+
+
+    // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+    const isSingleSpecialChar = (str: string) => {
+        return typeof str === 'string' && /^[^\w\s]$/.test(str);
+    };
+
+
+    const chkValueExist = (v: any) => {
         return typeof v !== 'undefined' && v !== '';
-    }
+    };
 
 
     const listContainerHeightLimit = (num: number) => {
@@ -475,34 +481,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
-        let _orginalData: OptionConfig[] = [];
-        const update = (inputData: any) => {
-            const filterRes = () => {
-
-                return inputData.filter((item: any) => {
-
-                    // Avoid fatal errors causing page crashes
-                    const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
-                    const _val = typeof val !== 'undefined' && val !== null ? val : '';
-
-                    if (
-                        (
-                            _queryString.split(',').some((l: any) => l.charAt(0) === _val.toLowerCase()) ||
-                            _queryString.split(',').some((l: any) => l.replace(/ /g, '').indexOf(_val.toLowerCase()) >= 0) ||
-                            item.label.toLowerCase().indexOf(_val.toLowerCase()) >= 0
-                        ) &&
-                        _val != ''
-                    ) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-            }
-
-            return filterRes();
-        };
-
         if (fetchUpdate) {
 
             // update filter status
@@ -511,9 +489,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             // Make a request
             handleFetch(val).then((response: any) => {
-                _orginalData = response;
-                const _filterRes = update(_orginalData);
-
+      
                 // pop win initalization
                 setTimeout(() => {
                     popwinPosInit();
@@ -521,9 +497,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 }, 0);
             });
         } else {
-            _orginalData = orginalData;
-            const _filterRes = update(_orginalData);
-
+   
             // pop win initalization
             setTimeout(() => {
                 popwinPosInit();
@@ -1048,6 +1022,27 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             const _queryString = typeof node.dataset.querystring !== 'undefined' && node.dataset.querystring !== null ? node.dataset.querystring : '';
             const _val = typeof val !== 'undefined' && val !== null ? val : '';
 
+
+            // STEP 1
+            //========
+            // @@@ This code is triggered only if a custom request is used to update "options" @@@
+            // If the condition is true, skip the loop and move on to the next node.
+            if (fetchUpdate && _val == ' ') {
+                return;
+            }
+
+
+            // STEP 2
+            //========
+            // @@@ This code is triggered only if a custom request is used to update "options" @@@
+            // If the condition is true, skip the loop and move on to the next node.
+            if (fetchUpdate && _val != '' && isSingleSpecialChar(_val)) {
+                return;
+            }
+
+
+            // STEP 3
+            //========
             if (
                 (
                     _queryString.split(',').some((l: any) => l.charAt(0) === _val.toLowerCase()) ||
@@ -1173,6 +1168,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         setFilterItemsHasNoMatchData(false);
 
 
+        // reset Select All status (for "Single selection")
+        setUserInputboxIsAllSelected(false);
+
+
         // Unlocks the page
         if (LOCK_BODY_SCROLL) enableBodyScroll(document.querySelector('body'));
     }
@@ -1270,7 +1269,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     async function handleSelect(el: any, dataInput: any = false, valueArr: any[] = [], labelArr: any[] = []) {
 
         if (typeof el === 'undefined') return;
-
 
         const curItem: any = el === null ? (isObject(dataInput) ? dataInput : JSON.parse(dataInput)) : optionsData[Number(el.currentTarget.dataset.index)];
         
@@ -2207,6 +2205,16 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
 
 
+    // Select all detection functions in the input box (for "Single selection")
+    function checkUserInputboxIsAllSelected(e: any) {
+        const input = e.target;
+        if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
+            setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
+        } else {
+            setUserInputboxIsAllSelected(false);
+        }
+    }
+
 
     return (
         <>
@@ -2316,6 +2324,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                             autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
                             spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                             {...attributes}
+                   
+                            // Select all detection (for "Single selection")
+                            onSelect={(e) => { checkUserInputboxIsAllSelected(e); }}
+                            onKeyUp={(e) => { checkUserInputboxIsAllSelected(e); }}
+                            onMouseUp={(e) => { checkUserInputboxIsAllSelected(e); }}
                         />
 
                     </div>
@@ -2377,7 +2390,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <span ref={blinkingCursorPosDivRef} className={combinedCls(
                             'custom-select-multi__control-blinking-cursor',
                             {
-                                'animated': generateInputFocusStr() === BLINKING_CURSOR_STR
+                                'animated': generateInputFocusStr() === BLINKING_CURSOR_STR,
+
+                                // Select all highlights (for "Single selection")
+                                'selected': userInputboxIsAllSelected
                             }
                         )}>
                             {controlTempValue || controlTempValue === '' ? (controlTempValue.length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{controlTempValue}</span>) : (stripTagsAndContent(controlLabel as never).length === 0 ? <span className={`${!hideBlinkingCursor() ? 'control-placeholder' : ''}`}>{generateInputFocusStr()}</span> : <span>{stripTagsAndContent(controlLabel as never)}</span>)}

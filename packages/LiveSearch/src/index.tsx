@@ -17,6 +17,7 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export interface OptionConfig {
     disabled?: boolean;
     label: any;
@@ -38,7 +39,6 @@ export type LiveSearchProps = {
     exceededSidePosOffset?: number;
     appearance?: string;
     isSearchInput?: boolean;
-    allowSpacingRetrive?: boolean;
     loader?: React.ReactNode;
     value?: string;
     label?: React.ReactNode | string;
@@ -101,7 +101,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         exceededSidePosOffset,
         appearance,
         isSearchInput,
-        allowSpacingRetrive,
         loader,
         readOnly,
         disabled,
@@ -253,6 +252,10 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
 
 
+    // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
+    const isSingleSpecialChar = (str: string) => {
+        return typeof str === 'string' && /^[^\w\s]$/.test(str);
+    };
 
 
     // Add function to the element that should be used as the scrollable area.
@@ -435,6 +438,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
     //
     async function matchData(val: string = '', query: boolean = false, emptyValShowAll: boolean = false) {
 
+
         let res: any[] = [];
         let filterRes = (data: any[]) => {
             return data.filter((item: any) => {
@@ -443,15 +447,31 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
                 const _queryString = typeof item.queryString !== 'undefined' && item.queryString !== null ? item.queryString : '';
                 const _val = typeof val !== 'undefined' && val !== null ? val : '';
 
-         
-                if (emptyValShowAll && val === '') {
+                // STEP 1
+                //========
+                if (emptyValShowAll && _val === '') {
                     return true;
                 }
 
-                if (allowSpacingRetrive && val == ' ') {
+
+                // STEP 2
+                //========
+                // @@@ This code is triggered only if a custom request is used to update "options" @@@
+                if (query && _val == ' ') {
                     return true;
                 }
-          
+
+
+                // STEP 3
+                //========
+                // @@@ This code is triggered only if a custom request is used to update "options" @@@
+                if (query && _val != '' && isSingleSpecialChar(_val)) {
+                    return true;
+                }
+
+
+                // STEP 4
+                //========
                 if (
                     (
                         _queryString.split(',').some((l: any) => l.charAt(0) === _val.toLowerCase()) ||
