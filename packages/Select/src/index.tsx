@@ -391,11 +391,11 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         () => ({
             active: () => {
                 handleShowList();
-                selectInputRef.current.select();
+                selectInputRef.current?.select();
             },
             
             focus: () => {
-                selectInputRef.current.select();
+                selectInputRef.current?.select();
             },
             clear: (cb?: any) => {
 
@@ -405,7 +405,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     handleClearValue();
                 }
 
-                selectInputRef.current.blur();
+                selectInputRef.current?.blur();
 
                 cb?.();
             },
@@ -428,7 +428,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 cb?.();
             }
         }),
-        [contentRef],
+        [contentRef, selectInputRef],
     );
 
 
@@ -1435,7 +1435,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                 //
-                selectInputRef.current.blur();
+                selectInputRef.current?.blur();
             }
 
 
@@ -1580,7 +1580,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                 //
-                selectInputRef.current.blur();
+                selectInputRef.current?.blur();
             }
         }
 
@@ -1765,7 +1765,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             //
-            selectInputRef.current.blur();
+            selectInputRef.current?.blur();
         }
 
     }
@@ -2004,7 +2004,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
                         //
-                        selectInputRef.current.blur();
+                        selectInputRef.current?.blur();
                     }
 
                 }

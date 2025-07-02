@@ -3846,19 +3846,22 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(contentRef, function () {
     return {
       active: function active() {
+        var _selectInputRef$curre;
         handleShowList();
-        selectInputRef.current.select();
+        (_selectInputRef$curre = selectInputRef.current) === null || _selectInputRef$curre === void 0 ? void 0 : _selectInputRef$curre.select();
       },
       focus: function focus() {
-        selectInputRef.current.select();
+        var _selectInputRef$curre2;
+        (_selectInputRef$curre2 = selectInputRef.current) === null || _selectInputRef$curre2 === void 0 ? void 0 : _selectInputRef$curre2.select();
       },
       clear: function clear(cb) {
+        var _selectInputRef$curre3;
         if (MULTI_SEL_VALID) {
           updateOptionCheckboxes('remove');
         } else {
           handleClearValue();
         }
-        selectInputRef.current.blur();
+        (_selectInputRef$curre3 = selectInputRef.current) === null || _selectInputRef$curre3 === void 0 ? void 0 : _selectInputRef$curre3.blur();
         cb === null || cb === void 0 ? void 0 : cb();
       },
       /*
@@ -3881,7 +3884,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         cb === null || cb === void 0 ? void 0 : cb();
       }
     };
-  }, [contentRef]);
+  }, [contentRef, selectInputRef]);
 
   // click outside
   useClickOutside_default()({
@@ -4628,6 +4631,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         $el,
         _selected,
         _selectedVal,
+        _selectInputRef$curre4,
         _curItem$callback,
         _value2,
         _label2,
@@ -4636,6 +4640,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         _$el,
         _selected2,
         _selectedVal2,
+        _selectInputRef$curre5,
         _args3 = arguments;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
@@ -4776,7 +4781,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
           case 25:
             //
-            selectInputRef.current.blur();
+            (_selectInputRef$curre4 = selectInputRef.current) === null || _selectInputRef$curre4 === void 0 ? void 0 : _selectInputRef$curre4.blur();
           case 26:
             _context3.next = 42;
             break;
@@ -4884,7 +4889,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? curItem : multipleSelectionCallback(_currentControlValueArr, _currentControlLabelArr));
           case 41:
             //
-            selectInputRef.current.blur();
+            (_selectInputRef$curre5 = selectInputRef.current) === null || _selectInputRef$curre5 === void 0 ? void 0 : _selectInputRef$curre5.blur();
           case 42:
             // Fixed an out-of-focus issue
             fixFocusStatus();
@@ -5020,7 +5025,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }
   function _handleMultiControlItemRemove() {
     _handleMultiControlItemRemove = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(event) {
-      var valueToRemove, getCurrentIndex, currentControlValueArr, currentControlLabelArr, _value, _label;
+      var valueToRemove, getCurrentIndex, currentControlValueArr, currentControlLabelArr, _value, _label, _selectInputRef$curre6;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
@@ -5057,7 +5062,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
           case 15:
             //
-            selectInputRef.current.blur();
+            (_selectInputRef$curre6 = selectInputRef.current) === null || _selectInputRef$curre6 === void 0 ? void 0 : _selectInputRef$curre6.blur();
           case 16:
           case "end":
             return _context5.stop();
@@ -5246,7 +5251,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }
   function _handleKeyPressed() {
     _handleKeyPressed = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(event) {
-      var key, res, currentIndex, currentData, currentControlValueArr, currentControlLabelArr, htmlOptions;
+      var key, res, currentIndex, currentData, currentControlValueArr, currentControlLabelArr, htmlOptions, _selectInputRef$curre7;
       return _regeneratorRuntime().wrap(function _callee8$(_context8) {
         while (1) switch (_context8.prev = _context8.next) {
           case 0:
@@ -5314,7 +5319,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             return onChange === null || onChange === void 0 ? void 0 : onChange(selectInputRef.current, valueInputRef.current, !MULTI_SEL_VALID ? currentData : multipleSelectionCallback(currentControlValueArr, currentControlLabelArr));
           case 25:
             //
-            selectInputRef.current.blur();
+            (_selectInputRef$curre7 = selectInputRef.current) === null || _selectInputRef$curre7 === void 0 ? void 0 : _selectInputRef$curre7.blur();
           case 26:
             if (!(key === 'ArrowUp')) {
               _context8.next = 30;
