@@ -415,7 +415,6 @@ export default () => {
                             value={data.role_cat}
                             name="role_cat[]"
                             depth={103}
-                            displayResult={true}
                             valueType="label"
                             placeholder="Select Category"
                             columnTitle={['Heading 1', 'Heading 2']}

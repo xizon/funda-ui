@@ -194,7 +194,6 @@ export default () => {
             <CascadingSelectE2E
                 value="{Title 2[2]}{Title 5[5]}"
                 name="name"
-                displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1','Heading 2','Heading 3']}
                 triggerClassName="d-block w-100"
@@ -385,6 +384,11 @@ Set hierarchical categories ( with sub-categories ) to attribute `fetchArray`.
 > Since the data of response structures of the two requests are not directly related, the attribute `destroyParentIdMatch` needs to be set to *true*.
 
 
+> [!NOTE]
+> Explanation: There is no correspondence between the `queryId` of the target request and the `id` in the result list.
+
+
+
 ```js
 import React from "react";
 import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
@@ -551,7 +555,6 @@ export default (props: any) => {
                 destroyParentIdMatch={true}
                 value="{Title 2[2]}{Title 11[11]}"
                 name="name"
-                displayResult={true}
                 valueType="label"
                 columnTitle={['Heading 1','Heading 2']}
                 fetchArray={[
@@ -672,6 +675,39 @@ export default () => {
 
 
 
+## Customize the value of the result in input box
+
+The `inputable` attribute allows you to edit text boxes.
+
+```js
+import React from "react";
+import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
+
+// component styles
+import 'funda-ui/CascadingSelectE2E/index.css';
+
+export default () => {
+
+    return (
+        <>
+
+            <CascadingSelectE2E
+                inputable
+                formatInputResult={(param: Array<{label: string, value: string | number}>) => {
+                    return param.map((item) => item.label).join(' / ');
+
+                    // const res: string = param.map((item) => item.label).join('/');
+                    // return res.split('/').at(-1) || '';
+                }}
+                ...
+            />
+
+        </>
+    );
+}
+```
+
+
 ## API
 
 ### Cascading Select End-to-end
@@ -680,23 +716,27 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It is the return input control of this component.  | - |
 | `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.close()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
+| `controlGroupWrapperClassName` | string | `input-group` | The class name of the control group wrapper. If you want not to wrap lines when crowded, you can change it to `input-group flex-nowrap` | - |
+| `controlGroupTextClassName` | string | `input-group-text` | The class name of the control group text. | - |
 | `searchable` | boolean  | false | Allows you to make per columns searchable. | - |
 | `searchPlaceholder` | string  | - | Search box placeholder | - |
 | `perColumnHeadersShow` | boolean | true | Per column headers can be displayed to options interface. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `extractValueByBraces` | boolean  | true | Whether to use curly braces to save result and initialize default value. | - |
-| `destroyParentIdMatch` | boolean  | false | Instead of using `parent_id` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. | - |
+| `destroyParentIdMatch` | boolean  | false | Instead of using `queryId` of response to match child and parent data (very useful for multiple fetch requests with no directly related fields), this operation will directly use the click event to modify the result. <blockquote>Explanation: There is no correspondence between the `queryId` of the target request and the `id` in the result list</blockquote> | - |
 | `columnTitle` | array  | - | Set headers for each column group. Such as <br /> `['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4']` <blockquote>Support html tags</blockquote> | - |
 | `triggerClassName` | string  | - | Specify a class for your trigger | - |
 | `triggerContent` | ReactNode  | - | Set a piece of text or HTML code for the trigger | - |
 | `cleanNodeBtnClassName` | string  | `btn btn-link p-0 m-0 text-decoration-none` | Specify a class for clean node button | - |
 | `cleanNodeBtnContent` | ReactNode  | `<svg width="12px" height="12px" viewBox="0 0 16 16"><path fill="inherit" d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z" fillRule="evenodd"></path></svg>` | Set a piece of text or HTML code for the clean node button | - |
 | `depth` | number  | 1055 | Set the depth value of the control to control the display of the pop-up layer appear above. Please set it when multiple controls are used at the same time. | - |
-| `displayResult` | boolean  | false | Whether to show breadcrumb result. | - |
+| `inputable` | boolean  | false | Whether it can be modified in the input box. | - |
+| `formatInputResult` | function | - | Customize the function of formatting the value of the input box.<br /> <ol><li>The first is an array of objects that's result (**Array\<\{label: string, value: string \| number\}\>**)</li></ol> | - |
 | `displayResultArrow` | ReactNode  | `<svg viewBox="0 0 22 22" width="8px"><path d="m345.44 248.29l-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373" transform="matrix(.03541-.00013.00013.03541 2.98 3.02)" fill="#a5a5a5" /></svg>` | Set an arrow of breadcrumb result | - |
 | `controlArrow` | ReactNode  | `<svg width="10px" height="10px" viewBox="0 -4.5 20 20"><g stroke="none" strokeWidth="1" fill="none"><g transform="translate(-180.000000, -6684.000000)" className="arrow-fill-g" fill="#a5a5a5"><g transform="translate(56.000000, 160.000000)"><path d="M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"></path></g></g></g></svg>` | Set an arrow of control | - |
 | `loader` | ReactNode  | `<svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"/><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"/><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"/><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"/><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"/><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"/><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"/><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"/></g></svg>` | Set a loader component to show while the component waits for the next load of data. e.g. `<span><i className="fa fa-spinner fa-spin fa-fw"></i></span>` | - |
@@ -707,10 +747,17 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `name` | string | - | Name is not deprecated when used with form fields. | - |
 | `placeholder` | string | - |  Specifies a short hint that describes. | - |
 | `disabled` | boolean | false | Whether it is disabled | - |
+| `units` | string | - | Specify a unit identification string. Such as `em`, `px`, and so on. | - |
+| `iconLeft` | ReactNode  | - | Set the left icon of this control | - |
+| `iconRight` | ReactNode  | - | Set the right icon of this control | - |
+| `maxLength` | number | - | Defines the maximum string length that the user can enter into it. | - |
+| `minLength` | number | - | Defines the minimum string length that the user can enter into it. | - |
+| `readOnly` | boolean | false | When present, it specifies that this component field is read-only. | - |
 | `required` | boolean | false | When present, it specifies that a field must be filled out before submitting the form. | - |
+| `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2 pe-3"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) | - |
 | `fetchArray` | array  | - | Set multiple requests, it should be an array | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The one is the input control (**HTML Element**)</li><li>The second parameter is the current option data (**JSON Object**)</li><li>The third parameter is the index of the current column group (**Number**)</li><li>The fourth parameter indicates the current column depth (**Number**)</li><li>The fifth is value of the current control (**JSON Object**).</li><li>The last is the function of close (**Function**)</li></ol> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The one is the input control (**HTML Element**)</li><li>The second parameter is the current option data (**JSON Object**)</li><li>The third parameter is the index of the current column group (**Number**)</li><li>The fourth parameter indicates the current column depth (**Number**)</li><li>The fifth is value of the input box (**String**).</li><li>The last is the function of close (**Function**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**)| - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)| - |
 

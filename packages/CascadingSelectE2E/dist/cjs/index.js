@@ -664,6 +664,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_extractContentsOfBrackets
           );
         },
+        /* harmony export */"extractContentsOfMixedCharactersWithBraces": function extractContentsOfMixedCharactersWithBraces() {
+          return (/* binding */_extractContentsOfMixedCharactersWithBraces
+          );
+        },
+        /* harmony export */"extractContentsOfMixedCharactersWithComma": function extractContentsOfMixedCharactersWithComma() {
+          return (/* binding */_extractContentsOfMixedCharactersWithComma
+          );
+        },
         /* harmony export */"extractContentsOfParentheses": function extractContentsOfParentheses() {
           return (/* binding */_extractContentsOfParentheses
           );
@@ -745,6 +753,69 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         } else {
           return res === null ? '' : res;
         }
+      }
+
+      /**
+       * Parses a braces-separated string of `{label[value]}` pairs into an array of objects.
+       *
+       * Example:
+       *   Input: "{Poor[c]}{Sub-option 4[c-2]}{Empty[]}"
+       *   Input: "{{Poor[c]}{Sub-option 4[c-2]}{Empty[]}[]}"
+       * 
+       *   Output: [
+       *     { label: "Poor", value: "c" },
+       *     { label: "Sub-option 4", value: "c-2" },
+       *     { label: "Empty", value: "" }
+       *   ]
+       *
+       * @param {string} str - The input string containing one or more `{label[value]}` segments.
+       * @returns {Array<{label: string, value: string}>} - An array of extracted label-value objects.
+       */
+      function _extractContentsOfMixedCharactersWithBraces(str) {
+        // Fix the extra '{' at the beginning
+        var cleaned = str.replace(/^{{/, '{');
+
+        // Remove empty {} or {[]} tail
+        var trimmed = cleaned.replace(/\{\[\]\}$/, '');
+
+        // The match is like {label[value]}
+        var pattern = /\{(.*?)\[(.*?)\]\}/g;
+        var matches = Array.from(trimmed.matchAll(pattern));
+        return matches.map(function (match) {
+          return {
+            label: match[1],
+            value: match[2]
+          };
+        });
+      }
+
+      /**
+       * Parses a comma-separated string of `label[value]` pairs into an array of objects.
+       *
+       * Example:
+       *   Input: "Poor[c],Sub-option 4[c-2],Empty[]"
+       *   Output: [
+       *     { label: "Poor", value: "c" },
+       *     { label: "Sub-option 4", value: "c-2" },
+       *     { label: "Empty", value: "" }
+       *   ]
+       *
+       * @param {string} str - A string containing label-value pairs in the format `label[value]`, separated by commas.
+       * @returns {Array<{ label: string, value: string }>} - An array of parsed objects.
+       */
+      function _extractContentsOfMixedCharactersWithComma(str) {
+        return str.split(",").map(function (item) {
+          return item.trim();
+        }).map(function (item) {
+          var match = item.match(/^(.*?)\[(.*?)\]$/);
+          if (match) {
+            return {
+              label: match[1],
+              value: match[2]
+            };
+          }
+          return null;
+        }).filter(Boolean);
       }
 
       /******/
@@ -2469,7 +2540,7 @@ function Group(props) {
         "data-value": JSON.stringify(item),
         "data-level": level,
         "data-query": item.queryId,
-        className: (0,cls.combinedCls)('cas-select-e2e__opt', {
+        className: (0,cls.combinedCls)('casc-select-e2e__opt', {
           'active': item.current
         }),
         dangerouslySetInnerHTML: {
@@ -2483,13 +2554,13 @@ function Group(props) {
     } else {
       return columnTitle[level] === '' || perColumnHeadersShow === false ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", {
         key: index,
-        className: "cas-select-e2e__opt-header"
+        className: "casc-select-e2e__opt-header"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         dangerouslySetInnerHTML: {
           __html: columnTitle[level]
         }
       }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-        className: "cas-select-e2e__opt-header__clean"
+        className: "casc-select-e2e__opt-header__clean"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,
         href: "#",
@@ -2517,7 +2588,7 @@ function Group(props) {
   }));
 }
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "searchable", "searchPlaceholder", "perColumnHeadersShow", "exceededSidePosOffset", "disabled", "required", "value", "label", "placeholder", "name", "id", "extractValueByBraces", "destroyParentIdMatch", "columnTitle", "depth", "loader", "displayResult", "displayResultArrow", "controlArrow", "valueType", "showCloseBtn", "style", "tabIndex", "triggerClassName", "triggerContent", "cleanNodeBtnClassName", "cleanNodeBtnContent", "fetchArray", "onFetch", "onChange", "onBlur", "onFocus"];
+var _excluded = ["popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "controlGroupWrapperClassName", "controlGroupTextClassName", "searchable", "searchPlaceholder", "perColumnHeadersShow", "exceededSidePosOffset", "readOnly", "disabled", "required", "requiredLabel", "units", "iconLeft", "iconRight", "minLength", "maxLength", "value", "label", "placeholder", "name", "id", "extractValueByBraces", "destroyParentIdMatch", "columnTitle", "depth", "loader", "inputable", "displayResultArrow", "controlArrow", "valueType", "showCloseBtn", "style", "tabIndex", "triggerClassName", "triggerContent", "cleanNodeBtnClassName", "cleanNodeBtnContent", "fetchArray", "onFetch", "onChange", "onBlur", "onFocus", "formatInputResult"];
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -2547,11 +2618,13 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-var CascadingSelectE2E = function CascadingSelectE2E(props) {
+var CascadingSelectE2E = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_amd_react_.forwardRef)(function (props, externalRef) {
   var popupRef = props.popupRef,
     wrapperClassName = props.wrapperClassName,
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
+    controlGroupWrapperClassName = props.controlGroupWrapperClassName,
+    controlGroupTextClassName = props.controlGroupTextClassName,
     _props$searchable = props.searchable,
     searchable = _props$searchable === void 0 ? false : _props$searchable,
     _props$searchPlacehol = props.searchPlaceholder,
@@ -2559,8 +2632,15 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     _props$perColumnHeade = props.perColumnHeadersShow,
     perColumnHeadersShow = _props$perColumnHeade === void 0 ? true : _props$perColumnHeade,
     exceededSidePosOffset = props.exceededSidePosOffset,
+    readOnly = props.readOnly,
     disabled = props.disabled,
     required = props.required,
+    requiredLabel = props.requiredLabel,
+    units = props.units,
+    iconLeft = props.iconLeft,
+    iconRight = props.iconRight,
+    minLength = props.minLength,
+    maxLength = props.maxLength,
     value = props.value,
     label = props.label,
     placeholder = props.placeholder,
@@ -2571,7 +2651,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     columnTitle = props.columnTitle,
     depth = props.depth,
     loader = props.loader,
-    displayResult = props.displayResult,
+    _props$inputable = props.inputable,
+    inputable = _props$inputable === void 0 ? false : _props$inputable,
     displayResultArrow = props.displayResultArrow,
     controlArrow = props.controlArrow,
     valueType = props.valueType,
@@ -2587,6 +2668,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     onChange = props.onChange,
     onBlur = props.onBlur,
     onFocus = props.onFocus,
+    formatInputResult = props.formatInputResult,
     attributes = _objectWithoutProperties(props, _excluded);
   var DEPTH = depth || 1055; // the default value same as bootstrap
   var POS_OFFSET = 0;
@@ -2595,7 +2677,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   var uniqueID = useComId_default()();
   var idRes = id || uniqueID;
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
-  var valRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
   // searchable
@@ -2603,6 +2685,22 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     _useState2 = _slicedToArray(_useState, 2),
     columnSearchKeywords = _useState2[0],
     setColumnSearchKeywords = _useState2[1];
+  var propExist = function propExist(p) {
+    return typeof p !== 'undefined' && p !== null && p !== '';
+  };
+  var resultInput = function resultInput(curData, curQueryIdsData) {
+    return VALUE_BY_BRACES ? (0,convert.convertArrToValByBraces)(curData.map(function (item, i) {
+      return "".concat(item, "[").concat(curQueryIdsData[i], "]");
+    })) : curData.map(function (item, i) {
+      return "".concat(item, "[").concat(curQueryIdsData[i], "]");
+    }).join(',');
+  };
+  var resultInputPureText = function resultInputPureText(inputStr) {
+    return VALUE_BY_BRACES ? "{".concat(inputStr, "[]}") : "".concat(inputStr, "[]");
+
+    // value1: {{curLabel[curValue]}[]}
+    // value2: curLabel[curValue][]
+  };
 
   // exposes the following methods
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useImperativeHandle)(popupRef, function () {
@@ -2661,7 +2759,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     queryIds: []
   });
 
-  // destroy `parent_id` match
+  // destroy `queryId` match
   var selectedDataByClick = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
     labels: [],
     values: [],
@@ -2697,17 +2795,16 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     windowScrollUpdate = _useWindowScroll2[1];
   function popwinPosInit() {
     var showAct = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-    if (rootRef.current === null || valRef.current === null) return;
+    if (rootRef.current === null || inputRef.current === null) return;
 
     // update modal position
-    var _modalRef = document.querySelector("#cas-select-e2e__items-wrapper-".concat(idRes));
-    var _triggerRef = valRef.current;
-    var _triggerXaxisRef = rootRef.current;
+    var _modalRef = document.querySelector("#casc-select-e2e__items-wrapper-".concat(idRes));
+    var _triggerRef = inputRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
 
     if (_modalRef === null) return;
-    var _getAbsolutePositionO = (0,getElementProperty.getAbsolutePositionOfStage)(_triggerXaxisRef),
+    var _getAbsolutePositionO = (0,getElementProperty.getAbsolutePositionOfStage)(_triggerRef),
       x = _getAbsolutePositionO.x;
     var _getAbsolutePositionO2 = (0,getElementProperty.getAbsolutePositionOfStage)(_triggerRef),
       y = _getAbsolutePositionO2.y,
@@ -2773,7 +2870,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }
 
   function popwinPosHide() {
-    var _modalRef = document.querySelector("#cas-select-e2e__items-wrapper-".concat(idRes));
+    var _modalRef = document.querySelector("#casc-select-e2e__items-wrapper-".concat(idRes));
     if (_modalRef !== null) {
       // remove classnames and styles
       _modalRef.classList.remove('active');
@@ -2784,9 +2881,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     var level = arguments.length > 2 ? arguments[2] : undefined;
     if (listRef.current === null) return;
     var latestDisplayColIndex = 0;
-    var currentItemsInner = listRef.current.querySelector('.cas-select-e2e__items-inner');
+    var currentItemsInner = listRef.current.querySelector('.casc-select-e2e__items-inner');
     if (currentItemsInner !== null) {
-      var colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.cas-select-e2e__items-col'));
+      var colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-select-e2e__items-col'));
       colItemsWrapper.forEach(function (perCol) {
         perCol.classList.remove('hide-col');
       });
@@ -2825,6 +2922,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   function activate() {
     // show list
     setIsShow(true);
+
+    // update data depth
+    setCurrentDataDepth(0);
 
     // Execute the fetch task
     if (!firstDataFeched) {
@@ -3020,13 +3120,13 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }
   function handleDisplayOptions(event) {
     if (event) event.preventDefault();
-
-    //
+    if (isShow) return;
     activate();
   }
   function handleClickItem(e, resValue, index, level, curData) {
     e.preventDefault();
-    var dataDepthMax = resValue.itemDepth === fetchArray.length - 1;
+    var maxDepth = fetchArray.length - 1;
+    var dataDepthMax = resValue.itemDepth === maxDepth;
     var parentId = e.currentTarget.dataset.query;
     var emptyAction = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
@@ -3049,7 +3149,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
           cancel();
         }
       });
-      return _currentDataDepth;
+      return _currentDataDepth > maxDepth ? maxDepth : _currentDataDepth;
     });
 
     //update selected data by clicked item
@@ -3063,7 +3163,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // callback
     //////////////////////////////////////////
     if (typeof onChange === 'function') {
-      onChange(valRef.current, resValue, index, level, inputVal, cancel);
+      var curValString = valueType === 'value' ? inputVal[0] : inputVal[1];
+      var curValCallback = typeof formatInputResult === 'function' ? formatInputResult(VALUE_BY_BRACES ? (0,extract.extractContentsOfMixedCharactersWithBraces)(curValString) : (0,extract.extractContentsOfMixedCharactersWithComma)(curValString)) : curValString;
+      onChange(inputRef.current, resValue, index, level, curValCallback, cancel);
     }
 
     // update data
@@ -3080,6 +3182,11 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     // All the elements from start(array.length - start) to the end of the array will be deleted.
     newData.splice(level + 1);
 
+    // When requesting a return asynchronously, a new column is added only under the currently clicked column, 
+    // and the previous column cannot be affected.
+    // Make sure that subsequent asynchronous requests will only insert new columns towards the level+1 position.
+    listData.current = _toConsumableArray(newData);
+
     // active status
     if (resValue.children) {
       var childList = resValue.children;
@@ -3093,17 +3200,14 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     if (dataDepthMax && resValue.id.toString().indexOf('$EMPTY_ID_') < 0) {
       //
       cancel();
-
-      // update data depth
-      setCurrentDataDepth(0);
     }
 
     // active current option with DOM
     //////////////////////////////////////////
-    var currentItemsInner = e.currentTarget.closest('.cas-select-e2e__items-inner');
+    var currentItemsInner = e.currentTarget.closest('.casc-select-e2e__items-inner');
     if (currentItemsInner !== null) {
       curData.forEach(function (v, col) {
-        var colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select-e2e__items-col');
+        var colItemsWrapper = currentItemsInner.querySelectorAll('.casc-select-e2e__items-col');
         colItemsWrapper.forEach(function (perCol) {
           var _col = Number(perCol.dataset.col);
           if (_col >= level) {
@@ -3156,7 +3260,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }
   function updateValue(arr, targetVal) {
     var level = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-    var inputEl = valRef.current;
+    var inputEl = inputRef.current;
     var _valueData, _labelData, _queryIdsData;
     if (targetVal.toString().indexOf('$EMPTY_ID_') >= 0) {
       // If clearing the current column
@@ -3210,16 +3314,8 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       _labelData = selectedDataByClick.current.labels;
       _queryIdsData = selectedDataByClick.current.queryIds;
     }
-    var inputVal_0 = VALUE_BY_BRACES ? (0,convert.convertArrToValByBraces)(_valueData.map(function (item, i) {
-      return "".concat(item, "[").concat(_queryIdsData[i], "]");
-    })) : _valueData.map(function (item, i) {
-      return "".concat(item, "[").concat(_queryIdsData[i], "]");
-    }).join(',');
-    var inputVal_1 = VALUE_BY_BRACES ? (0,convert.convertArrToValByBraces)(_labelData.map(function (item, i) {
-      return "".concat(item, "[").concat(_queryIdsData[i], "]");
-    })) : _labelData.map(function (item, i) {
-      return "".concat(item, "[").concat(_queryIdsData[i], "]");
-    }).join(',');
+    var inputVal_0 = resultInput(_valueData, _queryIdsData);
+    var inputVal_1 = resultInput(_labelData, _queryIdsData);
     if (valueType === 'value') {
       if (inputEl !== null) setChangedVal(inputVal_0);
     } else {
@@ -3640,10 +3736,16 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       }));
     }
   }, [listData.current.length]);
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    return function () {
+      // update data depth
+      setCurrentDataDepth(0);
+    };
+  }, []);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: (0,cls.clsWrite)(wrapperClassName, 'cas-select-e2e__wrapper mb-3 position-relative', "cas-select-e2e__wrapper ".concat(wrapperClassName)),
+    className: (0,cls.clsWrite)(wrapperClassName, 'casc-select-e2e__wrapper mb-3 position-relative', "casc-select-e2e__wrapper ".concat(wrapperClassName)),
     ref: rootRef,
-    "data-overlay-id": "cas-select-e2e__items-wrapper-".concat(idRes)
+    "data-overlay-id": "casc-select-e2e__items-wrapper-".concat(idRes)
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
     className: "form-label",
@@ -3654,23 +3756,23 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
     htmlFor: idRes,
     className: "form-label"
   }, label)) : null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: (0,cls.clsWrite)(triggerClassName, 'cas-select-e2e__trigger d-inline w-auto', "cas-select-e2e__trigger ".concat(triggerClassName)),
+    className: (0,cls.clsWrite)(triggerClassName, 'casc-select-e2e__trigger d-inline w-auto', "casc-select-e2e__trigger ".concat(triggerClassName)),
     onClick: handleDisplayOptions
   }, triggerContent)) : null, !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,
     containerClassName: "CascadingSelectE2E"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    id: "cas-select-e2e__items-wrapper-".concat(idRes),
-    className: "cas-select-e2e__items-wrapper position-absolute border shadow small",
+    id: "casc-select-e2e__items-wrapper-".concat(idRes),
+    className: "casc-select-e2e__items-wrapper position-absolute border shadow small",
     style: {
       zIndex: DEPTH,
       display: 'none'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: "cas-select-e2e__items-inner"
+    className: "casc-select-e2e__items-inner"
   }, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cas-select-e2e__items-loader"
+    className: "casc-select-e2e__items-loader"
   }, loader || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     height: "12px",
     width: "12px",
@@ -3706,7 +3808,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       e.preventDefault();
       cancel();
     },
-    className: "cas-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"
+    className: "casc-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
@@ -3727,9 +3829,9 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: level,
         "data-col": level,
-        className: "cas-select-e2e__items-col"
+        className: "casc-select-e2e__items-col"
       }, searchable && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-        className: "cas-select-e2e__items-col-searchbox"
+        className: "casc-select-e2e__items-col-searchbox"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
         type: "text",
         placeholder: searchPlaceholder,
@@ -3755,38 +3857,100 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
       return null;
     }
   })))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cas-select-e2e__val",
+    className: (0,cls.combinedCls)('casc-select-e2e__val', {
+      'inputable': inputable
+    }),
     onClick: handleDisplayOptions
-  }, destroyParentIdMatch ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, displayResult ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cas-select-e2e__result"
-  }, displayInfo(true)) : null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, displayResult ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cas-select-e2e__result"
-  }, displayInfo(false)) : null), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
-    ref: valRef,
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: (0,cls.combinedCls)('position-relative', (0,cls.clsWrite)(controlGroupWrapperClassName, 'input-group'), {
+      'has-left-content': propExist(iconLeft),
+      'has-right-content': propExist(iconRight) || propExist(units)
+    })
+  }, propExist(iconLeft) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: (0,cls.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, iconLeft)) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "input-group-control-container flex-fill position-relative"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", _extends({
+    ref: function ref(node) {
+      inputRef.current = node;
+      if (typeof externalRef === 'function') {
+        externalRef(node);
+      } else if (externalRef) {
+        externalRef.current = node;
+      }
+    },
     id: idRes,
-    "data-overlay-id": "cas-select-e2e__items-wrapper-".concat(idRes),
+    "data-overlay-id": "casc-select-e2e__items-wrapper-".concat(idRes),
     name: name,
-    className: (0,cls.combinedCls)((0,cls.clsWrite)(controlClassName, 'form-control'), controlExClassName),
+    className: (0,cls.combinedCls)((0,cls.clsWrite)(controlClassName, 'form-control'), controlExClassName, {
+      'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
+      'rounded-start-0': propExist(iconLeft),
+      'rounded-end-0': propExist(iconRight) || propExist(units)
+    }),
     placeholder: placeholder,
-    value: destroyParentIdMatch ? valueType === 'value' ? VALUE_BY_BRACES ? (0,convert.convertArrToValByBraces)(selectedDataByClick.current.values.map(function (item, i) {
-      return "".concat(item, "[").concat(selectedDataByClick.current.queryIds[i], "]");
-    })) : selectedDataByClick.current.values.map(function (item, i) {
-      return "".concat(item, "[").concat(selectedDataByClick.current.queryIds[i], "]");
-    }).join(',') : VALUE_BY_BRACES ? (0,convert.convertArrToValByBraces)(selectedDataByClick.current.labels.map(function (item, i) {
-      return "".concat(item, "[").concat(selectedDataByClick.current.queryIds[i], "]");
-    })) : selectedDataByClick.current.labels.map(function (item, i) {
-      return "".concat(item, "[").concat(selectedDataByClick.current.queryIds[i], "]");
-    }).join(',') : changedVal // placeholder will not change if defaultValue is used
+    value: function () {
+      var curValForamt = resultInputPureText(changedVal);
+      var curValCallback = '';
+
+      // STEP 1
+      //============
+
+      if (inputable) {
+        curValCallback = curValForamt;
+      } else {
+        curValCallback = destroyParentIdMatch ? valueType === 'value' ? resultInput(selectedDataByClick.current.values, selectedDataByClick.current.queryIds) : resultInput(selectedDataByClick.current.labels, selectedDataByClick.current.queryIds) : curValForamt;
+      }
+
+      // STEP 2
+      //============
+      if (typeof formatInputResult === 'function') {
+        return formatInputResult(VALUE_BY_BRACES ? (0,extract.extractContentsOfMixedCharactersWithBraces)(curValCallback) : (0,extract.extractContentsOfMixedCharactersWithComma)(curValCallback));
+      } else {
+        return changedVal;
+      }
+    }()
+    // placeholder will not change if defaultValue is used
     ,
     onFocus: handleFocus,
     onBlur: handleBlur,
+    autoComplete: "off",
     disabled: disabled || null,
+    readOnly: readOnly || null,
     required: required || null,
+    minLength: minLength || null,
+    maxLength: maxLength || null,
     style: style,
     tabIndex: tabIndex || 0,
-    readOnly: true
-  }, attributes)), isShow ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cas-select-e2e__closemask",
+    onChange: inputable ? function (e) {
+      setChangedVal(e.target.value);
+      if (typeof onChange === 'function') {
+        onChange(e,
+        // input dom event
+        null,
+        // currentData
+        null,
+        // index
+        null,
+        // depth
+        e.target.value,
+        // value
+        cancel);
+      }
+    } : undefined
+  }, attributes)), destroyParentIdMatch ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !inputable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "casc-select-e2e__result"
+  }, displayInfo(true)) : null) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !inputable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "casc-select-e2e__result"
+  }, displayInfo(false)) : null), required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "position-absolute end-0 top-0 my-2 mx-2 pe-3"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: "text-danger"
+  }, "*"))) : ''), propExist(units) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: (0,cls.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, units)) : null, propExist(iconRight) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
+    className: (0,cls.clsWrite)(controlGroupTextClassName, 'input-group-text')
+  }, iconRight)) : null), isShow ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "casc-select-e2e__closemask",
     onClick: function onClick(e) {
       e.preventDefault();
       cancel();
@@ -3813,7 +3977,7 @@ var CascadingSelectE2E = function CascadingSelectE2E(props) {
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
     d: "M144,6525.39 L142.594,6524 L133.987,6532.261 L133.069,6531.38 L133.074,6531.385 L125.427,6524.045 L124,6525.414 C126.113,6527.443 132.014,6533.107 133.987,6535 C135.453,6533.594 134.024,6534.965 144,6525.39"
   })))))))));
-};
+});
 /* harmony default export */ const src = (CascadingSelectE2E);
 })();
 

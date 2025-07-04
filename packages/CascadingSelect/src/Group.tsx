@@ -3,6 +3,7 @@ import React from 'react';
 import { combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export type GroupFnType = (arg1: any, arg2: any, arg3: number) => void;
 
 export type GroupProps = {
@@ -39,7 +40,7 @@ export default function Group(props: GroupProps) {
                         data-value={JSON.stringify(item)} 
                         data-level={level}
                         className={combinedCls(
-                            'cas-select__opt',
+                            'casc-select__opt',
                             {
                                 'active': item.current
                             }
@@ -52,12 +53,12 @@ export default function Group(props: GroupProps) {
                 } else {
                     return columnTitle[level] === '' || perColumnHeadersShow === false ? null : <h3 
                     key={index} 
-                    className="cas-select__opt-header" 
+                    className="casc-select__opt-header" 
                     >
                         <span dangerouslySetInnerHTML={{
                         __html: columnTitle[level]
                     }}></span>
-                        <div className="cas-select__opt-header__clean">
+                        <div className="casc-select__opt-header__clean">
                             <a 
                                 tabIndex={-1} 
                                 href="#" 

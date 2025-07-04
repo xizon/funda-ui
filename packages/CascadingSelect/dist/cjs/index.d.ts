@@ -1,10 +1,12 @@
 import React from 'react';
-export declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
+export declare type CascadingSelectOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any) => void;
 export declare type CascadingSelectProps = {
     popupRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     searchable?: boolean;
     searchPlaceholder?: string;
     perColumnHeadersShow?: boolean;
@@ -13,8 +15,15 @@ export declare type CascadingSelectProps = {
     label?: React.ReactNode | string;
     name?: string;
     placeholder?: string;
+    readOnly?: any;
     disabled?: any;
     required?: any;
+    requiredLabel?: React.ReactNode | string;
+    units?: React.ReactNode | string;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
+    minLength?: any;
+    maxLength?: any;
     /** Whether to use curly braces to save result and initialize default value */
     extractValueByBraces?: boolean;
     /** Set headers for each column group */
@@ -31,8 +40,8 @@ export declare type CascadingSelectProps = {
     /** Set a loader component to show while the component waits for the next load of data.
      * e.g. `<span>Loading...</span>` or any fancy loader element */
     loader?: React.ReactNode;
-    /** Whether to show breadcrumb result */
-    displayResult?: boolean;
+    /** Whether it can be modified in the input box */
+    inputable?: boolean;
     /** Set an arrow of breadcrumb result */
     displayResultArrow?: React.ReactNode;
     /** Set an arrow of control */
@@ -58,6 +67,14 @@ export declare type CascadingSelectProps = {
     onChange?: CascadingSelectOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    /**
+     * Customize the function of formatting the value of the input input box, and the parameters are labels, values, and queryIds
+     * Returns a string as the value of the input
+     */
+    formatInputResult?: (param: Array<{
+        label: string;
+        value: string | number;
+    }>) => string;
 };
-declare const CascadingSelect: (props: CascadingSelectProps) => JSX.Element;
+declare const CascadingSelect: React.ForwardRefExoticComponent<CascadingSelectProps & React.RefAttributes<unknown>>;
 export default CascadingSelect;

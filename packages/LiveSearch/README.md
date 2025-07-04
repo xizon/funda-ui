@@ -484,7 +484,7 @@ import LiveSearch from 'funda-ui/LiveSearch';
 
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
+| `ref` | React.ForwardedRef | - | It is the return input control of this component.  | - |
 | `contentRef` | React.ForwardedRef | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.control()`</li><li>`contentRef.current.getLatestVal()`</li><li>`contentRef.current.clear(() => { console.log('callback') })`</li><li>`contentRef.current.set('test value', () => { console.log('callback') })`</li></ol> <blockquote>DO NOT USE it in the `onChange` of this component, otherwise it will cause infinite rendering</blockquote>| - |
 | `popupRef` | React.ForwardedRef | - | It exposes the following methods when the component's popup opens or closes:  <br /> <ol><li>`popupRef.current.open()`</li><li>`popupRef.current.close()`</li></ol> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |

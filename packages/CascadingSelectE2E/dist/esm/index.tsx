@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, forwardRef, useRef, useImperativeHandle } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
@@ -9,6 +9,8 @@ import {
     extractorExist,
     extractContentsOfBraces,
     extractContentsOfBrackets,
+    extractContentsOfMixedCharactersWithBraces, 
+    extractContentsOfMixedCharactersWithComma
 } from 'funda-utils/dist/cjs/extract';
 import {
     convertArrToValByBraces
@@ -26,12 +28,11 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 import Group from './Group';
 
 
 
-export type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: any, closeFunc: any) => void;
+export type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any) => void;
 
 
 export interface fetchArrayConfig {
@@ -49,6 +50,8 @@ export type CascadingSelectE2EProps = {
     wrapperClassName?: string;
     controlClassName?: string;
     controlExClassName?: string;
+    controlGroupWrapperClassName?: string;
+    controlGroupTextClassName?: string;
     searchable?: boolean;
     searchPlaceholder?: string;
     perColumnHeadersShow?: boolean;
@@ -57,11 +60,18 @@ export type CascadingSelectE2EProps = {
     label?: React.ReactNode | string;
     name?: string;
     placeholder?: string;
+    readOnly?: any;
     disabled?: any;
     required?: any;
+    requiredLabel?: React.ReactNode | string;
+    units?: React.ReactNode | string;
+    iconLeft?: React.ReactNode | string;
+    iconRight?: React.ReactNode | string;
+    minLength?: any;
+    maxLength?: any;
     /** Whether to use curly braces to save result and initialize default value */
     extractValueByBraces?: boolean;
-    /** Instead of using `parent_id` of response to match child and parent data 
+    /** Instead of using `queryId` of response to match child and parent data 
      * (very useful for multiple fetch requests with no directly related fields), 
      * this operation will directly use the click event to modify the result. */
     destroyParentIdMatch?: boolean;
@@ -79,8 +89,8 @@ export type CascadingSelectE2EProps = {
     /** Set a loader component to show while the component waits for the next load of data. 
      * e.g. `<span>Loading...</span>` or any fancy loader element */
     loader?: React.ReactNode;
-    /** Whether to show breadcrumb result */
-    displayResult?: boolean;
+    /** Whether it can be modified in the input box */
+    inputable?: boolean;
     /** Set an arrow of breadcrumb result */
     displayResultArrow?: React.ReactNode;
     /** Set an arrow of control */
@@ -104,21 +114,35 @@ export type CascadingSelectE2EProps = {
     onChange?: CascadingSelectE2EOptionChangeFnType | null;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
+    /**
+     * Customize the function of formatting the value of the input input box, and the parameters are labels, values, and queryIds
+     * Returns a string as the value of the input
+     */
+    formatInputResult?: (param: Array<{label: string, value: string | number}>) => string;
 };
 
 
-const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
+const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalRef: any) => {
     const {
         popupRef,
         wrapperClassName,
         controlClassName,
         controlExClassName,
+        controlGroupWrapperClassName,
+        controlGroupTextClassName,
         searchable = false,
         searchPlaceholder = '',
         perColumnHeadersShow = true,
         exceededSidePosOffset,
+        readOnly,
         disabled,
         required,
+        requiredLabel,
+        units,
+        iconLeft,
+        iconRight,
+        minLength,
+        maxLength,
         value,
         label,
         placeholder,
@@ -129,7 +153,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         columnTitle,
         depth,
         loader,
-        displayResult,
+        inputable = false,
         displayResultArrow,
         controlArrow,
         valueType,
@@ -145,6 +169,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         onChange,
         onBlur,
         onFocus,
+        formatInputResult,
         ...attributes
     } = props;
 
@@ -156,11 +181,26 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     const uniqueID = useComId();
     const idRes = id || uniqueID;
     const rootRef = useRef<any>(null);
-    const valRef = useRef<any>(null);
+    const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
 
     // searchable
     const [columnSearchKeywords, setColumnSearchKeywords] = useState<string[]>([]);
+
+    const propExist = (p: any) => {
+        return typeof p !== 'undefined' && p !== null && p !== '';
+    };
+
+    const resultInput = (curData: string[] | number[], curQueryIdsData: string[] | number[]) => {
+        return VALUE_BY_BRACES ? convertArrToValByBraces(curData.map((item: any, i: number) => `${item}[${curQueryIdsData[i]}]`)) : curData.map((item: any, i: number) => `${item}[${curQueryIdsData[i]}]`)!.join(',');
+    };
+
+    const resultInputPureText = (inputStr: string) => {
+        return VALUE_BY_BRACES ? `{${inputStr}[]}` : `${inputStr}[]`;
+
+        // value1: {{curLabel[curValue]}[]}
+        // value2: curLabel[curValue][]
+    };
 
 
     // exposes the following methods
@@ -210,7 +250,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         queryIds: []
     });
 
-    // destroy `parent_id` match
+    // destroy `queryId` match
     const selectedDataByClick = useRef<any>({
         labels: [],
         values: [],
@@ -251,20 +291,19 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
     function popwinPosInit(showAct: boolean = true) {
-        if (rootRef.current === null || valRef.current === null) return;
+        if (rootRef.current === null || inputRef.current === null) return;
 
 
         // update modal position
-        const _modalRef: any = document.querySelector(`#cas-select-e2e__items-wrapper-${idRes}`);
-        const _triggerRef: any = valRef.current;
-        const _triggerXaxisRef: any = rootRef.current;
+        const _modalRef: any = document.querySelector(`#casc-select-e2e__items-wrapper-${idRes}`);
+        const _triggerRef: any = inputRef.current;
 
         
         // console.log(getAbsolutePositionOfStage(_triggerRef));
 
         if (_modalRef === null) return;
 
-        const { x } = getAbsolutePositionOfStage(_triggerXaxisRef);
+        const { x } = getAbsolutePositionOfStage(_triggerRef);
         const { y, width, height } = getAbsolutePositionOfStage(_triggerRef);
         const _triggerBox = _triggerRef.getBoundingClientRect();
         let targetPos = '';
@@ -341,7 +380,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function popwinPosHide() {
 
-        const _modalRef: any = document.querySelector(`#cas-select-e2e__items-wrapper-${idRes}`);
+        const _modalRef: any = document.querySelector(`#casc-select-e2e__items-wrapper-${idRes}`);
 
         if (_modalRef !== null) {
             // remove classnames and styles
@@ -357,9 +396,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         if (listRef.current === null) return;
 
         let latestDisplayColIndex: number = 0;
-        const currentItemsInner: any = listRef.current.querySelector('.cas-select-e2e__items-inner');
+        const currentItemsInner: any = listRef.current.querySelector('.casc-select-e2e__items-inner');
         if (currentItemsInner !== null) {
-            const colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.cas-select-e2e__items-col'));
+            const colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-select-e2e__items-col'));
             colItemsWrapper.forEach((perCol: any) => {
                 perCol.classList.remove('hide-col');
             });
@@ -406,6 +445,9 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
     function activate() {
         // show list
         setIsShow(true);
+
+        // update data depth
+        setCurrentDataDepth(0);
 
         // Execute the fetch task
         if (!firstDataFeched) {
@@ -611,17 +653,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function handleDisplayOptions(event: any) {
         if (event) event.preventDefault();
-
-        //
+        if (isShow) return;
         activate();
-
     }
 
 
     function handleClickItem(e: any, resValue: any, index: number, level: number, curData: any[]) {
         e.preventDefault();
 
-        const dataDepthMax: boolean = resValue.itemDepth === fetchArray!.length - 1;
+        const maxDepth: number = fetchArray!.length - 1;
+        const dataDepthMax: boolean = resValue.itemDepth === maxDepth;
         const parentId: number = e.currentTarget.dataset.query;
         const emptyAction: boolean = resValue.id.toString().indexOf('$EMPTY_ID_') < 0 ? false : true;
 
@@ -648,7 +689,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
             });
 
-            return _currentDataDepth;
+            return _currentDataDepth > maxDepth ? maxDepth : _currentDataDepth;
 
         });
 
@@ -664,8 +705,15 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // callback
         //////////////////////////////////////////
-        if (typeof (onChange) === 'function') {
-            onChange(valRef.current, resValue, index, level, inputVal, cancel);
+        if (typeof onChange === 'function') {
+            const curValString = valueType === 'value' ? inputVal[0] : inputVal[1];
+            const curValCallback = typeof formatInputResult === 'function' ? formatInputResult(
+                VALUE_BY_BRACES
+                    ? extractContentsOfMixedCharactersWithBraces(curValString)
+                    : extractContentsOfMixedCharactersWithComma(curValString)
+            ) : curValString;
+
+            onChange(inputRef.current, resValue, index, level, curValCallback, cancel);
         }
 
 
@@ -679,6 +727,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         // All the elements from start(array.length - start) to the end of the array will be deleted.
         newData.splice(level + 1);
+
+        // When requesting a return asynchronously, a new column is added only under the currently clicked column, 
+        // and the previous column cannot be affected.
+        // Make sure that subsequent asynchronous requests will only insert new columns towards the level+1 position.
+        listData.current = [...newData];
+
 
         // active status
         if (resValue.children) {
@@ -698,16 +752,14 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             //
             cancel();
 
-            // update data depth
-            setCurrentDataDepth(0);
         }
 
         // active current option with DOM
         //////////////////////////////////////////
-        const currentItemsInner: any = e.currentTarget.closest('.cas-select-e2e__items-inner');
+        const currentItemsInner: any = e.currentTarget.closest('.casc-select-e2e__items-inner');
         if (currentItemsInner !== null) {
             curData.forEach((v: any, col: number) => {
-                const colItemsWrapper = currentItemsInner.querySelectorAll('.cas-select-e2e__items-col');
+                const colItemsWrapper = currentItemsInner.querySelectorAll('.casc-select-e2e__items-col');
                 colItemsWrapper.forEach((perCol: HTMLUListElement) => {
                     const _col = Number(perCol.dataset.col);
 
@@ -773,7 +825,7 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
     function updateValue(arr: any[], targetVal: any, level: number | boolean = false) {
 
-        const inputEl: any = valRef.current;
+        const inputEl: any = inputRef.current;
         let _valueData: any, _labelData: any, _queryIdsData: any;
 
 
@@ -836,8 +888,8 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
             _queryIdsData = selectedDataByClick.current.queryIds;
         }
 
-        const inputVal_0 = VALUE_BY_BRACES ? convertArrToValByBraces(_valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)) : _valueData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
-        const inputVal_1 = VALUE_BY_BRACES ? convertArrToValByBraces(_labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)) : _labelData.map((item: any, i: number) => `${item}[${_queryIdsData[i]}]`)!.join(',');
+        const inputVal_0 = resultInput(_valueData, _queryIdsData);
+        const inputVal_1 = resultInput(_labelData, _queryIdsData);
 
         if (valueType === 'value') {
             if (inputEl !== null) setChangedVal(inputVal_0);
@@ -1358,19 +1410,27 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
         }
     }, [listData.current.length]);
 
+    useEffect(() => {
+        return () => {
+            // update data depth
+            setCurrentDataDepth(0);
+        }
+    }, []);
+
+
 
     return (
         <>
 
             <div
-                className={clsWrite(wrapperClassName, 'cas-select-e2e__wrapper mb-3 position-relative', `cas-select-e2e__wrapper ${wrapperClassName}`)}
+                className={clsWrite(wrapperClassName, 'casc-select-e2e__wrapper mb-3 position-relative', `casc-select-e2e__wrapper ${wrapperClassName}`)}
                 ref={rootRef}
-                data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
+                data-overlay-id={`casc-select-e2e__items-wrapper-${idRes}`}
             >
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
-                    <div className={clsWrite(triggerClassName, 'cas-select-e2e__trigger d-inline w-auto', `cas-select-e2e__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={clsWrite(triggerClassName, 'casc-select-e2e__trigger d-inline w-auto', `casc-select-e2e__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
@@ -1378,16 +1438,16 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
                     <RootPortal show={true} containerClassName="CascadingSelectE2E">
                         <div
                             ref={listRef}
-                            id={`cas-select-e2e__items-wrapper-${idRes}`}
-                            className="cas-select-e2e__items-wrapper position-absolute border shadow small"
+                            id={`casc-select-e2e__items-wrapper-${idRes}`}
+                            className="casc-select-e2e__items-wrapper position-absolute border shadow small"
                             style={{ zIndex: DEPTH, display: 'none' }}
                         >
-                            <ul className="cas-select-e2e__items-inner">
-                                {loading ? <><div className="cas-select-e2e__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
+                            <ul className="casc-select-e2e__items-inner">
+                                {loading ? <><div className="casc-select-e2e__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
                                 {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
                                     e.preventDefault();
                                     cancel();
-                                }} className="cas-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+                                }} className="casc-select-e2e__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
 
@@ -1406,12 +1466,12 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
                                         return (
-                                            <li key={level} data-col={level} className="cas-select-e2e__items-col">
+                                            <li key={level} data-col={level} className="casc-select-e2e__items-col">
 
                                  
                                                 {/* SEARCH BOX */}
                                                 {searchable && (
-                                                    <div className="cas-select-e2e__items-col-searchbox">
+                                                    <div className="casc-select-e2e__items-col-searchbox">
                                                         <input
                                                             type="text"
                                                             placeholder={searchPlaceholder}
@@ -1452,45 +1512,141 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
 
 
-                <div className="cas-select-e2e__val" onClick={handleDisplayOptions}>
+                <div className={combinedCls(
+                        'casc-select-e2e__val',
+                        {
+                            'inputable': inputable,
+                        }
 
-                    {/** REVIEW RESULT */}
-                    {destroyParentIdMatch ? <>
-                        {displayResult ? <div className="cas-select-e2e__result">{displayInfo(true)}</div> : null}
-                    </> : <>
-                        {displayResult ? <div className="cas-select-e2e__result">{displayInfo(false)}</div> : null}
-                    </>}
+                    )}
+                    onClick={handleDisplayOptions}
+                >
 
-                    
-                    <input
-                        ref={valRef}
-                        id={idRes}
-                        data-overlay-id={`cas-select-e2e__items-wrapper-${idRes}`}
-                        name={name}
-                        className={combinedCls(
-                            clsWrite(controlClassName, 'form-control'),
-                            controlExClassName
-                        )}
-                        placeholder={placeholder}
-                        value={destroyParentIdMatch
-                            ?
-                            (valueType === 'value' ? (VALUE_BY_BRACES ? convertArrToValByBraces(selectedDataByClick.current.values.map((item: any, i: number) => `${item}[${selectedDataByClick.current.queryIds[i]}]`)) : selectedDataByClick.current.values.map((item: any, i: number) => `${item}[${selectedDataByClick.current.queryIds[i]}]`)!.join(',')) : (VALUE_BY_BRACES ? convertArrToValByBraces(selectedDataByClick.current.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.current.queryIds[i]}]`)) : selectedDataByClick.current.labels.map((item: any, i: number) => `${item}[${selectedDataByClick.current.queryIds[i]}]`)!.join(',')))
-                            :
-                            changedVal
-                        } // placeholder will not change if defaultValue is used
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        disabled={disabled || null}
-                        required={required || null}
-                        style={style}
-                        tabIndex={tabIndex || 0}
-                        readOnly
-                        {...attributes}
-                    />
 
+                    {/* INPIT */}
+                    <div className={combinedCls(
+                        'position-relative',
+                        clsWrite(controlGroupWrapperClassName, 'input-group'),
+                        {
+                            'has-left-content': propExist(iconLeft),
+                            'has-right-content': propExist(iconRight) || propExist(units)
+                        }
+
+                    )}>
+
+                        {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
+
+                        <div className="input-group-control-container flex-fill position-relative">
+                            <input
+                                ref={(node) => {
+                                    inputRef.current = node;
+                                    if (typeof externalRef === 'function') {
+                                        externalRef(node);
+                                    } else if (externalRef) {
+                                        externalRef.current = node;
+                                    }
+                                }}
+                                id={idRes}
+                                data-overlay-id={`casc-select-e2e__items-wrapper-${idRes}`}
+                                name={name}
+                                className={combinedCls(
+                                    clsWrite(controlClassName, 'form-control'),
+                                    controlExClassName,
+                                    {
+                                        'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
+                                        'rounded-start-0': propExist(iconLeft),
+                                        'rounded-end-0': propExist(iconRight) || propExist(units)
+                                    }
+                                )}
+
+                                placeholder={placeholder}
+                                value={(() => {
+                                    const curValForamt: string = resultInputPureText(changedVal);
+                                    let curValCallback: string = '';
+
+                                    // STEP 1
+                                    //============
+
+                                    if (inputable) {
+                                        curValCallback = curValForamt;
+                                    } else {
+                                        curValCallback = destroyParentIdMatch ? (valueType === 'value'
+                                            ? resultInput(selectedDataByClick.current.values, selectedDataByClick.current.queryIds)
+                                            : resultInput(selectedDataByClick.current.labels, selectedDataByClick.current.queryIds)
+                                        ) : curValForamt;
+                                    }
+
+
+                                    // STEP 2
+                                    //============
+                                    if (typeof formatInputResult === 'function') {
+                               
+                                        return formatInputResult(
+                                            VALUE_BY_BRACES
+                                                ? extractContentsOfMixedCharactersWithBraces(curValCallback)
+                                                : extractContentsOfMixedCharactersWithComma(curValCallback)
+                                        );
+                                        
+                                    } else {
+                                        return changedVal;
+                                    }
+
+
+                                })()
+                                }
+                                // placeholder will not change if defaultValue is used
+                                onFocus={handleFocus}
+                                onBlur={handleBlur}
+                                autoComplete="off"
+                                disabled={disabled || null}
+                                readOnly={readOnly || null}
+                                required={required || null}
+                                minLength={minLength || null}
+                                maxLength={maxLength || null}
+                                style={style}
+                                tabIndex={tabIndex || 0}
+                                onChange={inputable ? (e) => {
+                                    setChangedVal(e.target.value);
+                                    if (typeof onChange === 'function') {
+                                        onChange(
+                                            e, // input dom event
+                                            null, // currentData
+                                            null, // index
+                                            null, // depth
+                                            e.target.value, // value
+                                            cancel
+                                        );
+                                    }
+                                } : undefined}
+                                {...attributes}
+
+                            />
+
+
+
+                            {/** REVIEW RESULT */}
+                            {destroyParentIdMatch ? <>
+                                {!inputable ? <div className="casc-select-e2e__result">{displayInfo(true)}</div> : null}
+                            </> : <>
+                                {!inputable ? <div className="casc-select-e2e__result">{displayInfo(false)}</div> : null}
+                            </>}
+
+
+                            {/* Required marking */}
+                            {required ? <>{requiredLabel || requiredLabel === '' ? requiredLabel : <span className="position-absolute end-0 top-0 my-2 mx-2 pe-3"><span className="text-danger">*</span></span>}</> : ''}
+
+                        </div>
+
+
+                        {propExist(units) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{units}</span></> : null}
+                        {propExist(iconRight) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconRight}</span></> : null}
+
+                    </div>
+                    {/* /INPIT */}
+                 
 
                     {isShow ? <div
-                        className="cas-select-e2e__closemask"
+                        className="casc-select-e2e__closemask"
                         onClick={(e) => {
                             e.preventDefault();
                             cancel();
@@ -1521,6 +1677,6 @@ const CascadingSelectE2E = (props: CascadingSelectE2EProps) => {
 
         </>
     )
-};
+});
 
 export default CascadingSelectE2E;

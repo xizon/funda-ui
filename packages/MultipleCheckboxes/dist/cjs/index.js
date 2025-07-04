@@ -462,6 +462,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           return (/* binding */_extractContentsOfBrackets
           );
         },
+        /* harmony export */"extractContentsOfMixedCharactersWithBraces": function extractContentsOfMixedCharactersWithBraces() {
+          return (/* binding */_extractContentsOfMixedCharactersWithBraces
+          );
+        },
+        /* harmony export */"extractContentsOfMixedCharactersWithComma": function extractContentsOfMixedCharactersWithComma() {
+          return (/* binding */_extractContentsOfMixedCharactersWithComma
+          );
+        },
         /* harmony export */"extractContentsOfParentheses": function extractContentsOfParentheses() {
           return (/* binding */_extractContentsOfParentheses
           );
@@ -543,6 +551,69 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         } else {
           return res === null ? '' : res;
         }
+      }
+
+      /**
+       * Parses a braces-separated string of `{label[value]}` pairs into an array of objects.
+       *
+       * Example:
+       *   Input: "{Poor[c]}{Sub-option 4[c-2]}{Empty[]}"
+       *   Input: "{{Poor[c]}{Sub-option 4[c-2]}{Empty[]}[]}"
+       * 
+       *   Output: [
+       *     { label: "Poor", value: "c" },
+       *     { label: "Sub-option 4", value: "c-2" },
+       *     { label: "Empty", value: "" }
+       *   ]
+       *
+       * @param {string} str - The input string containing one or more `{label[value]}` segments.
+       * @returns {Array<{label: string, value: string}>} - An array of extracted label-value objects.
+       */
+      function _extractContentsOfMixedCharactersWithBraces(str) {
+        // Fix the extra '{' at the beginning
+        var cleaned = str.replace(/^{{/, '{');
+
+        // Remove empty {} or {[]} tail
+        var trimmed = cleaned.replace(/\{\[\]\}$/, '');
+
+        // The match is like {label[value]}
+        var pattern = /\{(.*?)\[(.*?)\]\}/g;
+        var matches = Array.from(trimmed.matchAll(pattern));
+        return matches.map(function (match) {
+          return {
+            label: match[1],
+            value: match[2]
+          };
+        });
+      }
+
+      /**
+       * Parses a comma-separated string of `label[value]` pairs into an array of objects.
+       *
+       * Example:
+       *   Input: "Poor[c],Sub-option 4[c-2],Empty[]"
+       *   Output: [
+       *     { label: "Poor", value: "c" },
+       *     { label: "Sub-option 4", value: "c-2" },
+       *     { label: "Empty", value: "" }
+       *   ]
+       *
+       * @param {string} str - A string containing label-value pairs in the format `label[value]`, separated by commas.
+       * @returns {Array<{ label: string, value: string }>} - An array of parsed objects.
+       */
+      function _extractContentsOfMixedCharactersWithComma(str) {
+        return str.split(",").map(function (item) {
+          return item.trim();
+        }).map(function (item) {
+          var match = item.match(/^(.*?)\[(.*?)\]$/);
+          if (match) {
+            return {
+              label: match[1],
+              value: match[2]
+            };
+          }
+          return null;
+        }).filter(Boolean);
       }
 
       /******/
