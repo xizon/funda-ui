@@ -2087,6 +2087,8 @@ function useTableSort(_ref, deps) {
     data = _ref.data,
     spyElement = _ref.spyElement,
     fieldType = _ref.fieldType,
+    _ref$isReverse = _ref.isReverse,
+    isReverse = _ref$isReverse === void 0 ? false : _ref$isReverse,
     onColSort = _ref.onColSort,
     onClick = _ref.onClick;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -2125,7 +2127,17 @@ function useTableSort(_ref, deps) {
         node.classList.add('newsort');
       });
       setInverse(!inverse);
-      return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
+
+      // result
+      if (filterType == 'text') {
+        return isReverse ? txt1.localeCompare(txt2, 'zh-CN', {
+          sensitivity: 'base'
+        }) : txt2.localeCompare(txt1, 'zh-CN', {
+          sensitivity: 'base'
+        });
+      } else {
+        return isReverse ? txt1 < txt2 ? -1 : txt1 > txt2 ? 1 : 0 : txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
+      }
     };
     targetComparator.sort(sortBy);
 
@@ -2177,6 +2189,8 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
   var fieldType = props.fieldType,
     className = props.className,
     icon = props.icon,
+    _props$isReverse = props.isReverse,
+    isReverse = _props$isReverse === void 0 ? false : _props$isReverse,
     onClick = props.onClick;
   var _useContext = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useContext)(TableContext),
     originData = _useContext.originData,
@@ -2191,6 +2205,7 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
       spyElement: rootRef.current,
       fieldType: fieldType,
       onColSort: onColSort,
+      isReverse: isReverse,
       onClick: onClick
     }, [rootRef]),
     handleSortList = _useTableSort.handleSortList;

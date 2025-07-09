@@ -7,6 +7,7 @@ export type SortSpriteProps = {
     fieldType: 'text' | 'number' | 'date';
     className?: string;
     icon?: React.ReactNode;
+    isReverse?: boolean;
     onClick?: (e: any) => void;
 };
 
@@ -16,6 +17,7 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
         fieldType,
         className,
         icon,
+        isReverse = false,
         onClick
     } = props;
 
@@ -34,6 +36,7 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
         spyElement: rootRef.current,
         fieldType: fieldType,
         onColSort: onColSort,
+        isReverse: isReverse,
         onClick: onClick
     }, [rootRef]);
 

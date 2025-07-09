@@ -30,6 +30,7 @@ export interface UseTableSortProps {
     data?: any[];
     spyElement?: any;
     fieldType: 'text' | 'number' | 'date';
+    isReverse?: boolean;
     onColSort?: (fetchData: any) => void;
     onClick?: (e: any) => void;
 }
@@ -39,6 +40,7 @@ function useTableSort({
     data,
     spyElement,
     fieldType,
+    isReverse = false,
     onColSort,
     onClick
 }: UseTableSortProps, deps: any[]) {
@@ -79,14 +81,27 @@ function useTableSort({
                 txt2 = new Date(txt2);
             }
 
+
             //add filter class
             allRows(spyElement).forEach((node: any) => {
                 node.classList.add('newsort');
             });
 
+            
             setInverse(!inverse);
 
-            return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
+
+            // result
+            if (filterType == 'text') {
+                return isReverse
+                    ? txt1.localeCompare(txt2, 'zh-CN', { sensitivity: 'base' })
+                    : txt2.localeCompare(txt1, 'zh-CN', { sensitivity: 'base' });
+            } else {
+                return isReverse
+                    ? (txt1 < txt2 ? -1 : txt1 > txt2 ? 1 : 0)
+                    : (txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0);
+            }
+            
         }
 
         targetComparator.sort(sortBy);

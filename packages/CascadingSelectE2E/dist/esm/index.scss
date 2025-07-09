@@ -239,7 +239,8 @@
     .casc-select-e2e__items-col-searchbox {
         input {
             border: 1px solid var(--casc-select-e2e-searchbox-border-color);
-            border-radius: 0.35rem;
+            border-radius: 0.15rem;
+            width: 100%;
             background: transparent;
             font-size: 0.75rem;
         }

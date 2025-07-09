@@ -2310,4 +2310,5 @@ import { SortSprite } from 'funda-ui/Table';
 | `ref` | React.ForwardedRef | - | It is the return element of this component.  | - |
 | `className` | string | `sort-trigger` | The class name of the filter input control. | - |
 | `fieldType` | `text` \| `number` \| `date` | `text` | The type of field that is sorted, which ensures the accuracy of sorting. | ✅ |
+| `isReverse` | boolean | false | Whether the order is reversed | - |
 | `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 18 18"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path></g></svg>` | Specify an icon | - |
