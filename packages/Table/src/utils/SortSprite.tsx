@@ -9,6 +9,7 @@ export type SortSpriteProps = {
     icon?: React.ReactNode;
     isReverse?: boolean;
     onClick?: (e: any) => void;
+    sortBy?: (handleProcess: Function, filterType: string, inverse: boolean) => ((a: Element, b: Element) => number); // A function that determines the order of the elements. 
 };
 
 
@@ -18,7 +19,8 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
         className,
         icon,
         isReverse = false,
-        onClick
+        onClick,
+        sortBy
     } = props;
 
     const {
@@ -37,7 +39,8 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
         fieldType: fieldType,
         onColSort: onColSort,
         isReverse: isReverse,
-        onClick: onClick
+        onClick: onClick,
+        sortBy: sortBy
     }, [rootRef]);
 
 

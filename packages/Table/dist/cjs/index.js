@@ -2069,7 +2069,28 @@ const App = () => {
 
     useTableSort({
         enabled: sortableTable && rootRef.current,
-        spyElement: rootRef.current
+        spyElement: rootRef.current,
+        sortBy: (handleProcess: Function, filterType: string, inverse: boolean) => (a: Element, b: Element) => {
+        
+            // Custom comparison logic
+            let v1 = a.textContent, v2 = b.textContent;
+            if (filterType === 'number') {
+                v1 = parseFloat(v1);
+                v2 = parseFloat(v2);
+            }
+        
+            let result = 0;
+            if (filterType === 'text') {
+                result = v1.localeCompare(v2);
+            } else {
+                result = v1 - v2;
+            }
+        
+            // Apply display animation and status updates
+            handleProcess();
+        
+            return inverse ? -result : result;
+        }
     }, [rootRef]);
 
     return (
@@ -2090,7 +2111,8 @@ function useTableSort(_ref, deps) {
     _ref$isReverse = _ref.isReverse,
     isReverse = _ref$isReverse === void 0 ? false : _ref$isReverse,
     onColSort = _ref.onColSort,
-    onClick = _ref.onClick;
+    onClick = _ref.onClick,
+    sortBy = _ref.sortBy;
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState2 = useTableSort_slicedToArray(_useState, 2),
     inverse = _useState2[0],
@@ -2104,16 +2126,22 @@ function useTableSort(_ref, deps) {
     var filterType = fieldType || 'text';
     var curIndex = el.dataset.tableCol;
     var targetComparator = [].slice.call(tbodyRef.querySelectorAll("[data-table-col=\"".concat(curIndex, "\"]")));
+    var handleProcess = function handleProcess() {
+      allRows(spyElement).forEach(function (node) {
+        node.classList.add('newsort');
+      });
+      setInverse(!inverse);
+    };
 
-    //sort of HTML elements
-    var sortBy = function sortBy(a, b) {
+    // 
+    var defaultSortBy = function defaultSortBy(a, b) {
       var txt1 = a.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase(),
         txt2 = b.innerHTML.replace(/(<([^>]+)>)/ig, '').toLowerCase();
 
       //type of number
       if (filterType == 'number') {
-        txt1 = Number(txt1.replace(/[^0-9.-]+/g, ''));
-        txt2 = Number(txt2.replace(/[^0-9.-]+/g, ''));
+        txt1 = parseFloat(txt1.replace(/[^0-9.+-]+/g, ''));
+        txt2 = parseFloat(txt2.replace(/[^0-9.+-]+/g, ''));
       }
 
       //type of date
@@ -2123,10 +2151,7 @@ function useTableSort(_ref, deps) {
       }
 
       //add filter class
-      allRows(spyElement).forEach(function (node) {
-        node.classList.add('newsort');
-      });
-      setInverse(!inverse);
+      handleProcess();
 
       // result
       if (filterType == 'text') {
@@ -2139,7 +2164,10 @@ function useTableSort(_ref, deps) {
         return isReverse ? txt1 < txt2 ? -1 : txt1 > txt2 ? 1 : 0 : txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
       }
     };
-    targetComparator.sort(sortBy);
+
+    // Use a custom sort method if available, otherwise default is used
+    var sortFn = typeof sortBy === 'function' ? sortBy(handleProcess, filterType, inverse) : defaultSortBy;
+    targetComparator.sort(sortFn);
 
     //console.log( 'targetComparator:', targetComparator );
     //console.log( 'inverse:', inverse );
@@ -2191,7 +2219,8 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
     icon = props.icon,
     _props$isReverse = props.isReverse,
     isReverse = _props$isReverse === void 0 ? false : _props$isReverse,
-    onClick = props.onClick;
+    onClick = props.onClick,
+    sortBy = props.sortBy;
   var _useContext = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useContext)(TableContext),
     originData = _useContext.originData,
     rootRef = _useContext.rootRef,
@@ -2206,7 +2235,8 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
       fieldType: fieldType,
       onColSort: onColSort,
       isReverse: isReverse,
-      onClick: onClick
+      onClick: onClick,
+      sortBy: sortBy
     }, [rootRef]),
     handleSortList = _useTableSort.handleSortList;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, colSortable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {

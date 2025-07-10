@@ -1402,6 +1402,30 @@ export default () => {
 
 It is valid when `colSortable` exists. You can set more properties, such as: `onColSort`.
 
+`sortBy` allows you to sort with multiple column combinations. such as:
+```js
+sortBy: (handleProcess: Function, filterType: string, inverse: boolean) => (a: Element, b: Element) => {
+
+    // Custom comparison logic
+    let v1 = a.textContent, v2 = b.textContent;
+    if (filterType === 'number') {
+        v1 = parseFloat(v1);
+        v2 = parseFloat(v2);
+    }
+
+    let result = 0;
+    if (filterType === 'text') {
+        result = v1.localeCompare(v2);
+    } else {
+        result = v1 - v2;
+    }
+
+    // Apply display animation and status updates
+    handleProcess();
+
+    return inverse ? -result : result;
+}
+```
 
 ```js
 import React from "react";
@@ -1421,11 +1445,15 @@ import 'funda-ui/Table/index.css';
 
 const tableData = [
     {money: "$55.134", name: "David Lin", no: "3453434", date1: "2012-09-25T12:10:46+00:00", date2: "May 22, 2003"},
+    {money: "$-24.0", name: "Foristin", no: "+6.6", date1: "2011-02-26T12:10:46+00:00", date2: "July 22, 2016"},
     {money: "$255.12", name: "Co Cheey", no: "-2324.343", date1: "2013-09-10T12:10:46+00:00", date2: "September 13, 2013"},
     {money: "$21.134", name: "Foristin", no: "-34789.34", date1: "2018-09-24T12:10:46+00:00", date2: "January 2, 2019"},
     {money: "$3454.134", name: "Alice", no: "+224.5", date1: "2011-09-21T12:10:46+00:00", date2: "December 1, 2018"},
     {money: "$224.0", name: "Wooli", no: "+33.6", date1: "2011-02-26T12:10:46+00:00", date2: "July 22, 2017"},
+    {money: "$11.134", name: "Foristin", no: "-1789.34", date1: "2018-09-24T12:10:46+00:00", date2: "January 2, 2024"},
     {money: "$356.2", name: "Spiter Low", no: "278.23487", date1: "2019-01-01T12:10:46+00:00", date2: "July 28, 2017"},
+    {money: "$154.134", name: "Foristin", no: "+524.5", date1: "2011-09-21T12:10:46+00:00", date2: "December 1, 2011"},
+    {money: "$256.2", name: "Foristin", no: "178.23487", date1: "2019-01-01T12:10:46+00:00", date2: "July 28, 2014"},
 ];
 
 export default () => {
@@ -1447,7 +1475,36 @@ export default () => {
                         <TableRow>
                             <TableCell scope="col" nowrap>#</TableCell>
                             <TableCell scope="col" nowrap>Money <SortSprite fieldType="number" /></TableCell>
-                            <TableCell scope="col" nowrap>Name <SortSprite fieldType="text" /></TableCell>
+                            <TableCell scope="col" nowrap>Name 
+                                <SortSprite 
+                                    fieldType="text" 
+                                    isReverse 
+                                    sortBy={(handleProcess: Function, filterType: string, inverse: boolean) => {
+                                        // Sort by "Name" in regular order first, and then by "No." in the Name group
+                                        return (a: Element, b: Element) => {
+                                            const trA: any = a.closest('tr');
+                                            const trB: any = b.closest('tr');
+
+                                            const getText = (tr: Element, col: number) => {
+                                                return tr.querySelector(`[data-table-col="${col}"]`)?.textContent?.trim().toLowerCase() || "";
+                                            };
+
+                                            const nameA = getText(trA, 2);
+                                            const nameB = getText(trB, 2);
+                                            const noA = parseFloat(getText(trA, 3).replace(/[^0-9.+-]/g, ""));
+                                            const noB = parseFloat(getText(trB, 3).replace(/[^0-9.+-]/g, ""));
+
+                                            const nameCompare = nameA.localeCompare(nameB, "zh-CN", { sensitivity: "base" });
+                                            if (nameCompare !== 0) return nameCompare;
+
+                                            // Apply display animation and status updates
+                                            handleProcess();
+
+                                            return inverse ? noB - noA : noA - noB;
+                                        }
+                                    }}
+                                />
+                            </TableCell>
                             <TableCell scope="col" nowrap>No. <SortSprite fieldType="number" /></TableCell>
                             <TableCell scope="col" nowrap>Date1 <SortSprite fieldType="date" /></TableCell>
                             <TableCell scope="col" nowrap>Date2 <SortSprite fieldType="date" /></TableCell>
@@ -2312,3 +2369,10 @@ import { SortSprite } from 'funda-ui/Table';
 | `fieldType` | `text` \| `number` \| `date` | `text` | The type of field that is sorted, which ensures the accuracy of sorting. | ✅ |
 | `isReverse` | boolean | false | Whether the order is reversed | - |
 | `icon` | ReactNode  | `<svg width="1em" height="1em" viewBox="0 0 18 18"><g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"><path d="M9.5,3 L13,8 L6,8 L9.5,3 L9.5,3 Z M6,11 L13,11 L9.5,16 L6,11 L6,11 Z" id="path" fill="#000000"></path></g></svg>` | Specify an icon | - |
+| `sortBy` | (handleProcess: Function, filterType: string, inverse: boolean) => (a: Element, b: Element) => number  | - | Custom sort function generator. <br />This function receives three arguments: <ol><li>`handleProcess`: a callback to trigger sort animation and internal state updates (call this inside your comparator if you want animation/effects).</li><li>`filterType`: the column type, e.g., **text** \| **number** \| **date**.</li><li>`inverse`: a boolean indicating whether the current sort order is reversed.</li></ol> It should return a comparator function compatible with [Array.prototype.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#comparefn), i.e., <code>(a, b) =&gt; number</code>. <br />If not provided, a default sort logic is used.| - |
+
+
+
+
+
+
