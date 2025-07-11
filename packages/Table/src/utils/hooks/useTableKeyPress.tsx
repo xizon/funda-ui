@@ -104,6 +104,7 @@ const useTableKeyPress = ({
    
     const handleKeyPressed = useCallback( async (event: KeyboardEvent<HTMLTableCellElement>) => {
         const key = event.code;
+        const isNumLockOn = event.getModifierState && event.getModifierState('NumLock');
 
    
         // If Enter is pressed and keyboard navigation is disabled, just trigger onCellPressEnter
@@ -139,49 +140,46 @@ const useTableKeyPress = ({
                     maxCol = rowInfo.colCount;
                 }
             }
-            switch (key) {
-                case 'ArrowLeft':
-                case 'Numpad4':
-                    if (_col - 1 < 0) {
-                        isLeftEdge = true;
-                        _col = 0;
-                    } else {
-                        _col = _col - 1;
-                    }
-                    break;
-                case 'ArrowRight':
-                case 'Numpad6': {
-                    if (_col + 1 > maxCol - 1) {
-                        isRightEdge = true;
-                        _col = maxCol - 1;
-                    } else {
-                        _col = _col + 1;
-                    }
-                    break;
-                }
-                case 'ArrowUp':
-                case 'Numpad8':
-                    if (_row - 1 < 0) {
-                        isTopEdge = true;
-                        _row = 0;
-                    } else {
-                        _row = _row - 1;
-                    }
-                    break;
-                case 'ArrowDown':
-                case 'Numpad2':
 
-     
-                    if (_row + 1 > rootDataInfo.totalRow - 1) {
-                        isBottomEdge = true;
-                        _row = rootDataInfo.totalRow - 1;
-                    } else {
-                        _row = _row + 1;
-                    }
-                    break;
+            
+            // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+            if ((key === 'ArrowLeft') || (key === 'Numpad4' && !isNumLockOn)) {
+                if (_col - 1 < 0) {
+                    isLeftEdge = true;
+                    _col = 0;
+                } else {
+                    _col = _col - 1;
+                }
             }
 
-             
+            if ((key === 'ArrowRight') || (key === 'Numpad6' && !isNumLockOn)) {
+                if (_col + 1 > maxCol - 1) {
+                    isRightEdge = true;
+                    _col = maxCol - 1;
+                } else {
+                    _col = _col + 1;
+                }
+            }
+
+            if ((key === 'ArrowUp') || (key === 'Numpad8' && !isNumLockOn)) {
+                if (_row - 1 < 0) {
+                    isTopEdge = true;
+                    _row = 0;
+                } else {
+                    _row = _row - 1;
+                }
+            }
+
+            if ((key === 'ArrowDown') || (key === 'Numpad2' && !isNumLockOn)) {
+                if (_row + 1 > rootDataInfo.totalRow - 1) {
+                    isBottomEdge = true;
+                    _row = rootDataInfo.totalRow - 1;
+                } else {
+                    _row = _row + 1;
+                }
+            }
+
+            
 
             const nextCellSignal: string = cellMark(_row, _col);
             // Focus the current cell
@@ -209,19 +207,20 @@ const useTableKeyPress = ({
         };
       
         // Handle arrow key navigation
-        if (key === 'ArrowLeft' || key === 'Numpad4') {
+        // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+        if ((key === 'ArrowLeft') || (key === 'Numpad4' && !isNumLockOn)) {
             move('ArrowLeft');
         }
 
-        if (key === 'ArrowRight' || key === 'Numpad6') {
+        if ((key === 'ArrowRight') || (key === 'Numpad6' && !isNumLockOn)) {
             move('ArrowRight');
         }
 
-        if (key === 'ArrowUp' || key === 'Numpad8') {
+        if ((key === 'ArrowUp') || (key === 'Numpad8' && !isNumLockOn)) {
             move('ArrowUp');
         }
 
-        if (key === 'ArrowDown' || key === 'Numpad2') {
+        if ((key === 'ArrowDown') || (key === 'Numpad2' && !isNumLockOn)) {
             move('ArrowDown');
         }
 

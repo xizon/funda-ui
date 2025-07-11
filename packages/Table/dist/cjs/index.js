@@ -1131,13 +1131,14 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
   var handleKeyPressed = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
       var _focusableCellIdRef$c;
-      var key, currentCell, row, col, nextCellSignal, oldCellSignal, _row, _col, move, _nextCellSignal;
+      var key, isNumLockOn, currentCell, row, col, nextCellSignal, oldCellSignal, _row, _col, move, _nextCellSignal;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            key = event.code; // If Enter is pressed and keyboard navigation is disabled, just trigger onCellPressEnter
+            key = event.code;
+            isNumLockOn = event.getModifierState && event.getModifierState('NumLock'); // If Enter is pressed and keyboard navigation is disabled, just trigger onCellPressEnter
             if (!((key === 'Enter' || key === 'NumpadEnter') && !enabled)) {
-              _context.next = 8;
+              _context.next = 9;
               break;
             }
             currentCell = event.target;
@@ -1146,13 +1147,13 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
             nextCellSignal = cellMark(row, col);
             onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(nextCellSignal, refNode.current.get(nextCellSignal), event);
             return _context.abrupt("return");
-          case 8:
+          case 9:
             if (!(!Array.isArray(data) || rootDataInfo === null || spyElement === null || typeof enabled === 'undefined' || enabled === false)) {
-              _context.next = 10;
+              _context.next = 11;
               break;
             }
             return _context.abrupt("return");
-          case 10:
+          case 11:
             // Parse the current focused cell's row and column
             oldCellSignal = (_focusableCellIdRef$c = focusableCellIdRef.current) === null || _focusableCellIdRef$c === void 0 ? void 0 : _focusableCellIdRef$c.replace('cell-', '').split('-');
             _row = Number(oldCellSignal[0]);
@@ -1171,45 +1172,39 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
                   maxCol = rowInfo.colCount;
                 }
               }
-              switch (key) {
-                case 'ArrowLeft':
-                case 'Numpad4':
-                  if (_col - 1 < 0) {
-                    isLeftEdge = true;
-                    _col = 0;
-                  } else {
-                    _col = _col - 1;
-                  }
-                  break;
-                case 'ArrowRight':
-                case 'Numpad6':
-                  {
-                    if (_col + 1 > maxCol - 1) {
-                      isRightEdge = true;
-                      _col = maxCol - 1;
-                    } else {
-                      _col = _col + 1;
-                    }
-                    break;
-                  }
-                case 'ArrowUp':
-                case 'Numpad8':
-                  if (_row - 1 < 0) {
-                    isTopEdge = true;
-                    _row = 0;
-                  } else {
-                    _row = _row - 1;
-                  }
-                  break;
-                case 'ArrowDown':
-                case 'Numpad2':
-                  if (_row + 1 > rootDataInfo.totalRow - 1) {
-                    isBottomEdge = true;
-                    _row = rootDataInfo.totalRow - 1;
-                  } else {
-                    _row = _row + 1;
-                  }
-                  break;
+
+              // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+              if (key === 'ArrowLeft' || key === 'Numpad4' && !isNumLockOn) {
+                if (_col - 1 < 0) {
+                  isLeftEdge = true;
+                  _col = 0;
+                } else {
+                  _col = _col - 1;
+                }
+              }
+              if (key === 'ArrowRight' || key === 'Numpad6' && !isNumLockOn) {
+                if (_col + 1 > maxCol - 1) {
+                  isRightEdge = true;
+                  _col = maxCol - 1;
+                } else {
+                  _col = _col + 1;
+                }
+              }
+              if (key === 'ArrowUp' || key === 'Numpad8' && !isNumLockOn) {
+                if (_row - 1 < 0) {
+                  isTopEdge = true;
+                  _row = 0;
+                } else {
+                  _row = _row - 1;
+                }
+              }
+              if (key === 'ArrowDown' || key === 'Numpad2' && !isNumLockOn) {
+                if (_row + 1 > rootDataInfo.totalRow - 1) {
+                  isBottomEdge = true;
+                  _row = rootDataInfo.totalRow - 1;
+                } else {
+                  _row = _row + 1;
+                }
               }
               var nextCellSignal = cellMark(_row, _col);
               // Focus the current cell
@@ -1223,16 +1218,17 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
               onCellKeyPressed === null || onCellKeyPressed === void 0 ? void 0 : onCellKeyPressed(nextCellSignal, refNode.current.get(nextCellSignal), event, isLeftEdge, isRightEdge, isTopEdge, isBottomEdge);
               onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event);
             }; // Handle arrow key navigation
-            if (key === 'ArrowLeft' || key === 'Numpad4') {
+            // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+            if (key === 'ArrowLeft' || key === 'Numpad4' && !isNumLockOn) {
               move('ArrowLeft');
             }
-            if (key === 'ArrowRight' || key === 'Numpad6') {
+            if (key === 'ArrowRight' || key === 'Numpad6' && !isNumLockOn) {
               move('ArrowRight');
             }
-            if (key === 'ArrowUp' || key === 'Numpad8') {
+            if (key === 'ArrowUp' || key === 'Numpad8' && !isNumLockOn) {
               move('ArrowUp');
             }
-            if (key === 'ArrowDown' || key === 'Numpad2') {
+            if (key === 'ArrowDown' || key === 'Numpad2' && !isNumLockOn) {
               move('ArrowDown');
             }
 
@@ -1241,7 +1237,7 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
               _nextCellSignal = cellMark(_row, _col);
               onCellPressEnter === null || onCellPressEnter === void 0 ? void 0 : onCellPressEnter(_nextCellSignal, refNode.current.get(_nextCellSignal), event);
             }
-          case 19:
+          case 20:
           case "end":
             return _context.stop();
         }

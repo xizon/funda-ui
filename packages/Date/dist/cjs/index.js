@@ -5471,14 +5471,16 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   }
   function _handleKeyPressedForSplitInputs() {
     _handleKeyPressedForSplitInputs = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(event) {
-      var key, btnMark, isLeftArrow, isRightArrow, move;
+      var key, btnMark, isNumLockOn, isLeftArrow, isRightArrow, move;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             key = event.code;
-            btnMark = event.target.dataset.mark; // Check for both regular arrow keys and numpad arrow keys
-            isLeftArrow = key === 'ArrowLeft' || key === 'Numpad4';
-            isRightArrow = key === 'ArrowRight' || key === 'Numpad6';
+            btnMark = event.target.dataset.mark;
+            isNumLockOn = event.getModifierState && event.getModifierState('NumLock'); // Check for both regular arrow keys and numpad arrow keys
+            // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+            isLeftArrow = key === 'ArrowLeft' || key === 'Numpad4' && !isNumLockOn;
+            isRightArrow = key === 'ArrowRight' || key === 'Numpad6' && !isNumLockOn;
             move = function move(direction) {
               var currentIndex = splitInputsIds.findIndex(function (s) {
                 return s === btnMark;
@@ -5499,7 +5501,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
             if (isRightArrow) {
               move('right');
             }
-          case 7:
+          case 8:
           case "end":
             return _context2.stop();
         }

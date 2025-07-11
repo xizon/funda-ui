@@ -679,10 +679,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
     async function handleKeyPressedForSplitInputs(event: KeyboardEvent<HTMLDivElement>) {
         const key = event.code;
         const btnMark = (event.target as any).dataset.mark;
+        const isNumLockOn = event.getModifierState && event.getModifierState('NumLock');
         
         // Check for both regular arrow keys and numpad arrow keys
-        const isLeftArrow = key === 'ArrowLeft' || key === 'Numpad4';
-        const isRightArrow = key === 'ArrowRight' || key === 'Numpad6';
+        // Numpad2/4/6/8 trigger direction is allowed only when NumLock is off
+        const isLeftArrow = key === 'ArrowLeft' || (key === 'Numpad4' && !isNumLockOn);
+        const isRightArrow = key === 'ArrowRight' || (key === 'Numpad6' && !isNumLockOn);
         
         const move = (direction: 'left' | 'right') => {
             const currentIndex = splitInputsIds.findIndex((s: string) => s === btnMark);
