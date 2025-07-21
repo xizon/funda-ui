@@ -269,8 +269,14 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const keyboardSelectedItem = useRef<any>(null);
 
 
+    // loading
+    const [fetchLoading, setFetchLoading] = useState(false);
+    const loadingOutput = <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></>;
+
+
     // return a array of options
     let staticOptionsData: OptionConfig[] = optionsRes;
+    const hasDefaultOptions = staticOptionsData.length > 0;
 
     //
     const [orginalData, setOrginalData] = useState<OptionConfig[]>(staticOptionsData);
@@ -481,6 +487,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     //performance
     const handleChangeFetchSafe = useDebounce((val: any) => {
 
+        setFetchLoading(true);
+
         if (fetchUpdate) {
 
             // update filter status
@@ -495,6 +503,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     popwinPosInit();
                     popwinFilterItems(val);
                 }, 0);
+
+                setFetchLoading(false);
             });
         } else {
    
@@ -504,12 +514,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                 popwinFilterItems(val);
             }, 0);
 
+            setFetchLoading(false);
+
         }
 
 
     }, 350, [optionsData]);
-
-
 
     async function fetchData(params: any, valueToInputDefault: any, inputDefault: any, init: boolean = true) {
 
@@ -1152,12 +1162,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         setIsOpen(false);
         if (!MULTI_SEL_VALID) popwinPosHide();
 
-
         if (MANUAL_REQ) {
-            // clear data
-            setOptionsData([]);
+            // restore to static data
+            setOptionsData(staticOptionsData);
         } else {
-            // restore data
             setOptionsData(orginalData);
         }
 
@@ -1220,10 +1228,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         }
 
-
         if (MANUAL_REQ) {
-            // clear data
-            setOptionsData([]);
+            // display static data
+            setOptionsData(staticOptionsData);
         } else {
             // restore data
             setOptionsData(orginalData);
@@ -1237,7 +1244,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
         // Every time the input changes or the search button is clicked, a data request will be triggered
-        if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null)) {
+        // !!! If the default data is empty, the pop-up window is not displayed
+        if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null) && !hasDefaultOptions) {
             setTimeout(() => {
                 popwinPosHide();
             }, 0);
@@ -1715,7 +1723,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         setControlTempValue(null);
 
         // update filter status
-        setFilterItemsHasNoMatchData(false); 
+        setFilterItemsHasNoMatchData(false);
 
     }
 
@@ -1787,8 +1795,8 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     }
 
-
     async function handleFetch(inputVal: any = null) {
+        setFetchLoading(true); 
 
         // data init
         const searchStr: string = typeof inputVal === 'string' ? inputVal : (controlTempValue || controlTempValue === '' ? controlTempValue : '');
@@ -1798,6 +1806,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         const res = await fetchData((_params).join(','), '', '', false);
 
+        setFetchLoading(false);
 
         return res;
     }
@@ -2801,161 +2810,169 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     {/* /CLEAR BUTTON (Only Single selection) */}
 
 
-                                    {/* NO MATCH & LOADER */}
-                                    <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide" disabled>
-                                        {
-                                            // (1) Handling async data with the click event
-                                            (!FIRST_REQUEST_AUTO && !handleFirstFetchCompleted) ||
-
-                                            // (2) Every time the input changes or the search button is clicked, a data request will be triggered
-                                            (fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '')
-                                        ? <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : <>{fetchNoneInfo}</>}
-                                    </button>
-                                    {/* /NO MATCH & LOADER */}
-
-
 
                                     {/* OPTIONS LIST */}
-                                    {optionsData ? optionsData.map((item, index) => {
-                                        const startItemBorder = index === 0 ? 'border-top-0' : '';
-                                        const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
+                                    {fetchLoading && MANUAL_REQ && hasDefaultOptions ? (
+                                        // only loading
+                                        <><button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch" disabled>{loadingOutput}</button></>
+                                    ) : (
+                                        <>
+
+                                            {/* NO MATCH & LOADER */}
+                                            <button tabIndex={-1} type="button" className="list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide" disabled>
+                                                {
+                                                    // (1) Handling async data with the click event
+                                                    (!FIRST_REQUEST_AUTO && !handleFirstFetchCompleted) ||
+
+                                                    // (2) Every time the input changes or the search button is clicked, a data request will be triggered
+                                                    (fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '')
+                                                ? <>{loadingOutput}</> : <>{fetchNoneInfo}</>}
+                                            </button>
+                                            {/* /NO MATCH & LOADER */}
 
 
-                                        // disable selected options (only single selection)
-                                        let disabledCurrentOption: boolean = false;
-                                        if (
-                                            (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '') &&
-                                            (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
-                                        ) {
+                                            {optionsData ? optionsData.map((item, index) => {
+                                                const startItemBorder = index === 0 ? 'border-top-0' : '';
+                                                const endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 
-                                            if (!MULTI_SEL_VALID) {
-                                                const _defaultValue = controlValue.toString();
-                                                let filterRes: any = [];
-                                                const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
-                                                const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);
 
-                                                if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
-                                                    filterRes = filterResQueryValue;
-                                                    if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                                                // disable selected options (only single selection)
+                                                let disabledCurrentOption: boolean = false;
+                                                if (
+                                                    (typeof controlValue !== 'undefined' && controlValue !== null && controlValue !== '') &&
+                                                    (typeof item.value !== 'undefined' && item.value !== null && item.value !== '')
+                                                ) {
+
+                                                    if (!MULTI_SEL_VALID) {
+                                                        const _defaultValue = controlValue.toString();
+                                                        let filterRes: any = [];
+                                                        const filterResQueryValue = optionsData.filter((item: any) => item.value == _defaultValue);
+                                                        const filterResQueryLabel = optionsData.filter((item: any) => item.label == _defaultValue);
+
+                                                        if (filterResQueryValue.length === 0 && filterResQueryLabel.length > 0) {
+                                                            filterRes = filterResQueryValue;
+                                                            if (filterResQueryValue.length === 0) filterRes = filterResQueryLabel;
+                                                        }
+
+                                                        const _targetValue = filterRes.length > 0 ? filterRes[0].value : _defaultValue;
+                                                        const _realValue = item.value.toString();
+
+                                                        if (_realValue === _targetValue && _targetValue !== '') {
+                                                            disabledCurrentOption = true;
+                                                        }
+                                                    }
+
                                                 }
 
-                                                const _targetValue = filterRes.length > 0 ? filterRes[0].value : _defaultValue;
-                                                const _realValue = item.value.toString();
 
-                                                if (_realValue === _targetValue && _targetValue !== '') {
-                                                    disabledCurrentOption = true;
+
+                                                if (!MULTI_SEL_VALID) {
+
+                                                    // ++++++++++++++++++++
+                                                    // Single selection
+                                                    // ++++++++++++++++++++
+                                                    return <button
+                                                        tabIndex={-1}
+                                                        type="button"
+                                                        data-index={index}
+                                                        key={index}
+                                                        className={combinedCls(
+                                                            'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
+                                                            startItemBorder,
+                                                            endItemBorder,
+                                                            {
+                                                                'disabled': item.disabled,
+                                                                'active disabled': disabledCurrentOption,
+                                                                'custom-select-grouptitle': item.group
+                                                            }
+
+                                                        )}
+                                                        data-value={`${item.value}`}
+                                                        data-label={`${item.label}`}
+                                                        data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
+                                                        data-itemdata={JSON.stringify(item)}
+                                                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                                        role="tab"
+                                                        onClick={handleSelect}
+                                                    >
+                                                        {typeof renderOption === 'function' ? <>
+                                                            {renderOption(item, index)}
+                                                        </> : <>
+                                                            <span dangerouslySetInnerHTML={{
+                                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                                            }}></span>
+                                                        </>}
+                                                    </button>
+
+                                                } else {
+
+                                                    // ++++++++++++++++++++
+                                                    // Multiple selection
+                                                    // ++++++++++++++++++++
+                                                    const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
+
+                                                    return <button
+                                                        tabIndex={-1}
+                                                        type="button"
+                                                        data-selected={`${itemSelected ? 'true' : 'false'}`}
+                                                        data-index={index}
+                                                        key={index}
+                                                        className={combinedCls(
+                                                            'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
+                                                            startItemBorder,
+                                                            endItemBorder,
+                                                            {
+                                                                'list-group-item-secondary item-selected': itemSelected,
+                                                                'disabled': item.disabled,
+                                                                'custom-select-grouptitle': item.group
+
+                                                            }
+                                                        )}
+                                                        data-value={`${item.value}`}
+                                                        data-label={`${item.label}`}
+                                                        data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
+                                                        data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
+                                                        data-itemdata={JSON.stringify(item)}
+                                                        role="tab"
+                                                        onClick={handleSelect}
+                                                    >
+                                                        <var className={combinedCls(
+                                                            'me-1 custom-select-multi__control-option-checkbox-selected',
+                                                            {
+                                                                'd-none': !itemSelected
+                                                            }
+
+                                                        )}>
+                                                            <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
+
+                                                        </var>
+
+                                                        <var className={combinedCls(
+                                                            'me-1 custom-select-multi__control-option-checkbox-placeholder',
+                                                            {
+                                                                'd-none': itemSelected
+                                                            }
+                                                        )}>
+                                                            <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
+                                                        </var>
+
+                                                        {typeof renderOption === 'function' ? <>
+                                                            {renderOption(item, index)}
+                                                        </> : <>
+                                                            <span dangerouslySetInnerHTML={{
+                                                                __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
+                                                            }}></span>
+                                                        </>}
+
+
+                                                    </button>
+
                                                 }
-                                            }
-
-                                        }
 
 
-
-                                        if (!MULTI_SEL_VALID) {
-
-                                            // ++++++++++++++++++++
-                                            // Single selection
-                                            // ++++++++++++++++++++
-                                            return <button
-                                                tabIndex={-1}
-                                                type="button"
-                                                data-index={index}
-                                                key={index}
-                                                className={combinedCls(
-                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
-                                                    startItemBorder,
-                                                    endItemBorder,
-                                                    {
-                                                        'disabled': item.disabled,
-                                                        'active disabled': disabledCurrentOption,
-                                                        'custom-select-grouptitle': item.group
-                                                    }
-
-                                                )}
-                                                data-value={`${item.value}`}
-                                                data-label={`${item.label}`}
-                                                data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
-                                                data-itemdata={JSON.stringify(item)}
-                                                data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                                                role="tab"
-                                                onClick={handleSelect}
-                                            >
-                                                {typeof renderOption === 'function' ? <>
-                                                    {renderOption(item, index)}
-                                                </> : <>
-                                                    <span dangerouslySetInnerHTML={{
-                                                        __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                                    }}></span>
-                                                </>}
-                                            </button>
-
-                                        } else {
-
-                                            // ++++++++++++++++++++
-                                            // Multiple selection
-                                            // ++++++++++++++++++++
-                                            const itemSelected = multiSelControlOptionExist(controlArr.values, item.value) ? true : false;
-
-                                            return <button
-                                                tabIndex={-1}
-                                                type="button"
-                                                data-selected={`${itemSelected ? 'true' : 'false'}`}
-                                                data-index={index}
-                                                key={index}
-                                                className={combinedCls(
-                                                    'list-group-item list-group-item-action border-start-0 border-end-0 custom-select-multi__control-option-item border-bottom-0',
-                                                    startItemBorder,
-                                                    endItemBorder,
-                                                    {
-                                                        'list-group-item-secondary item-selected': itemSelected,
-                                                        'disabled': item.disabled,
-                                                        'custom-select-grouptitle': item.group
-
-                                                    }
-                                                )}
-                                                data-value={`${item.value}`}
-                                                data-label={`${item.label}`}
-                                                data-querystring={`${typeof item.queryString === 'undefined' ? '' : item.queryString}`}
-                                                data-list-item-label={`${typeof item.listItemLabel === 'undefined' ? '' : item.listItemLabel}`}
-                                                data-itemdata={JSON.stringify(item)}
-                                                role="tab"
-                                                onClick={handleSelect}
-                                            >
-                                                <var className={combinedCls(
-                                                    'me-1 custom-select-multi__control-option-checkbox-selected',
-                                                    {
-                                                        'd-none': !itemSelected
-                                                    }
-
-                                                )}>
-                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" /></svg>
-
-                                                </var>
-
-                                                <var className={combinedCls(
-                                                    'me-1 custom-select-multi__control-option-checkbox-placeholder',
-                                                    {
-                                                        'd-none': itemSelected
-                                                    }
-                                                )}>
-                                                    <svg width="1.2em" height="1.2em" fill="#000000" viewBox="0 0 24 24"><path d="M4 7.2002V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2837 4.40973 18.9074 4.21799C18.4796 4 17.9203 4 16.8002 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002Z" /></svg>
-                                                </var>
-                                    
-                                                {typeof renderOption === 'function' ? <>
-                                                    {renderOption(item, index)}
-                                                </> : <>
-                                                    <span dangerouslySetInnerHTML={{
-                                                        __html: typeof item.listItemLabel === 'undefined' ? item.label : item.listItemLabel
-                                                    }}></span>
-                                                </>}
-
-
-                                            </button>
-
-                                        }
-
-
-                                    }) : null}
+                                            }) : null}
+                                        </>
+                                    )}
                                     {/* /OPTIONS LIST */}
 
                                 </div>

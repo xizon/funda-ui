@@ -802,6 +802,51 @@ export default () => {
 
 
 
+            <h3>Single selection and Default value exists (Enter the search character. You can enter 1 or 2)</h3>
+            {/* ================================================================== */}
+            <Select
+                value={{ label: 'foo2', value: 'bar2', queryString: 'fb2,foobar2' }}
+                placeholder="Search Options"
+                name="name"
+                data="mydata"
+                options={[
+                    {
+                        "label": "Default Option Title 1",
+                        "value": 'default-1',
+                        "queryString": ""
+                    },
+                    {
+                        "label": "Default Option Title 2",
+                        "value": 'default-2',
+                        "queryString": ""
+                    },
+                    {
+                        "label": "Default Option Title 3",
+                        "value": 'default-3',
+                        "queryString": "",
+                    }
+                ]}
+                fetchUpdate={true}
+                fetchTrigger={true}
+                fetchFuncAsync={new DataService}
+                fetchFuncMethod="getListAwait"
+                fetchFuncMethodParams={['$QUERY_STRING',0]}
+                fetchCallback={(res) => {
+
+                    const formattedData = res.map((item) => {
+                        return {
+                            label: item.item_name,
+                            value: item.item_code,
+                            queryString: item.kb_code
+                        }
+                    }); 
+                    return formattedData;
+                }}
+                onFetch={(e, e2, value, res, data) => {
+                    console.log('onFetch: ', e, e2, value, res, data);
+                }}
+            />
+
 
             <h3>Multiple selection (Enter the search character. You can enter 1 or 2)</h3>
             {/* ================================================================== */}  

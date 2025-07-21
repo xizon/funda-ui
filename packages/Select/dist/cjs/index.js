@@ -3703,54 +3703,92 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var LIST_CONTAINER_MAX_HEIGHT = 300;
   var keyboardSelectedItem = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
+  // loading
+  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    fetchLoading = _useState2[0],
+    setFetchLoading = _useState2[1];
+  var loadingOutput = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
+    className: "cus-select-loader"
+  }, loader || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
+    height: "12px",
+    width: "12px",
+    viewBox: "0 0 512 512"
+  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"
+  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
+    fill: "inherit",
+    d: "M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"
+  })))));
+
   // return a array of options
   var staticOptionsData = optionsRes;
+  var hasDefaultOptions = staticOptionsData.length > 0;
 
   //
-  var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
-    _useState2 = _slicedToArray(_useState, 2),
-    orginalData = _useState2[0],
-    setOrginalData = _useState2[1];
   var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
     _useState4 = _slicedToArray(_useState3, 2),
-    optionsData = _useState4[0],
-    setOptionsData = _useState4[1];
-  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    orginalData = _useState4[0],
+    setOrginalData = _useState4[1];
+  var _useState5 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(staticOptionsData),
     _useState6 = _slicedToArray(_useState5, 2),
-    hasErr = _useState6[0],
-    setHasErr = _useState6[1];
+    optionsData = _useState6[0],
+    setOptionsData = _useState6[1];
+  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState8 = _slicedToArray(_useState7, 2),
+    hasErr = _useState8[0],
+    setHasErr = _useState8[1];
 
   // Set the final result
-  var _useState7 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
-    _useState8 = _slicedToArray(_useState7, 2),
-    controlLabel = _useState8[0],
-    setControlLabel = _useState8[1];
   var _useState9 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
     _useState10 = _slicedToArray(_useState9, 2),
-    controlValue = _useState10[0],
-    setControlValue = _useState10[1];
+    controlLabel = _useState10[0],
+    setControlLabel = _useState10[1];
+  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(''),
+    _useState12 = _slicedToArray(_useState11, 2),
+    controlValue = _useState12[0],
+    setControlValue = _useState12[1];
 
   //
-  var _useState11 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
-    _useState12 = _slicedToArray(_useState11, 2),
-    controlTempValue = _useState12[0],
-    setControlTempValue = _useState12[1]; // Storage for temporary input
-  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+  var _useState13 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState14 = _slicedToArray(_useState13, 2),
-    isOpen = _useState14[0],
-    setIsOpen = _useState14[1];
-  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
+    controlTempValue = _useState14[0],
+    setControlTempValue = _useState14[1]; // Storage for temporary input
+  var _useState15 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState16 = _slicedToArray(_useState15, 2),
-    incomingData = _useState16[0],
-    setIncomingData = _useState16[1];
-  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    isOpen = _useState16[0],
+    setIsOpen = _useState16[1];
+  var _useState17 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(null),
     _useState18 = _slicedToArray(_useState17, 2),
-    firstRequestExecuted = _useState18[0],
-    setFirstRequestExecuted = _useState18[1];
+    incomingData = _useState18[0],
+    setIncomingData = _useState18[1];
   var _useState19 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
     _useState20 = _slicedToArray(_useState19, 2),
-    handleFirstFetchCompleted = _useState20[0],
-    setHandleFirstFetchCompleted = _useState20[1];
+    firstRequestExecuted = _useState20[0],
+    setFirstRequestExecuted = _useState20[1];
+  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState22 = _slicedToArray(_useState21, 2),
+    handleFirstFetchCompleted = _useState22[0],
+    setHandleFirstFetchCompleted = _useState22[1];
 
   // Mark whether it is out of focus
   // Fixed the issue that caused the pop-up window to still display due to 
@@ -3758,25 +3796,25 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var isBlurringRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
 
   // filter status
-  var _useState21 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState22 = _slicedToArray(_useState21, 2),
-    filterItemsHasNoMatchData = _useState22[0],
-    setFilterItemsHasNoMatchData = _useState22[1];
+  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState24 = _slicedToArray(_useState23, 2),
+    filterItemsHasNoMatchData = _useState24[0],
+    setFilterItemsHasNoMatchData = _useState24[1];
 
   // blinking cursor
   var BLINKING_CURSOR_STR = '|';
-  var _useState23 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
-    _useState24 = _slicedToArray(_useState23, 2),
-    blinkingPosStart = _useState24[0],
-    setBlinkingPosStart = _useState24[1];
+  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(0),
+    _useState26 = _slicedToArray(_useState25, 2),
+    blinkingPosStart = _useState26[0],
+    setBlinkingPosStart = _useState26[1];
   var blinkingPosFauxRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var blinkingCursorPosDivRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
   // Select All status (for "Single selection")
-  var _useState25 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
-    _useState26 = _slicedToArray(_useState25, 2),
-    userInputboxIsAllSelected = _useState26[0],
-    setUserInputboxIsAllSelected = _useState26[1];
+  var _useState27 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState28 = _slicedToArray(_useState27, 2),
+    userInputboxIsAllSelected = _useState28[0],
+    setUserInputboxIsAllSelected = _useState28[1];
   var selectedSign = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
   var MULTI_SEL_VALID = multiSelect ? multiSelect.valid : false;
   var MULTI_SEL_ENTIRE_AREA_TRIGGER = typeof multiSelectEntireAreaTrigger === 'undefined' ? true : multiSelectEntireAreaTrigger;
@@ -3787,13 +3825,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     allItemsLabel: 'All Content ({num})',
     noneLabel: 'No items selected'
   };
-  var _useState27 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
+  var _useState29 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)({
       labels: [],
       values: []
     }),
-    _useState28 = _slicedToArray(_useState27, 2),
-    controlArr = _useState28[0],
-    setControlArr = _useState28[1];
+    _useState30 = _slicedToArray(_useState29, 2),
+    controlArr = _useState30[0],
+    setControlArr = _useState30[1];
 
   // Only single symbols such as , #, and @ are allowed, and , a, a, , etc. are not allowed.
   var isSingleSpecialChar = function isSingleSpecialChar(str) {
@@ -3943,6 +3981,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
   //performance
   var handleChangeFetchSafe = useDebounce_default()(function (val) {
+    setFetchLoading(true);
     if (fetchUpdate) {
       // update filter status
       setFilterItemsHasNoMatchData(false);
@@ -3954,6 +3993,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
           popwinPosInit();
           popwinFilterItems(val);
         }, 0);
+        setFetchLoading(false);
       });
     } else {
       // pop win initalization
@@ -3961,6 +4001,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         popwinPosInit();
         popwinFilterItems(val);
       }, 0);
+      setFetchLoading(false);
     }
   }, 350, [optionsData]);
   function fetchData(_x2, _x3, _x4) {
@@ -4517,10 +4558,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     setIsOpen(false);
     if (!MULTI_SEL_VALID) popwinPosHide();
     if (MANUAL_REQ) {
-      // clear data
-      setOptionsData([]);
+      // restore to static data
+      setOptionsData(staticOptionsData);
     } else {
-      // restore data
       setOptionsData(orginalData);
     }
 
@@ -4576,8 +4616,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }, 500);
     }
     if (MANUAL_REQ) {
-      // clear data
-      setOptionsData([]);
+      // display static data
+      setOptionsData(staticOptionsData);
     } else {
       // restore data
       setOptionsData(orginalData);
@@ -4589,7 +4629,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }
 
     // Every time the input changes or the search button is clicked, a data request will be triggered
-    if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null)) {
+    // !!! If the default data is empty, the pop-up window is not displayed
+    if (MANUAL_REQ && (controlTempValue === '' || controlTempValue === null) && !hasDefaultOptions) {
       setTimeout(function () {
         popwinPosHide();
       }, 0);
@@ -5098,18 +5139,21 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
             inputVal = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : null;
+            setFetchLoading(true);
+
             // data init
             searchStr = typeof inputVal === 'string' ? inputVal : controlTempValue || controlTempValue === '' ? controlTempValue : '';
             _oparams = fetchFuncMethodParams || [];
             _params = _oparams.map(function (item) {
               return item !== '$QUERY_STRING' ? item : searchStr;
             });
-            _context6.next = 6;
+            _context6.next = 7;
             return fetchData(_params.join(','), '', '', false);
-          case 6:
+          case 7:
             res = _context6.sent;
+            setFetchLoading(false);
             return _context6.abrupt("return", res);
-          case 8:
+          case 10:
           case "end":
             return _context6.stop();
         }
@@ -5904,7 +5948,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       __html: "".concat(CLEAR_TRIGGER_LABEL)
     },
     onClick: handleClearValue
-  }))) : null) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+  }))) : null) : null, fetchLoading && MANUAL_REQ && hasDefaultOptions ?
+  /*#__PURE__*/
+  // only loading
+  external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
+    tabIndex: -1,
+    type: "button",
+    className: "list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch",
+    disabled: true
+  }, loadingOutput)) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
     className: "list-group-item list-group-item-action no-match border-0 custom-select-multi__control-option-item--nomatch hide",
@@ -5913,37 +5965,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   // (1) Handling async data with the click event
   !FIRST_REQUEST_AUTO && !handleFirstFetchCompleted ||
   // (2) Every time the input changes or the search button is clicked, a data request will be triggered
-  fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "cus-select-loader"
-  }, loader || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
-    height: "12px",
-    width: "12px",
-    viewBox: "0 0 512 512"
-  }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("g", null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z"
-  }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("path", {
-    fill: "inherit",
-    d: "M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z"
-  }))))) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, fetchNoneInfo)), optionsData ? optionsData.map(function (item, index) {
+  fetchUpdate && !filterItemsHasNoMatchData && controlTempValue !== '' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, loadingOutput) : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, fetchNoneInfo)), optionsData ? optionsData.map(function (item, index) {
     var startItemBorder = index === 0 ? 'border-top-0' : '';
     var endItemBorder = index === optionsData.length - 1 ? 'border-bottom-0' : '';
 
@@ -6047,7 +6069,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         }
       })));
     }
-  }) : null))))) : null));
+  }) : null)))))) : null));
 });
 /* harmony default export */ const src = (Select);
 })();
