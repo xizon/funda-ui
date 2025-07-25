@@ -23,6 +23,7 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 import Group from './Group';
 
 
@@ -260,7 +261,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
         if (rootRef.current === null || inputRef.current === null) return
 
         // update modal position
-        const _modalRef: any = document.querySelector(`#casc-select__items-wrapper-${idRes}`);
+        const _modalRef: any = document.querySelector(`#casc-menu__items-wrapper-${idRes}`);
         const _triggerRef: any = inputRef.current;
 
         // console.log(getAbsolutePositionOfStage(_triggerRef));
@@ -343,7 +344,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
     function popwinPosHide() {
 
-        const _modalRef: any = document.querySelector(`#casc-select__items-wrapper-${idRes}`);
+        const _modalRef: any = document.querySelector(`#casc-menu__items-wrapper-${idRes}`);
 
         if (_modalRef !== null) {
             // remove classnames and styles
@@ -357,9 +358,9 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
         if (listRef.current === null) return;
 
         let latestDisplayColIndex: number = 0;
-        const currentItemsInner: any = listRef.current.querySelector('.casc-select__items-inner');
+        const currentItemsInner: any = listRef.current.querySelector('.casc-menu__items-inner');
         if (currentItemsInner !== null) {
-            const colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-select__items-col'));
+            const colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-menu__items-col'));
             colItemsWrapper.forEach((perCol: any) => {
                 perCol.classList.remove('hide-col');
             });
@@ -595,10 +596,10 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
         // active current option with DOM
         //////////////////////////////////////////
-        const currentItemsInner: any = e.currentTarget.closest('.casc-select__items-inner');
+        const currentItemsInner: any = e.currentTarget.closest('.casc-menu__items-inner');
         if (currentItemsInner !== null) {
             curData.forEach((v: any, col: number) => {
-                const colItemsWrapper = currentItemsInner.querySelectorAll('.casc-select__items-col');
+                const colItemsWrapper = currentItemsInner.querySelectorAll('.casc-menu__items-col');
                 colItemsWrapper.forEach((perCol: HTMLUListElement) => {
                     const _col = Number(perCol.dataset.col);
 
@@ -1155,14 +1156,14 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
         <>
 
             <div
-                className={clsWrite(wrapperClassName, 'casc-select__wrapper mb-3 position-relative', `casc-select__wrapper ${wrapperClassName}`)}
+                className={clsWrite(wrapperClassName, 'casc-menu__wrapper mb-3 position-relative', `casc-menu__wrapper ${wrapperClassName}`)}
                 ref={rootRef}
-                data-overlay-id={`casc-select__items-wrapper-${idRes}`}
+                data-overlay-id={`casc-menu__items-wrapper-${idRes}`}
             >
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 {triggerContent ? <>
-                    <div className={clsWrite(wrapperClassName, 'casc-select__trigger d-inline w-auto', `casc-select__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
+                    <div className={clsWrite(wrapperClassName, 'casc-menu__trigger d-inline w-auto', `casc-menu__trigger ${triggerClassName}`)} onClick={handleDisplayOptions}>{triggerContent}</div>
                 </> : null}
 
 
@@ -1171,16 +1172,16 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
                         <div
                             ref={listRef}
-                            id={`casc-select__items-wrapper-${idRes}`}
-                            className="casc-select__items-wrapper position-absolute border shadow small"
+                            id={`casc-menu__items-wrapper-${idRes}`}
+                            className="casc-menu__items-wrapper position-absolute border shadow small"
                             style={{ zIndex: DEPTH, display: 'none' }}
                         >
-                            <ul className="casc-select__items-inner">
-                                {loading ? <><div className="casc-select__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
+                            <ul className="casc-menu__items-inner">
+                                {loading ? <><div className="casc-menu__items-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></> : null}
                                 {showCloseBtn ? <a href="#" tabIndex={-1} onClick={(e) => {
                                     e.preventDefault();
                                     cancel();
-                                }} className="casc-select__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
+                                }} className="casc-menu__close position-absolute top-0 end-0 mt-0 mx-1"><svg width="10px" height="10px" viewBox="0 0 1024 1024"><path fill="#000" d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z" /></svg></a> : null}
 
 
 
@@ -1199,11 +1200,11 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
 
                                         return (
-                                            <li key={level} data-col={level} className="casc-select__items-col">
+                                            <li key={level} data-col={level} className="casc-menu__items-col">
                
                                                 {/* SEARCH BOX */}
                                                 {searchable && (
-                                                    <div className="casc-select__items-col-searchbox">
+                                                    <div className="casc-menu__items-col-searchbox">
                                                         <input
                                                             type="text"
                                                             placeholder={searchPlaceholder}
@@ -1243,7 +1244,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
 
                 <div className={combinedCls(
-                        'casc-select__val',
+                        'casc-menu__val',
                         {
                             'inputable': inputable,
                         }
@@ -1277,7 +1278,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
                                     }
                                 }}
                                 id={idRes}
-                                data-overlay-id={`casc-select__items-wrapper-${idRes}`}
+                                data-overlay-id={`casc-menu__items-wrapper-${idRes}`}
                                 name={name}
                                 className={combinedCls(
                                     clsWrite(controlClassName, 'form-control'),
@@ -1342,7 +1343,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
 
                             {/** REVIEW RESULT */}
-                            {!inputable ? <div className="casc-select__result">{displayInfo()}</div> : null}
+                            {!inputable ? <div className="casc-menu__result">{displayInfo()}</div> : null}
 
 
                             {/* Required marking */}
@@ -1359,7 +1360,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
                  
 
                     {isShow ? <div
-                        className="casc-select__closemask"
+                        className="casc-menu__closemask"
                         onClick={(e) => {
                             e.preventDefault();
                             cancel();

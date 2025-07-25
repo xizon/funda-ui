@@ -2183,7 +2183,7 @@ function Group(props) {
         "data-id": item.id,
         "data-value": JSON.stringify(item),
         "data-level": level,
-        className: (0,cls.combinedCls)('casc-select__opt', {
+        className: (0,cls.combinedCls)('casc-menu__opt', {
           'active': item.current
         }),
         dangerouslySetInnerHTML: {
@@ -2197,13 +2197,13 @@ function Group(props) {
     } else {
       return columnTitle[level] === '' || perColumnHeadersShow === false ? null : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("h3", {
         key: index,
-        className: "casc-select__opt-header"
+        className: "casc-menu__opt-header"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
         dangerouslySetInnerHTML: {
           __html: columnTitle[level]
         }
       }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-        className: "casc-select__opt-header__clean"
+        className: "casc-menu__opt-header__clean"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("a", {
         tabIndex: -1,
         href: "#",
@@ -2416,7 +2416,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     if (rootRef.current === null || inputRef.current === null) return;
 
     // update modal position
-    var _modalRef = document.querySelector("#casc-select__items-wrapper-".concat(idRes));
+    var _modalRef = document.querySelector("#casc-menu__items-wrapper-".concat(idRes));
     var _triggerRef = inputRef.current;
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
@@ -2488,7 +2488,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }
 
   function popwinPosHide() {
-    var _modalRef = document.querySelector("#casc-select__items-wrapper-".concat(idRes));
+    var _modalRef = document.querySelector("#casc-menu__items-wrapper-".concat(idRes));
     if (_modalRef !== null) {
       // remove classnames and styles
       _modalRef.classList.remove('active');
@@ -2499,9 +2499,9 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     var level = arguments.length > 2 ? arguments[2] : undefined;
     if (listRef.current === null) return;
     var latestDisplayColIndex = 0;
-    var currentItemsInner = listRef.current.querySelector('.casc-select__items-inner');
+    var currentItemsInner = listRef.current.querySelector('.casc-menu__items-inner');
     if (currentItemsInner !== null) {
-      var colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-select__items-col'));
+      var colItemsWrapper = [].slice.call(currentItemsInner.querySelectorAll('.casc-menu__items-col'));
       colItemsWrapper.forEach(function (perCol) {
         perCol.classList.remove('hide-col');
       });
@@ -2701,10 +2701,10 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
 
     // active current option with DOM
     //////////////////////////////////////////
-    var currentItemsInner = e.currentTarget.closest('.casc-select__items-inner');
+    var currentItemsInner = e.currentTarget.closest('.casc-menu__items-inner');
     if (currentItemsInner !== null) {
       curData.forEach(function (v, col) {
-        var colItemsWrapper = currentItemsInner.querySelectorAll('.casc-select__items-col');
+        var colItemsWrapper = currentItemsInner.querySelectorAll('.casc-menu__items-col');
         colItemsWrapper.forEach(function (perCol) {
           var _col = Number(perCol.dataset.col);
           if (_col >= level) {
@@ -3149,9 +3149,9 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     }
   }, [listData.current.length]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: (0,cls.clsWrite)(wrapperClassName, 'casc-select__wrapper mb-3 position-relative', "casc-select__wrapper ".concat(wrapperClassName)),
+    className: (0,cls.clsWrite)(wrapperClassName, 'casc-menu__wrapper mb-3 position-relative', "casc-menu__wrapper ".concat(wrapperClassName)),
     ref: rootRef,
-    "data-overlay-id": "casc-select__items-wrapper-".concat(idRes)
+    "data-overlay-id": "casc-menu__items-wrapper-".concat(idRes)
   }, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
     htmlFor: idRes,
     className: "form-label",
@@ -3162,23 +3162,23 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     htmlFor: idRes,
     className: "form-label"
   }, label)) : null, triggerContent ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: (0,cls.clsWrite)(wrapperClassName, 'casc-select__trigger d-inline w-auto', "casc-select__trigger ".concat(triggerClassName)),
+    className: (0,cls.clsWrite)(wrapperClassName, 'casc-menu__trigger d-inline w-auto', "casc-menu__trigger ".concat(triggerClassName)),
     onClick: handleDisplayOptions
   }, triggerContent)) : null, !hasErr ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), {
     show: true,
     containerClassName: "CascadingSelect"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     ref: listRef,
-    id: "casc-select__items-wrapper-".concat(idRes),
-    className: "casc-select__items-wrapper position-absolute border shadow small",
+    id: "casc-menu__items-wrapper-".concat(idRes),
+    className: "casc-menu__items-wrapper position-absolute border shadow small",
     style: {
       zIndex: DEPTH,
       display: 'none'
     }
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("ul", {
-    className: "casc-select__items-inner"
+    className: "casc-menu__items-inner"
   }, loading ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "casc-select__items-loader"
+    className: "casc-menu__items-loader"
   }, loader || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     height: "12px",
     width: "12px",
@@ -3214,7 +3214,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       e.preventDefault();
       cancel();
     },
-    className: "casc-select__close position-absolute top-0 end-0 mt-0 mx-1"
+    className: "casc-menu__close position-absolute top-0 end-0 mt-0 mx-1"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "10px",
     height: "10px",
@@ -3235,9 +3235,9 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("li", {
         key: level,
         "data-col": level,
-        className: "casc-select__items-col"
+        className: "casc-menu__items-col"
       }, searchable && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-        className: "casc-select__items-col-searchbox"
+        className: "casc-menu__items-col-searchbox"
       }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", {
         type: "text",
         placeholder: searchPlaceholder,
@@ -3263,7 +3263,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       return null;
     }
   })))) : null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: (0,cls.combinedCls)('casc-select__val', {
+    className: (0,cls.combinedCls)('casc-menu__val', {
       'inputable': inputable
     }),
     onClick: handleDisplayOptions
@@ -3286,7 +3286,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     },
     id: idRes,
-    "data-overlay-id": "casc-select__items-wrapper-".concat(idRes),
+    "data-overlay-id": "casc-menu__items-wrapper-".concat(idRes),
     name: name,
     className: (0,cls.combinedCls)((0,cls.clsWrite)(controlClassName, 'form-control'), controlExClassName, {
       'rounded': !propExist(iconLeft) && !propExist(iconRight) && !propExist(units),
@@ -3335,7 +3335,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       }
     } : undefined
   }, attributes)), !inputable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "casc-select__result"
+    className: "casc-menu__result"
   }, displayInfo()) : null, required ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: "position-absolute end-0 top-0 my-2 mx-2 pe-3"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
@@ -3345,7 +3345,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   }, units)) : null, propExist(iconRight) ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: (0,cls.clsWrite)(controlGroupTextClassName, 'input-group-text')
   }, iconRight)) : null), isShow ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
-    className: "casc-select__closemask",
+    className: "casc-menu__closemask",
     onClick: function onClick(e) {
       e.preventDefault();
       cancel();

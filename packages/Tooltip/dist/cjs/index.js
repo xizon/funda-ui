@@ -1431,6 +1431,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(954);
 /* harmony import */ var funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_inputsCalculation__WEBPACK_IMPORTED_MODULE_6__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1444,35 +1450,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var useContainerDimensions = function useContainerDimensions(myRef) {
-  var _useState = useState({
-      width: 0,
-      height: 0
-    }),
-    _useState2 = _slicedToArray(_useState, 2),
-    dimensions = _useState2[0],
-    setDimensions = _useState2[1];
-  useEffect(function () {
-    var getDimensions = function getDimensions() {
-      return {
-        width: myRef.current.offsetWidth,
-        height: myRef.current.offsetHeight
-      };
-    };
-    var handleResize = function handleResize() {
-      setDimensions(getDimensions());
-    };
-    if (myRef.current) {
-      setDimensions(getDimensions());
-    }
-    window.addEventListener("resize", handleResize);
-    return function () {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [myRef]);
-  return dimensions;
-};
-var Tooltip = function Tooltip(props) {
+// Use forwardRef to expose imperative methods
+var Tooltip = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(function (props, ref) {
   var triggerClassName = props.triggerClassName,
     wrapperClassName = props.wrapperClassName,
     direction = props.direction,
@@ -1483,7 +1462,14 @@ var Tooltip = function Tooltip(props) {
     mouseOutDelay = props.mouseOutDelay,
     content = props.content,
     id = props.id,
-    children = props.children;
+    children = props.children,
+    controlled = props.controlled,
+    popupArrowColor = props.popupArrowColor,
+    popupContentStyle = props.popupContentStyle,
+    delayedClose = props.delayedClose,
+    delayedCloseTimeout = props.delayedCloseTimeout,
+    onContentMouseEnter = props.onContentMouseEnter,
+    onContentMouseLeave = props.onContentMouseLeave;
   var POS_OFFSET = Number(offset) || 4;
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var uniqueID = funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_2___default()();
@@ -1492,33 +1478,85 @@ var Tooltip = function Tooltip(props) {
   var modalRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var HOVER_DELAY = hoverDelay ? hoverDelay : 200;
   var MOUSE_OUT_DELAY = mouseOutDelay ? mouseOutDelay : HOVER_DELAY;
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState2 = _slicedToArray(_useState, 2),
+    hasBeenShown = _useState2[0],
+    setHasBeenShown = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    hasBeenShown = _useState4[0],
-    setHasBeenShown = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState6 = _slicedToArray(_useState5, 2),
-    isShow = _useState6[0],
-    setIsShow = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    isShow = _useState4[0],
+    setIsShow = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
       x: 0,
       y: 0
     }),
-    _useState8 = _slicedToArray(_useState7, 2),
-    position = _useState8[0],
-    setPosition = _useState8[1];
+    _useState6 = _slicedToArray(_useState5, 2),
+    position = _useState6[0],
+    setPosition = _useState6[1];
+  var popupArrowStyle = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    if (typeof popupArrowColor !== 'undefined' && Array.isArray(popupArrowColor) && popupArrowColor.length === 4) {
+      return {
+        '--cus-tooltip-arrow-bg-top': "url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%28".concat(popupArrowColor[0], ",%20").concat(popupArrowColor[1], ",%20").concat(popupArrowColor[2], ",%20").concat(popupArrowColor[3], "%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat"),
+        '--cus-tooltip-arrow-bg-bottom': "url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%28".concat(popupArrowColor[0], ",%20").concat(popupArrowColor[1], ",%20").concat(popupArrowColor[2], ",%20").concat(popupArrowColor[3], "%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat"),
+        '--cus-tooltip-arrow-bg-left': "url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%28".concat(popupArrowColor[0], ",%20").concat(popupArrowColor[1], ",%20").concat(popupArrowColor[2], ",%20").concat(popupArrowColor[3], "%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat"),
+        '--cus-tooltip-arrow-bg-right': "url(\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%28".concat(popupArrowColor[0], ",%20").concat(popupArrowColor[1], ",%20").concat(popupArrowColor[2], ",%20").concat(popupArrowColor[3], "%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E\") no-repeat")
+      };
+    }
+    return undefined;
+  }, [popupArrowColor]);
+
+  // Expose show/hide methods to parent via ref
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(ref, function () {
+    return {
+      show: function show() {
+        // Find the trigger element
+        var triggerEl = rootRef.current;
+        if (triggerEl) {
+          // Calculate position (copy from handleMouseEnter)
+          var _getAbsolutePositionO = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_4__.getAbsolutePositionOfStage)(triggerEl),
+            x = _getAbsolutePositionO.x,
+            y = _getAbsolutePositionO.y,
+            width = _getAbsolutePositionO.width,
+            height = _getAbsolutePositionO.height;
+          var pos = triggerEl.dataset.microtipPosition;
+          if (typeof pos === 'undefined') pos = 'top';
+          if (pos.indexOf('top') >= 0) {
+            setPosition({
+              x: x + width / 2 + 'px',
+              y: y - height - POS_OFFSET + 'px'
+            });
+          }
+          if (pos.indexOf('bottom') >= 0) {
+            setPosition({
+              x: x + width / 2 + 'px',
+              y: y + height + POS_OFFSET + 'px'
+            });
+          }
+        }
+        setIsShow(true);
+      },
+      hide: function hide() {
+        hideTip();
+      }
+    };
+  }, [POS_OFFSET]);
 
   // click outside
   funda_utils_dist_cjs_useClickOutside__WEBPACK_IMPORTED_MODULE_3___default()({
-    enabled: isShow && rootRef.current,
+    enabled: isShow && rootRef.current && !controlled,
+    // Only auto-close if not controlled
     isOutside: function isOutside(event) {
+      // Prevent closing when clicking inside the tooltip wrapper
+      if (modalRef.current && modalRef.current.contains(event.target)) {
+        return false; // Click is inside the tooltip wrapper, do not close
+      }
       // close dropdown when other dropdown is opened
       return rootRef.current !== event.target && !rootRef.current.contains(event.target);
     },
     handle: function handle(event) {
       hideTip();
     }
-  }, [isShow, rootRef]);
+  }, [isShow, rootRef, controlled]);
 
   //timer hover
   var timeoutHoverIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -1552,7 +1590,7 @@ var Tooltip = function Tooltip(props) {
     //------------------
     var _modalRef = modalRef.current;
     if (_modalRef === null) return;
-    var _modalContent = _modalRef.querySelector('.tooltip__content');
+    var _modalContent = _modalRef.querySelector('.cus-tooltip__content');
     var _modalBox = _modalContent.getBoundingClientRect();
     if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
       // Adjust the coordinates due to height
@@ -1590,6 +1628,7 @@ var Tooltip = function Tooltip(props) {
   };
 
   function handleMouseEnter(e) {
+    if (controlled) return; // Do nothing if controlled
     stopTimerHover();
     stopTimerMouseout();
     startTimerHover();
@@ -1600,11 +1639,11 @@ var Tooltip = function Tooltip(props) {
 
     // console.log(getAbsolutePositionOfStage(_triggerRef));
     if (_triggerRef !== null) {
-      var _getAbsolutePositionO = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_4__.getAbsolutePositionOfStage)(_triggerRef),
-        x = _getAbsolutePositionO.x,
-        y = _getAbsolutePositionO.y,
-        width = _getAbsolutePositionO.width,
-        height = _getAbsolutePositionO.height;
+      var _getAbsolutePositionO2 = (0,funda_utils_dist_cjs_getElementProperty__WEBPACK_IMPORTED_MODULE_4__.getAbsolutePositionOfStage)(_triggerRef),
+        x = _getAbsolutePositionO2.x,
+        y = _getAbsolutePositionO2.y,
+        width = _getAbsolutePositionO2.width,
+        height = _getAbsolutePositionO2.height;
       var pos = _triggerRef.dataset.microtipPosition;
       if (typeof pos === 'undefined') pos = 'top';
 
@@ -1628,6 +1667,7 @@ var Tooltip = function Tooltip(props) {
     }
   }
   function handleMouseLeave() {
+    if (controlled) return; // Do nothing if controlled
     stopTimerHover();
     stopTimerMouseout();
     startTimerMouseout();
@@ -1635,10 +1675,59 @@ var Tooltip = function Tooltip(props) {
   function hideTip() {
     setIsShow(false);
   }
+
+  // Timer for delayed close
+  var delayedCloseTimerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var DELAYED_CLOSE_TIMEOUT = typeof delayedCloseTimeout === 'number' ? delayedCloseTimeout : 1500;
+
+  // Handler for mouse leave on trigger (when delayedClose is enabled)
+  function handleTriggerMouseLeave() {
+    if (controlled) return;
+    if (delayedClose) {
+      // Start delayed close timer
+      if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
+      delayedCloseTimerRef.current = setTimeout(function () {
+        hideTip();
+      }, DELAYED_CLOSE_TIMEOUT);
+    } else {
+      stopTimerHover();
+      stopTimerMouseout();
+      startTimerMouseout();
+    }
+  }
+
+  // Handler for mouse enter on wrapper (cancel delayed close)
+  function handleWrapperMouseEnter(event) {
+    if (controlled) return;
+    if (delayedClose && delayedCloseTimerRef.current) {
+      clearTimeout(delayedCloseTimerRef.current);
+      delayedCloseTimerRef.current = null;
+    }
+    // Call user-provided handler if present
+    if (onContentMouseEnter && event) {
+      onContentMouseEnter(event);
+    }
+  }
+
+  // Handler for mouse leave on wrapper (restart delayed close timer)
+  function handleWrapperMouseLeave(event) {
+    if (controlled) return;
+    if (delayedClose) {
+      if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
+      delayedCloseTimerRef.current = setTimeout(function () {
+        hideTip();
+      }, DELAYED_CLOSE_TIMEOUT);
+    }
+    // Call user-provided handler if present
+    if (onContentMouseLeave && event) {
+      onContentMouseLeave(event);
+    }
+  }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     return function () {
       stopTimerHover();
       stopTimerMouseout();
+      if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
     };
   }, []);
 
@@ -1648,31 +1737,38 @@ var Tooltip = function Tooltip(props) {
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: rootRef,
-    "data-overlay-id": "tooltip__wrapper-".concat(idRes),
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.combinedCls)('tooltip__trigger', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.clsWrite)(triggerClassName, 'd-inline-block')),
+    "data-overlay-id": "cus-tooltip__wrapper-".concat(idRes),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.combinedCls)('cus-tooltip__trigger', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.clsWrite)(triggerClassName, 'd-inline-block')),
     "data-microtip-position": direction || 'top',
     "data-microtip-size": size || 'auto',
     onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave
+    onMouseLeave: delayedClose ? handleTriggerMouseLeave : handleMouseLeave
   }, children), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((funda_root_portal__WEBPACK_IMPORTED_MODULE_1___default()), {
     show: isShow,
     containerClassName: "Tooltip"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: modalRef,
-    id: "tooltip__wrapper-".concat(idRes),
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.combinedCls)('tooltip__wrapper', wrapperClassName, 'active'),
+    id: "cus-tooltip__wrapper-".concat(idRes),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_5__.combinedCls)('cus-tooltip__wrapper', wrapperClassName, 'active'),
     role: "tooltip",
     "data-microtip-position": direction || 'top',
     "data-microtip-size": size || 'auto',
-    style: {
+    style: _objectSpread({
       left: position.x,
       top: position.y,
       display: 'none'
-    }
+    }, popupArrowStyle),
+    onMouseEnter: delayedClose || onContentMouseEnter ? function (e) {
+      return handleWrapperMouseEnter(e);
+    } : undefined,
+    onMouseLeave: delayedClose || onContentMouseLeave ? function (e) {
+      return handleWrapperMouseLeave(e);
+    } : undefined
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "tooltip__content"
+    className: "cus-tooltip__content",
+    style: _objectSpread({}, popupContentStyle)
   }, content))));
-};
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Tooltip);
 })();
 

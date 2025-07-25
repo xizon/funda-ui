@@ -16,9 +16,23 @@ export declare type TooltipProps = {
     mouseOutDelay?: number;
     /** Set a piece of text or HTML code */
     content?: React.ReactNode;
+    /** If true, Tooltip is controlled by parent via ref, not by mouse events */
+    controlled?: boolean;
+    /** Custom color for the popup arrow */
+    popupArrowColor?: number[];
+    /** Custom style for the popup content */
+    popupContentStyle?: React.CSSProperties;
+    /** If true, tooltip closes only if mouse does not enter wrapper within timeout after leaving trigger */
+    delayedClose?: boolean;
+    /** Timeout in ms for delayed close (ms) */
+    delayedCloseTimeout?: number;
+    /** Called when mouse enters the tooltip wrapper */
+    onContentMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
+    /** Called when mouse leaves the tooltip wrapper */
+    onContentMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
     /** -- */
     id?: string;
     children: React.ReactNode;
 };
-declare const Tooltip: (props: TooltipProps) => JSX.Element;
+declare const Tooltip: React.ForwardRefExoticComponent<TooltipProps & React.RefAttributes<any>>;
 export default Tooltip;

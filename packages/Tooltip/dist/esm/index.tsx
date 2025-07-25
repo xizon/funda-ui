@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef, useMemo } from 'react';
 
 import RootPortal from 'funda-root-portal';
 
@@ -9,7 +9,6 @@ import {
 } from 'funda-utils/dist/cjs/getElementProperty';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import { getElCSS } from 'funda-utils/dist/cjs/inputsCalculation';
-
 
 
 
@@ -30,40 +29,27 @@ export type TooltipProps = {
     mouseOutDelay?: number;
     /** Set a piece of text or HTML code */
     content?: React.ReactNode;
+    /** If true, Tooltip is controlled by parent via ref, not by mouse events */
+    controlled?: boolean;
+    /** Custom color for the popup arrow */
+    popupArrowColor?: number[];
+    /** Custom style for the popup content */
+    popupContentStyle?: React.CSSProperties;
+    /** If true, tooltip closes only if mouse does not enter wrapper within timeout after leaving trigger */
+    delayedClose?: boolean;
+    /** Timeout in ms for delayed close (ms) */
+    delayedCloseTimeout?: number;
+    /** Called when mouse enters the tooltip wrapper */
+    onContentMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
+    /** Called when mouse leaves the tooltip wrapper */
+    onContentMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
     /** -- */
     id?: string;
     children: React.ReactNode;
 };
 
-const useContainerDimensions = (myRef: any) => {
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-
-    useEffect(() => {
-        const getDimensions = () => ({
-            width: myRef.current.offsetWidth,
-            height: myRef.current.offsetHeight
-        })
-
-        const handleResize = () => {
-            setDimensions(getDimensions())
-        }
-
-        if (myRef.current) {
-            setDimensions(getDimensions())
-        }
-
-        window.addEventListener("resize", handleResize)
-
-        return () => {
-            window.removeEventListener("resize", handleResize)
-        }
-    }, [myRef])
-
-    return dimensions;
-};
-
-
-const Tooltip = (props: TooltipProps) => {
+// Use forwardRef to expose imperative methods
+const Tooltip = forwardRef<any, TooltipProps>((props, ref) => {
     const {
         triggerClassName,
         wrapperClassName,
@@ -75,7 +61,14 @@ const Tooltip = (props: TooltipProps) => {
         mouseOutDelay,
         content,
         id,
-        children
+        children,
+        controlled,
+        popupArrowColor,
+        popupContentStyle,
+        delayedClose,
+        delayedCloseTimeout,
+        onContentMouseEnter,
+        onContentMouseLeave
     } = props;
 
 
@@ -95,12 +88,62 @@ const Tooltip = (props: TooltipProps) => {
         y: 0
     }); 
 
+    const popupArrowStyle = useMemo(() => {
+        if (
+            typeof popupArrowColor !== 'undefined' &&
+            Array.isArray(popupArrowColor) &&
+            popupArrowColor.length === 4
+        ) {
+            return {
+                '--cus-tooltip-arrow-bg-top': `url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%28${popupArrowColor[0]},%20${popupArrowColor[1]},%20${popupArrowColor[2]},%20${popupArrowColor[3]}%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat`,
+                '--cus-tooltip-arrow-bg-bottom': `url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%28${popupArrowColor[0]},%20${popupArrowColor[1]},%20${popupArrowColor[2]},%20${popupArrowColor[3]}%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat`,
+                '--cus-tooltip-arrow-bg-left': `url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%28${popupArrowColor[0]},%20${popupArrowColor[1]},%20${popupArrowColor[2]},%20${popupArrowColor[3]}%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat`,
+                '--cus-tooltip-arrow-bg-right': `url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%28${popupArrowColor[0]},%20${popupArrowColor[1]},%20${popupArrowColor[2]},%20${popupArrowColor[3]}%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat`,
+            };
+        }
+        return undefined;
+    }, [popupArrowColor]);
+
+    // Expose show/hide methods to parent via ref
+    useImperativeHandle(ref, () => ({
+        show: () => {
+            // Find the trigger element
+            const triggerEl = rootRef.current;
+            if (triggerEl) {
+                // Calculate position (copy from handleMouseEnter)
+                const { x, y, width, height } = getAbsolutePositionOfStage(triggerEl);
+                let pos = triggerEl.dataset.microtipPosition;
+                if (typeof pos === 'undefined') pos = 'top';
+
+                if (pos.indexOf('top') >= 0) {
+                    setPosition({
+                        x: x + (width / 2) + 'px',
+                        y: y - height - POS_OFFSET + 'px'
+                    });
+                }
+                if (pos.indexOf('bottom') >= 0) {
+                    setPosition({
+                        x: x + (width / 2) + 'px',
+                        y: y + height + POS_OFFSET + 'px'
+                    });
+                }
+            }
+            setIsShow(true);
+        },
+        hide: () => {
+            hideTip();
+        }
+    }), [POS_OFFSET]);
 
 
     // click outside
     useClickOutside({
-        enabled: isShow && rootRef.current,
+        enabled: isShow && rootRef.current && !controlled, // Only auto-close if not controlled
         isOutside: (event: any) => {
+            // Prevent closing when clicking inside the tooltip wrapper
+            if (modalRef.current && modalRef.current.contains(event.target)) {
+                return false; // Click is inside the tooltip wrapper, do not close
+            }
             // close dropdown when other dropdown is opened
             return (
                 (rootRef.current !== event.target && !rootRef.current.contains(event.target as HTMLElement))
@@ -109,7 +152,7 @@ const Tooltip = (props: TooltipProps) => {
         handle: (event: any) => {
             hideTip();
         }
-    }, [isShow, rootRef]);
+    }, [isShow, rootRef, controlled]);
 
 
 
@@ -153,7 +196,7 @@ const Tooltip = (props: TooltipProps) => {
         const _modalRef: any = modalRef.current;
         if (_modalRef === null) return;
         
-        const _modalContent = _modalRef.querySelector('.tooltip__content');
+        const _modalContent = _modalRef.querySelector('.cus-tooltip__content');
         const _modalBox = _modalContent.getBoundingClientRect();
         if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
@@ -197,6 +240,7 @@ const Tooltip = (props: TooltipProps) => {
     };
 
     function handleMouseEnter(e: any) {
+        if (controlled) return; // Do nothing if controlled
         stopTimerHover();
         stopTimerMouseout();
         startTimerHover();
@@ -239,6 +283,7 @@ const Tooltip = (props: TooltipProps) => {
     
 
     function handleMouseLeave() {
+        if (controlled) return; // Do nothing if controlled
         stopTimerHover();
         stopTimerMouseout();
         startTimerMouseout();
@@ -250,10 +295,60 @@ const Tooltip = (props: TooltipProps) => {
     }
 
 
+    // Timer for delayed close
+    const delayedCloseTimerRef = useRef<any>(null);
+    const DELAYED_CLOSE_TIMEOUT = typeof delayedCloseTimeout === 'number' ? delayedCloseTimeout : 1500;
+
+    // Handler for mouse leave on trigger (when delayedClose is enabled)
+    function handleTriggerMouseLeave() {
+        if (controlled) return;
+        if (delayedClose) {
+            // Start delayed close timer
+            if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
+            delayedCloseTimerRef.current = setTimeout(() => {
+                hideTip();
+            }, DELAYED_CLOSE_TIMEOUT);
+        } else {
+            stopTimerHover();
+            stopTimerMouseout();
+            startTimerMouseout();
+        }
+    }
+
+    // Handler for mouse enter on wrapper (cancel delayed close)
+    function handleWrapperMouseEnter(event?: React.MouseEvent<HTMLDivElement>) {
+        if (controlled) return;
+        if (delayedClose && delayedCloseTimerRef.current) {
+            clearTimeout(delayedCloseTimerRef.current);
+            delayedCloseTimerRef.current = null;
+        }
+        // Call user-provided handler if present
+        if (onContentMouseEnter && event) {
+            onContentMouseEnter(event);
+        }
+    }
+
+    // Handler for mouse leave on wrapper (restart delayed close timer)
+    function handleWrapperMouseLeave(event?: React.MouseEvent<HTMLDivElement>) {
+        if (controlled) return;
+        if (delayedClose) {
+            if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
+            delayedCloseTimerRef.current = setTimeout(() => {
+                hideTip();
+            }, DELAYED_CLOSE_TIMEOUT);
+        }
+        // Call user-provided handler if present
+        if (onContentMouseLeave && event) {
+            onContentMouseLeave(event);
+        }
+    }
+
+
     useEffect(() => {
         return () => {
             stopTimerHover();
             stopTimerMouseout();
+            if (delayedCloseTimerRef.current) clearTimeout(delayedCloseTimerRef.current);
         };
     }, []);
 
@@ -268,15 +363,15 @@ const Tooltip = (props: TooltipProps) => {
 
             <div
                 ref={rootRef}
-                data-overlay-id={`tooltip__wrapper-${idRes}`}
+                data-overlay-id={`cus-tooltip__wrapper-${idRes}`}
                 className={combinedCls(
-                    'tooltip__trigger',
+                    'cus-tooltip__trigger',
                     clsWrite(triggerClassName, 'd-inline-block')
                 )}
                 data-microtip-position={direction || 'top'}
                 data-microtip-size={size || 'auto'}
                 onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onMouseLeave={delayedClose ? handleTriggerMouseLeave : handleMouseLeave}
             >
                 {children}
             </div>
@@ -285,9 +380,9 @@ const Tooltip = (props: TooltipProps) => {
             <RootPortal show={isShow} containerClassName="Tooltip">
                 <div
                     ref={modalRef}
-                    id={`tooltip__wrapper-${idRes}`}
+                    id={`cus-tooltip__wrapper-${idRes}`}
                     className={combinedCls(
-                        'tooltip__wrapper',
+                        'cus-tooltip__wrapper',
                         wrapperClassName,
                         'active'
                     )}
@@ -297,10 +392,15 @@ const Tooltip = (props: TooltipProps) => {
                     style={{
                         left: position.x,
                         top: position.y,
-                        display: 'none'
+                        display: 'none',
+                        ...popupArrowStyle
                     }}
+                    onMouseEnter={delayedClose || onContentMouseEnter ? (e) => handleWrapperMouseEnter(e) : undefined}
+                    onMouseLeave={delayedClose || onContentMouseLeave ? (e) => handleWrapperMouseLeave(e) : undefined}
                 >
-                    <div className="tooltip__content">{content}</div>
+                    <div className="cus-tooltip__content" style={{
+                        ...popupContentStyle
+                    }}>{content}</div>
                 </div>
 
             </RootPortal>
@@ -311,7 +411,6 @@ const Tooltip = (props: TooltipProps) => {
 
         </>
     )
-};
-
+});
 
 export default Tooltip;
