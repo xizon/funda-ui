@@ -212,6 +212,7 @@ import Tooltip from 'funda-ui/Tooltip';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `ref` | React.ForwardedRef | - | It exposes the following methods of the component:  <br /> <ol><li>`ref.current.show()`</li><li>`ref.current.hide()`</li></ol> | - |
 | `triggerClassName` | string | `d-inline-block` | The class name of the trigger. The Trigger will wrap around your target object | - |
 | `wrapperClassName` | string | - | The class name of the control wrapper. | - |
 | `direction` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | top | The direction of the tip. Defaults to `top`. | - |
