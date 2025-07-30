@@ -138,7 +138,7 @@ import React, { useState } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -203,7 +203,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -283,7 +283,7 @@ import React, { useState, useMemo } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 // DO NOT move `useMemo` to component
 function SelectOneMemo(props) {
@@ -372,7 +372,7 @@ import React, { useState } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -896,7 +896,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -934,7 +934,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -986,7 +986,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -1031,7 +1031,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 
 class DataService {
@@ -1123,7 +1123,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -1241,7 +1241,7 @@ import React from "react";
 import Select, { MultiSelectControlValConfig } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -1307,7 +1307,7 @@ import React, { useState } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 class DataService {
     
@@ -1547,7 +1547,7 @@ import React, { useEffect, useState } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 
 
@@ -1763,7 +1763,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 class DataService {
 
@@ -1934,7 +1934,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
  
@@ -1986,7 +1986,7 @@ import React, { useRef } from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 
 export default () => {
@@ -2125,7 +2125,7 @@ import React from "react";
 import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -2164,7 +2164,7 @@ import React from "react";
 import Select from 'funda-ui/Select';
 
 // component styles
-import '../funda-ui/Select/src/index.scss';
+import 'funda-ui/Select/index.css';
 
 export default () => {
 
@@ -2220,7 +2220,7 @@ import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
 | `controlClassName` | string | `form-control` | The class name of the control. | - |
 | `controlExClassName` | string | - | The extended class name of `controlClassName`. | - |
 | `optionsExClassName` | string | - | The extended class name of options from popup. | - |
-| `customScrollContainer` | string \| HTMLElement \| React.RefObject<HTMLElement> | - | Custom scroll container for position calculation instead of window. Can be a selector string, DOM element, or React ref. | - |
+| `customScrollContainer` | string \| HTMLElement \| React.RefObject\<HTMLElement\> | - | Custom scroll container for position calculation instead of window. Can be a selector string, DOM element, or React ref. | - |
 | `exceededSidePosOffset` | number | 15 | Offset px that exceeds the far right or left side of the screen | - |
 | `clearIcon` | boolean | true | A clear icon is displayed on the right side of the search box to clear the form | - |
 | `options` | JSON Object Literals \| JSON Object | - | Set the default value using JSON string format for menu of options, like this: `[{"label": "Option 1","value": "value-1","queryString": "option1"},{"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},{"label": "Option 3","value": "value-3","queryString": "option3"},{"label": "Option 4","value": "value-4","queryString": "option4","disabled":true}]` <br /> <blockquote>Note: Use API data if database query exists. That is, the attribute `fetch<METHOD_NAME>`</blockquote> <hr /> <blockquote>When the attribute `hierarchical` is true, you need to use a hierarchical structure to pass data, such as: `[{label:"Top level 1",value:'level-1',queryString:""},{label:"Top level 2",value:'level-2',queryString:""},{label:"Top level 3",value:'level-3',queryString:"",children:[{label:"Sub level 3_1",value:'level-3_1',queryString:""},{label:"Sub level 3_2",value:'level-3_2',queryString:"",children:[{label:"Sub level 3_2_1",value:'level-3_2_1',queryString:""}]},{label:"Sub level 3_3",value:'level-3_3',queryString:""}]}]`</blockquote>| - |
