@@ -2322,6 +2322,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var inputRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var listRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
+  var MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
   // searchable
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)([]),
@@ -2439,7 +2440,7 @@ var CascadingSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
     // STEP 2:
     //-----------
     // Detect position
-    if (window.innerHeight - _triggerBox.top > 100) {
+    if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
       targetPos = 'bottom';
     } else {
       targetPos = 'top';

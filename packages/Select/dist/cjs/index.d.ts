@@ -47,6 +47,7 @@ export declare type SelectProps = {
     controlClassName?: string;
     controlExClassName?: string;
     optionsExClassName?: string;
+    customScrollContainer?: string | HTMLElement | React.RefObject<HTMLElement>;
     exceededSidePosOffset?: number;
     clearIcon?: boolean;
     renderOption?: (optionData: OptionConfig, index: number) => React.ReactNode;

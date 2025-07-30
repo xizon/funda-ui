@@ -193,6 +193,9 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
 
     const DEPTH = depth || 1055;  // the default value same as bootstrap
+    const MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
+
+
     const defaultValueIsEmpty = (s: any) => {
         return typeof s === 'undefined' || s === null || s === 'null' || s === '';
     };
@@ -521,7 +524,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         // STEP 1:
         //-----------
         // Detect position
-        if (window.innerHeight - _triggerBox.top > 100) {
+        if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';

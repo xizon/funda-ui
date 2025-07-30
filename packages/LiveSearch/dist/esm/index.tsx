@@ -153,6 +153,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
     const EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
     const AUTO_SHOW_OPTIONS = typeof autoShowOptions !== 'undefined' && autoShowOptions === true ? true : false; 
     const MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false;  // Manual requests
+    const MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
     const NO_MATCH_POPUP = typeof noMatchPopup === 'undefined' ? true : noMatchPopup;
     const WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
@@ -300,7 +301,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // STEP 2:
         //-----------
         // Detect position
-        if (window.innerHeight - _triggerBox.top > 100) {
+        if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';

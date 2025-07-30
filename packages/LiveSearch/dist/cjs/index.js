@@ -2892,6 +2892,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
   var EXCEEDED_SIDE_POS_OFFSET = Number(exceededSidePosOffset) || 15;
   var AUTO_SHOW_OPTIONS = typeof autoShowOptions !== 'undefined' && autoShowOptions === true ? true : false;
   var MANUAL_REQ = typeof fetchTrigger !== 'undefined' && fetchTrigger === true ? true : false; // Manual requests
+  var MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
   var NO_MATCH_POPUP = typeof noMatchPopup === 'undefined' ? true : noMatchPopup;
   var WIN_WIDTH = typeof winWidth === 'function' ? winWidth() : winWidth ? winWidth : 'auto';
@@ -3052,7 +3053,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     // STEP 2:
     //-----------
     // Detect position
-    if (window.innerHeight - _triggerBox.top > 100) {
+    if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
       targetPos = 'bottom';
     } else {
       targetPos = 'top';

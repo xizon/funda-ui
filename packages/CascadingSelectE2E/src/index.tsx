@@ -184,6 +184,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
     const rootRef = useRef<any>(null);
     const inputRef = useRef<any>(null);
     const listRef = useRef<any>(null);
+    const MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
     // searchable
     const [columnSearchKeywords, setColumnSearchKeywords] = useState<string[]>([]);
@@ -318,7 +319,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
         // STEP 2:
         //-----------
         // Detect position
-        if (window.innerHeight - _triggerBox.top > 100) {
+        if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';

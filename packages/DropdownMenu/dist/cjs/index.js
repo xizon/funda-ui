@@ -1285,6 +1285,8 @@ var DropdownMenu = function DropdownMenu(props) {
     selected = _useState4[0],
     setSelected = _useState4[1];
   var _hoverDelay = !isNaN(hoverDelay) && typeof hoverDelay !== 'undefined' ? hoverDelay : 150;
+  var MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
+
   var defaultLabel = triggerContent === undefined ? '' : triggerContent;
   var selectedLabel = triggerSwitchActive ? selected ? selected.label : defaultLabel : defaultLabel;
   var selectOptionsListPresentation = options === null || options === void 0 ? void 0 : options.map(function (selectOption, index) {
@@ -1375,7 +1377,7 @@ var DropdownMenu = function DropdownMenu(props) {
       // STEP 2:
       //-----------
       // Detect position
-      if (window.innerHeight - _triggerBox.top > 100) {
+      if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
         targetPos = 'bottom';
       } else {
         targetPos = 'top';

@@ -88,6 +88,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<any>(null);
     const _hoverDelay = !isNaN(hoverDelay as never) && typeof hoverDelay !== 'undefined' ? hoverDelay : 150;
+        const MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
    
     const defaultLabel = triggerContent === undefined ? '' : triggerContent;
@@ -207,7 +208,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             // STEP 2:
             //-----------
             // Detect position
-            if (window.innerHeight - _triggerBox.top > 100) {
+            if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
                 targetPos = 'bottom';
             } else {
                 targetPos = 'top';

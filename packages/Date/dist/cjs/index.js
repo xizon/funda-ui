@@ -5034,6 +5034,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     langToday = props.langToday,
     attributes = _objectWithoutProperties(props, _excluded);
   var DEPTH = depth || 1055; // the default value same as bootstrap
+  var MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
+
   var defaultValueIsEmpty = function defaultValueIsEmpty(s) {
     return typeof s === 'undefined' || s === null || s === 'null' || s === '';
   };
@@ -5328,7 +5330,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     // STEP 1:
     //-----------
     // Detect position
-    if (window.innerHeight - _triggerBox.top > 100) {
+    if (window.innerHeight - _triggerBox.top > MIN_SPACE_FOR_DROPDOWN) {
       targetPos = 'bottom';
     } else {
       targetPos = 'top';

@@ -3578,7 +3578,7 @@ var format_string = __webpack_require__(933);
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/index.tsx
-var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "exceededSidePosOffset", "clearIcon", "renderOption", "multiSelect", "multiSelectEntireAreaTrigger", "multiSelectSelectedItemOnlyStatus", "renderSelectedValue", "disabled", "required", "defaultValue", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "autoCapitalize", "spellCheck", "options", "clearTrigger", "loader", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "firstRequestAutoExec", "fetchTrigger", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus", "onKeyPressed"];
+var _excluded = ["contentRef", "popupRef", "wrapperClassName", "controlClassName", "controlExClassName", "optionsExClassName", "customScrollContainer", "exceededSidePosOffset", "clearIcon", "renderOption", "multiSelect", "multiSelectEntireAreaTrigger", "multiSelectSelectedItemOnlyStatus", "renderSelectedValue", "disabled", "required", "defaultValue", "value", "label", "name", "readOnly", "placeholder", "id", "autoComplete", "autoCapitalize", "spellCheck", "options", "clearTrigger", "loader", "lockBodyScroll", "hierarchical", "indentation", "doubleIndent", "style", "depth", "controlArrow", "winWidth", "tabIndex", "firstRequestAutoExec", "fetchTrigger", "fetchNoneInfo", "fetchUpdate", "fetchFuncAsync", "fetchFuncMethod", "fetchFuncMethodParams", "data", "extractValueByBrackets", "fetchCallback", "onFetch", "onLoad", "onSelect", "onChange", "onBlur", "onFocus", "onKeyPressed"];
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -3626,6 +3626,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     controlClassName = props.controlClassName,
     controlExClassName = props.controlExClassName,
     optionsExClassName = props.optionsExClassName,
+    customScrollContainer = props.customScrollContainer,
     exceededSidePosOffset = props.exceededSidePosOffset,
     clearIcon = props.clearIcon,
     renderOption = props.renderOption,
@@ -3701,6 +3702,8 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   var listContentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var optionsRes = options ? (0,validate.isJSON)(options) ? JSON.parse(options) : options : [];
   var LIST_CONTAINER_MAX_HEIGHT = 300;
+  var MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
+
   var keyboardSelectedItem = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
 
   // loading
@@ -4321,8 +4324,36 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     _contentOldHeight = listContainerHeightLimit(_contentOldHeight);
 
     // You need to wait for the height of the pop-up container to be set
-    // Detect position、
-    if (window.innerHeight - _triggerBox.top > 100) {
+    // Detect position
+    var containerHeight = window.innerHeight;
+    var containerTop = 0;
+
+    // If custom scroll container is specified, use it instead of window
+    if (customScrollContainer) {
+      var customContainer = null;
+      if (typeof customScrollContainer === 'string') {
+        // Handle selector string
+        customContainer = document.querySelector(customScrollContainer);
+      } else if (customScrollContainer instanceof HTMLElement) {
+        // Handle DOM element directly
+        customContainer = customScrollContainer;
+      } else if (customScrollContainer && 'current' in customScrollContainer) {
+        // Handle React ref
+        customContainer = customScrollContainer.current;
+      }
+      if (customContainer) {
+        var containerRect = customContainer.getBoundingClientRect();
+        containerHeight = containerRect.height;
+        containerTop = containerRect.top;
+      }
+    }
+
+    // Calculate available space below the trigger
+    var availableSpaceBelow = containerHeight - (_triggerBox.top - containerTop);
+
+    // Use a more reasonable threshold for position decision
+    // Consider the minimum space needed for a usable dropdown
+    if (availableSpaceBelow > MIN_SPACE_FOR_DROPDOWN) {
       targetPos = 'bottom';
     } else {
       targetPos = 'top';
@@ -4333,7 +4364,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     //-----------
     // Set the pop-up height
     if (targetPos === 'top') {
-      contentMaxHeight = _triggerBox.top;
+      // Calculate available space above the trigger
+      var availableSpaceAbove = _triggerBox.top - containerTop;
+      contentMaxHeight = availableSpaceAbove;
 
       // height restrictions
       contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
@@ -4354,7 +4387,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
       }
     }
     if (targetPos === 'bottom') {
-      contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+      // Calculate available space below the trigger
+      var _availableSpaceBelow = containerHeight - (_triggerBox.bottom - containerTop);
+      contentMaxHeight = _availableSpaceBelow;
 
       // height restrictions
       contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
@@ -4380,17 +4415,16 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Adjust position
     if (targetPos === 'top') {
       _modalRef.style.left = x + 'px';
-      //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
-      _modalRef.style.top = 'auto';
-      _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
-      _modalRef.style.setProperty('position', 'fixed', 'important');
+      _modalRef.style.bottom = 'auto';
+      // Position the popup above the trigger without overlapping
+      var topPosition = y - POS_OFFSET - listContentRef.current.clientHeight - 2;
+      _modalRef.style.top = topPosition + 'px';
       _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {
       _modalRef.style.left = x + 'px';
       _modalRef.style.bottom = 'auto';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
-      _modalRef.style.setProperty('position', 'absolute', 'important');
       _modalRef.classList.remove('pos-top');
     }
 
@@ -4400,16 +4434,38 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     var _modalContent = _modalRef;
     var _modalBox = _modalContent.getBoundingClientRect();
     if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
+      // Get container width for boundary checking
+      var containerWidth = window.innerWidth;
+      var containerLeft = 0;
+      if (customScrollContainer) {
+        var _customContainer = null;
+        if (typeof customScrollContainer === 'string') {
+          // Handle selector string
+          _customContainer = document.querySelector(customScrollContainer);
+        } else if (customScrollContainer instanceof HTMLElement) {
+          // Handle DOM element directly
+          _customContainer = customScrollContainer;
+        } else if (customScrollContainer && 'current' in customScrollContainer) {
+          // Handle React ref
+          _customContainer = customScrollContainer.current;
+        }
+        if (_customContainer) {
+          var _containerRect = _customContainer.getBoundingClientRect();
+          containerWidth = _containerRect.width;
+          containerLeft = _containerRect.left;
+        }
+      }
+
       // 10 pixels is used to account for some bias in mobile devices
-      if (_modalBox.right + 10 > window.innerWidth) {
-        var _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
+      if (_modalBox.right + 10 > containerLeft + containerWidth) {
+        var _modalOffsetPosition = _modalBox.right - (containerLeft + containerWidth) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.dataset.offset = _modalOffsetPosition;
         _modalContent.style.marginLeft = "-".concat(_modalOffsetPosition, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)
       }
 
-      if (_modalBox.left - 10 < 0) {
-        var _modalOffsetPosition2 = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
+      if (_modalBox.left - 10 < containerLeft) {
+        var _modalOffsetPosition2 = Math.abs(_modalBox.left - containerLeft) + EXCEEDED_SIDE_POS_OFFSET;
         _modalContent.dataset.offset = _modalOffsetPosition2;
         _modalContent.style.marginLeft = "".concat(_modalOffsetPosition2, "px");
         // console.log('_modalPosition: ', _modalOffsetPosition)

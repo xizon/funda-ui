@@ -47,7 +47,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface MultiSelectValue {
     items: { label: string; value: string }[];
     labels: string[];
@@ -109,6 +108,7 @@ export type SelectProps = {
     controlClassName?: string;
     controlExClassName?: string;
     optionsExClassName?: string;
+    customScrollContainer?: string | HTMLElement | React.RefObject<HTMLElement>;
     exceededSidePosOffset?: number;
     clearIcon?: boolean; 
     renderOption?: (optionData: OptionConfig, index: number) => React.ReactNode;
@@ -188,6 +188,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         controlClassName,
         controlExClassName,
         optionsExClassName,
+        customScrollContainer,
         exceededSidePosOffset,
         clearIcon,
         renderOption,
@@ -265,6 +266,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     const listContentRef = useRef<any>(null);
     const optionsRes = options ? (isJSON(options) ? JSON.parse(options as string) : options) : [];
     const LIST_CONTAINER_MAX_HEIGHT = 300;
+    const MIN_SPACE_FOR_DROPDOWN = 200; // Minimum space needed to show dropdown below trigger
 
     const keyboardSelectedItem = useRef<any>(null);
 
@@ -850,8 +852,38 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         _contentOldHeight = listContainerHeightLimit(_contentOldHeight);
 
         // You need to wait for the height of the pop-up container to be set
-        // Detect position、
-        if (window.innerHeight - _triggerBox.top > 100) {
+        // Detect position
+        let containerHeight = window.innerHeight;
+        let containerTop = 0;
+        
+        // If custom scroll container is specified, use it instead of window
+        if (customScrollContainer) {
+            let customContainer: HTMLElement | null = null;
+            
+            if (typeof customScrollContainer === 'string') {
+                // Handle selector string
+                customContainer = document.querySelector(customScrollContainer);
+            } else if (customScrollContainer instanceof HTMLElement) {
+                // Handle DOM element directly
+                customContainer = customScrollContainer;
+            } else if (customScrollContainer && 'current' in customScrollContainer) {
+                // Handle React ref
+                customContainer = customScrollContainer.current;
+            }
+            
+            if (customContainer) {
+                const containerRect = customContainer.getBoundingClientRect();
+                containerHeight = containerRect.height;
+                containerTop = containerRect.top;
+            }
+        }
+        
+        // Calculate available space below the trigger
+        const availableSpaceBelow = containerHeight - (_triggerBox.top - containerTop);
+        
+        // Use a more reasonable threshold for position decision
+        // Consider the minimum space needed for a usable dropdown
+        if (availableSpaceBelow > MIN_SPACE_FOR_DROPDOWN) {
             targetPos = 'bottom';
         } else {
             targetPos = 'top';
@@ -865,7 +897,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         //-----------
         // Set the pop-up height
         if (targetPos === 'top') {
-            contentMaxHeight = _triggerBox.top;
+            // Calculate available space above the trigger
+            const availableSpaceAbove = _triggerBox.top - containerTop;
+            contentMaxHeight = availableSpaceAbove;
 
             // height restrictions
             contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
@@ -892,8 +926,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         }
 
         if (targetPos === 'bottom') {
-            contentMaxHeight = window.innerHeight - _triggerBox.bottom;
-
+            // Calculate available space below the trigger
+            const availableSpaceBelow = containerHeight - (_triggerBox.bottom - containerTop);
+            contentMaxHeight = availableSpaceBelow;
 
             // height restrictions
             contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
@@ -925,18 +960,18 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Adjust position
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
-            //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
-            _modalRef.style.top = 'auto';
-            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
-            _modalRef.style.setProperty('position', 'fixed', 'important');
+            _modalRef.style.bottom = 'auto';
+            // Position the popup above the trigger without overlapping
+            const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
+            _modalRef.style.top = topPosition + 'px';
             _modalRef.classList.add('pos-top');
+
         }
 
         if (targetPos === 'bottom') {
             _modalRef.style.left = x + 'px';
             _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
-            _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
 
@@ -949,22 +984,45 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         const _modalBox = _modalContent.getBoundingClientRect();
         if (typeof _modalContent.dataset.offset === 'undefined' && _modalBox.left > 0) {
 
+            // Get container width for boundary checking
+            let containerWidth = window.innerWidth;
+            let containerLeft = 0;
+            
+            if (customScrollContainer) {
+                let customContainer: HTMLElement | null = null;
+                
+                if (typeof customScrollContainer === 'string') {
+                    // Handle selector string
+                    customContainer = document.querySelector(customScrollContainer);
+                } else if (customScrollContainer instanceof HTMLElement) {
+                    // Handle DOM element directly
+                    customContainer = customScrollContainer;
+                } else if (customScrollContainer && 'current' in customScrollContainer) {
+                    // Handle React ref
+                    customContainer = customScrollContainer.current;
+                }
+                
+                if (customContainer) {
+                    const containerRect = customContainer.getBoundingClientRect();
+                    containerWidth = containerRect.width;
+                    containerLeft = containerRect.left;
+                }
+            }
+
             // 10 pixels is used to account for some bias in mobile devices
-            if ((_modalBox.right + 10) > window.innerWidth) {
-                const _modalOffsetPosition = _modalBox.right - window.innerWidth + EXCEEDED_SIDE_POS_OFFSET;
+            if ((_modalBox.right + 10) > (containerLeft + containerWidth)) {
+                const _modalOffsetPosition = _modalBox.right - (containerLeft + containerWidth) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `-${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
             }
 
-
-            if ((_modalBox.left - 10) < 0) {
-                const _modalOffsetPosition = Math.abs(_modalBox.left) + EXCEEDED_SIDE_POS_OFFSET;
+            if ((_modalBox.left - 10) < containerLeft) {
+                const _modalOffsetPosition = Math.abs(_modalBox.left - containerLeft) + EXCEEDED_SIDE_POS_OFFSET;
                 _modalContent.dataset.offset = _modalOffsetPosition;
                 _modalContent.style.marginLeft = `${_modalOffsetPosition}px`;
                 // console.log('_modalPosition: ', _modalOffsetPosition)
             }
-
 
         }
 
