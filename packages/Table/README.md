@@ -32,6 +32,15 @@ export default () => {
                         <TableCell scope="col" nowrap>Title 1</TableCell>
                         <TableCell scope="col" nowrap>Title 2</TableCell>
                         <TableCell scope="col" nowrap>Title 3</TableCell>
+                        <TableCell scope="col" nowrap>Title 4</TableCell>
+                        <TableCell scope="col" nowrap>Title 5</TableCell>
+                        <TableCell scope="col" nowrap>Title 6</TableCell>
+                        <TableCell scope="col" nowrap>Title 7</TableCell>
+                        <TableCell scope="col" nowrap>Long Title 8</TableCell>
+                        <TableCell scope="col" nowrap>Long Title 9</TableCell>
+                        <TableCell scope="col" nowrap>Long Title 10</TableCell>
+                        <TableCell scope="col" nowrap>Long Title 11</TableCell>
+                        <TableCell scope="col" nowrap>Long Title 12</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -40,12 +49,30 @@ export default () => {
                         <TableCell>David</TableCell>
                         <TableCell>Jone</TableCell>
                         <TableCell>Good</TableCell>
+                        <TableCell>Test 4</TableCell>
+                        <TableCell>Test 5</TableCell>
+                        <TableCell>Test 6</TableCell>
+                        <TableCell>Test 7</TableCell>
+                        <TableCell>Test  8</TableCell>
+                        <TableCell>Test 9</TableCell>
+                        <TableCell>Test 10</TableCell>
+                        <TableCell>Test 11</TableCell>
+                        <TableCell>Test 12</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell scope="row">2</TableCell>
                         <TableCell>Chuckie</TableCell>
                         <TableCell>Jone</TableCell>
                         <TableCell>BAD</TableCell>
+                        <TableCell>Test 4</TableCell>
+                        <TableCell>Test 5</TableCell>
+                        <TableCell>Test 6</TableCell>
+                        <TableCell>Test 7</TableCell>
+                        <TableCell>Test 8</TableCell>
+                        <TableCell>Test 9</TableCell>
+                        <TableCell>Test 10</TableCell>
+                        <TableCell>Test 11</TableCell>
+                        <TableCell>Test 12</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell scope="row">3</TableCell>
@@ -53,6 +80,15 @@ export default () => {
                             Hi There
                         </TableCell>
                         <TableCell>Cool</TableCell>
+                        <TableCell>Test 4</TableCell>
+                        <TableCell>Test 5</TableCell>
+                        <TableCell>Test 6</TableCell>
+                        <TableCell>Test 7</TableCell>
+                        <TableCell>Test 8</TableCell>
+                        <TableCell>Test 9</TableCell>
+                        <TableCell>Test 10</TableCell>
+                        <TableCell>Test 11</TableCell>
+                        <TableCell>Test 12</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
