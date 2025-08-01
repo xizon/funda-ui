@@ -3026,7 +3026,6 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     if (isBlurringRef.current && !MANUAL_REQ) return;
 
     //
-    var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
     // update modal position
@@ -3067,6 +3066,11 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     var _contentActualHeight = listContentRef.current.querySelector('.livesearch__options-contentlist-inner').clientHeight;
     if (targetPos === 'top') {
       contentMaxHeight = _triggerBox.top;
+
+      // Calculate the final height with minimum height protection
+      var contentHeightOffset = 0;
+      var finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
+
       if (_contentBox.height > _contentActualHeight) {
         if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
       } else {
@@ -3074,11 +3078,16 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
 
         // recalculate the height
         _contentBox = listContentRef.current.getBoundingClientRect();
-        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
+        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = finalHeight + 'px';
       }
     }
     if (targetPos === 'bottom') {
       contentMaxHeight = window.innerHeight - _triggerBox.bottom;
+
+      // Calculate the final height with minimum height protection
+      var _contentHeightOffset = 10;
+      var _finalHeight = Math.max(contentMaxHeight - _contentHeightOffset, 150); // Ensure minimum height of 150px
+
       if (_contentBox.height > _contentActualHeight) {
         if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
       } else {
@@ -3086,7 +3095,7 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
 
         // recalculate the height
         _contentBox = listContentRef.current.getBoundingClientRect();
-        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
+        if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = _finalHeight + 'px';
       }
     }
 
@@ -3095,17 +3104,16 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
     // Adjust position
     if (targetPos === 'top') {
       _modalRef.style.left = x + 'px';
-      //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
-      _modalRef.style.top = 'auto';
-      _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
-      _modalRef.style.setProperty('position', 'fixed', 'important');
+      _modalRef.style.bottom = 'auto';
+      // Position the popup above the trigger without overlapping
+      var topPosition = y - POS_OFFSET - listContentRef.current.clientHeight - 2;
+      _modalRef.style.top = topPosition + 'px';
       _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {
       _modalRef.style.left = x + 'px';
       _modalRef.style.bottom = 'auto';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
-      _modalRef.style.setProperty('position', 'absolute', 'important');
       _modalRef.classList.remove('pos-top');
     }
 

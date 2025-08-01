@@ -276,7 +276,6 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
 
         //
-        const contentHeightOffset = 80;
         let contentMaxHeight = 0;
 
         // update modal position
@@ -321,6 +320,10 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         if (targetPos === 'top') {
             contentMaxHeight = _triggerBox.top;
 
+            // Calculate the final height with minimum height protection
+            const contentHeightOffset = 0;
+            const finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
+
             if (_contentBox.height > _contentActualHeight) {
                 if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
             } else {
@@ -328,7 +331,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
                 // recalculate the height
                 _contentBox = listContentRef.current.getBoundingClientRect();
-                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
+                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = finalHeight + 'px';
 
             }
         }
@@ -336,6 +339,10 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         if (targetPos === 'bottom') {
             contentMaxHeight = window.innerHeight - _triggerBox.bottom;
 
+            // Calculate the final height with minimum height protection
+            const contentHeightOffset = 10;
+            const finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
+
             if (_contentBox.height > _contentActualHeight) {
                 if (_contentActualHeight > 0) listContentRef.current.style.height = _contentActualHeight + 'px';
             } else {
@@ -343,7 +350,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
 
                 // recalculate the height
                 _contentBox = listContentRef.current.getBoundingClientRect();
-                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
+                if (_contentBox.height > contentMaxHeight) listContentRef.current.style.height = finalHeight + 'px';
             }
 
         }
@@ -355,23 +362,20 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // Adjust position
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
-            //_modalRef.style.top = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2 + 'px';
-            _modalRef.style.top = 'auto';
-            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
-            _modalRef.style.setProperty('position', 'fixed', 'important');
+            _modalRef.style.bottom = 'auto';
+            // Position the popup above the trigger without overlapping
+            const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
+            _modalRef.style.top = topPosition + 'px';
             _modalRef.classList.add('pos-top');
+
         }
 
         if (targetPos === 'bottom') {
             _modalRef.style.left = x + 'px';
             _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
-            _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
-
-
-
 
 
         // STEP 5:

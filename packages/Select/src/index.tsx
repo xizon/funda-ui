@@ -47,6 +47,7 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export interface MultiSelectValue {
     items: { label: string; value: string }[];
     labels: string[];
@@ -815,7 +816,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (isBlurringRef.current) return;
 
         //
-        const contentHeightOffset = 80;
         let contentMaxHeight = 0;
 
         // update modal position
@@ -904,10 +904,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // height restrictions
             contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
 
+            // Calculate the final height with minimum height protection
+            const contentHeightOffset = 0;
+            const finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
 
             if (_contentBox.height > contentMaxHeight) {
-                listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
-                if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - contentHeightOffset;
+                listContentRef.current.style.height = finalHeight + 'px';
+                if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = finalHeight;
 
                 // has scrollbar
                 listContentRef.current.dataset.hasScrollbar = 'true';
@@ -933,10 +936,13 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             // height restrictions
             contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
 
+            // Calculate the final height with minimum height protection
+            const contentHeightOffset = 10;
+            const finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
 
             if (_contentBox.height > contentMaxHeight) {
-                listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
-                if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - 10;
+                listContentRef.current.style.height = finalHeight + 'px';
+                if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = finalHeight;
 
                 // has scrollbar
                 listContentRef.current.dataset.hasScrollbar = 'true';

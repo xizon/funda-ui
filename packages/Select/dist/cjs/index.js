@@ -4289,7 +4289,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     if (isBlurringRef.current) return;
 
     //
-    var contentHeightOffset = 80;
     var contentMaxHeight = 0;
 
     // update modal position
@@ -4370,9 +4369,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
       // height restrictions
       contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
+
+      // Calculate the final height with minimum height protection
+      var contentHeightOffset = 0;
+      var finalHeight = Math.max(contentMaxHeight - contentHeightOffset, 150); // Ensure minimum height of 150px
+
       if (_contentBox.height > contentMaxHeight) {
-        listContentRef.current.style.height = contentMaxHeight - contentHeightOffset + 'px';
-        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - contentHeightOffset;
+        listContentRef.current.style.height = finalHeight + 'px';
+        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = finalHeight;
 
         // has scrollbar
         listContentRef.current.dataset.hasScrollbar = 'true';
@@ -4393,9 +4397,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
       // height restrictions
       contentMaxHeight = listContainerHeightLimit(contentMaxHeight);
+
+      // Calculate the final height with minimum height protection
+      var _contentHeightOffset = 10;
+      var _finalHeight = Math.max(contentMaxHeight - _contentHeightOffset, 150); // Ensure minimum height of 150px
+
       if (_contentBox.height > contentMaxHeight) {
-        listContentRef.current.style.height = contentMaxHeight - 10 + 'px';
-        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = contentMaxHeight - 10;
+        listContentRef.current.style.height = _finalHeight + 'px';
+        if (typeof listContentRef.current.dataset.height === 'undefined') listContentRef.current.dataset.height = _finalHeight;
 
         // has scrollbar
         listContentRef.current.dataset.hasScrollbar = 'true';
