@@ -2239,7 +2239,7 @@ export default () => {
 
     //
     const tableCheckRef = useRef<Map<string, HTMLTableElement>>(new Map());
-    const [selectedRowData, setSelectedRowData] = useState<Record<string, any> | null>(null);
+    const [selectedRowData, setSelectedRowData] = useState<any[] | null>(null);
 
     useEffect(() => {
         
@@ -2377,7 +2377,7 @@ export default () => {
     //
     const tableSelectAllRef = useRef<any>(null);
     const tableCheckRef = useRef<Map<string, HTMLTableElement>>(new Map());
-    const [selectedRowData, setSelectedRowData] = useState<Record<string, any> | null>(null);
+    const [selectedRowData, setSelectedRowData] = useState<any[]>([]);
 
     useEffect(() => {
         
