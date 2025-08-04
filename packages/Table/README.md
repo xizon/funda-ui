@@ -2209,6 +2209,315 @@ export default () => {
 
 
 
+
+## Set the value of a `<ToggleSelection />` (Radio control)
+
+Click on the current row to activate the radio of the current row.
+
+
+```js
+import React, { useRef, useState, useEffect } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+
+    // utils
+    ToggleSelection,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+
+
+    const [tableData, setTableData] = useState<any[]>([]);
+
+    //
+    const tableCheckRef = useRef<Map<string, HTMLTableElement>>(new Map());
+    const [selectedRowData, setSelectedRowData] = useState<Record<string, any> | null>(null);
+
+    useEffect(() => {
+        
+        // test async
+        setTableData([
+            { name: 'David', friend: 'Jone', condition: 'GOOD' },
+            { name: 'Chuckie', friend: 'Jone', condition: 'BAD' },
+            { name: 'Smith Jone', friend: 'Lomi', condition: 'GOOD' },
+            { name: 'Frank', friend: 'Alice', condition: 'PERFECT' },
+        ]);
+
+    }, []);
+
+    return (
+        <>
+        
+            <Table
+                rowSelectable
+                tableClassName="table"
+                data={tableData}
+                dataSelected={[]}
+                onChangeRowSelect={(fetchData) => {
+                    setSelectedRowData(fetchData);
+                }}
+            >
+                <TableHead>
+                    <TableRow>
+                        <TableCell scope="col" nowrap style={{width: '25px'}}></TableCell>
+                        <TableCell scope="col" nowrap>#</TableCell>
+                        <TableCell scope="col" nowrap>Name</TableCell>
+                        <TableCell scope="col" nowrap>Friend</TableCell>
+                        <TableCell scope="col" nowrap>Condition</TableCell>
+                        <TableCell scope="col" nowrap>Operations</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {tableData.map((item, index) => {
+                        return <TableRow 
+                            key={`row-${index}`} 
+                            data-key={`row-${index}`}
+                            itemData={item}
+                            style={{'cursor': 'pointer'}}
+                            onClick={(e: React.MouseEvent) => {
+                                setSelectedRowData([item]);
+
+                                // trigger target checkbox
+                                if (tableCheckRef.current !== null) {
+                                    const currentCheckbox: any = tableCheckRef.current.get(item.name);
+                                    
+
+                                    // deselecting all
+                                    for (let [key, value] of tableCheckRef.current as any) {
+                                        value.set(false);
+                                    }
+
+                                    // select current target
+                                    currentCheckbox.set(true);
+                                }
+
+
+                            }}
+
+                        >
+                            <TableCell scope="row">
+                                {/** Checkbox */}
+                                <div className="checkbox-indeterminate">
+                                    <ToggleSelection
+                                        useRadio
+                                        row={index}
+                                        contentRef={(node: any) => {
+                                            if (node) {
+                                                tableCheckRef.current.set(item.name, node);
+                                            }
+
+                                        }}
+                                    />
+                                </div>
+                            </TableCell>
+                            <TableCell scope="row">{index}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.friend}</TableCell>
+                            <TableCell>{item.condition}</TableCell>
+                            <TableCell>
+                                {selectedRowData !== null && selectedRowData[0].name === item.name ? <>
+                                    <button tabIndex={-1} type="button" onClick={(e: React.MouseEvent) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+
+                                    }}>Detail</button>
+                                </> : ''}
+                            </TableCell>
+                        </TableRow>
+
+                    })}
+                </TableBody>
+            </Table>   
+
+            <small>Selected: {selectedRowData && selectedRowData[0].name}</small>
+
+
+        </>
+    );
+}
+```
+
+
+
+## Set the value of a `<ToggleSelection />` (Checkbox control)
+
+Click on the current row to activate the checkbox of the current row.
+
+
+```js
+import React, { useRef, useState, useEffect } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+
+    // utils
+    ToggleSelection,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+
+
+    const [tableData, setTableData] = useState<any[]>([]);
+
+    //
+    const tableSelectAllRef = useRef<any>(null);
+    const tableCheckRef = useRef<Map<string, HTMLTableElement>>(new Map());
+    const [selectedRowData, setSelectedRowData] = useState<Record<string, any> | null>(null);
+
+    useEffect(() => {
+        
+        // test async
+        setTableData([
+            { name: 'David', friend: 'Jone', condition: 'GOOD' },
+            { name: 'Chuckie', friend: 'Jone', condition: 'BAD' },
+            { name: 'Smith Jone', friend: 'Lomi', condition: 'GOOD' },
+            { name: 'Frank', friend: 'Alice', condition: 'PERFECT' },
+        ]);
+
+    }, []);
+
+    return (
+        <>
+        
+            <Table
+                rowSelectable
+                tableClassName="table"
+                data={tableData}
+                dataSelected={[]}
+                onChangeRowSelect={(fetchData) => {
+                    setSelectedRowData(fetchData);
+                }}
+            >
+                <TableHead>
+                    <TableRow>
+                        <TableCell scope="col" nowrap style={{width: '25px'}}>
+                            {/** Checkbox */}
+                            <div className="checkbox-indeterminate">
+                                <ToggleSelection row={-1} contentRef={tableSelectAllRef} />
+                            </div>
+                        </TableCell>
+                        <TableCell scope="col" nowrap>#</TableCell>
+                        <TableCell scope="col" nowrap>Name</TableCell>
+                        <TableCell scope="col" nowrap>Friend</TableCell>
+                        <TableCell scope="col" nowrap>Condition</TableCell>
+                        <TableCell scope="col" nowrap>Operations</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {tableData.map((item, index) => {
+                        return <TableRow 
+                            key={`row-${index}`} 
+                            data-key={`row-${index}`}
+                            itemData={item}
+                            style={{'cursor': 'pointer'}}
+                            onClick={(e) => {
+                                setSelectedRowData((prevState: any[]) => {
+                                    const exists = prevState.some(obj => obj.name === item.name);
+
+                                    let newState;
+                                    if (exists) {
+                                        newState = prevState.filter(obj => obj.name !== item.name);
+                                    } else {
+                                        const merged = [...prevState, item];
+                                        newState = Array.from(new Map(merged.map(obj => [obj.name, obj])).values());
+                                    }
+
+
+                                  //  Initialize indeterminate status of all checkboxes 
+                                    setTimeout(() => {
+                                        if (tableSelectAllRef.current) {
+                                            if (newState.length > 0 || newState.length < tableData.length) tableSelectAllRef.current.indeterminate(true);
+                                            if (newState.length === 0 || newState.length === tableData.length) tableSelectAllRef.current.indeterminate(false);
+                                            if (newState.length === 0) tableSelectAllRef.current.setSelectAll(false);
+                                            if (newState.length === tableData.length) tableSelectAllRef.current.setSelectAll(true);
+                                        }
+                                    }, 0);
+
+
+                                    return newState;
+                                });
+
+        
+                                // trigger target checkbox
+                                if (tableCheckRef.current !== null) {
+                                    const currentCheckbox = tableCheckRef.current.get(item.name);
+                                    if (currentCheckbox) {
+                                        currentCheckbox.set(!currentCheckbox.control().checked);
+                                    }
+                                }
+
+  
+
+                            }}
+
+                        >
+                            <TableCell scope="row">
+                                {/** Checkbox */}
+                                <div className="checkbox-indeterminate">
+                                    <ToggleSelection
+                                        row={index}
+                                        contentRef={(node: any) => {
+                                            if (node) {
+                                                tableCheckRef.current.set(item.name, node);
+                                            }
+
+                                        }}
+                                        onChange={(e: React.MouseEvent, val: boolean, fetchData: any[]) => {
+                                            //  Initialize indeterminate status of all checkboxes 
+                                            if (tableSelectAllRef.current) {
+                                                if (fetchData.length > 0 || fetchData.length < tableData.length) tableSelectAllRef.current.indeterminate(true);
+                                                if (fetchData.length === 0 || fetchData.length === tableData.length) tableSelectAllRef.current.indeterminate(false);
+                                                if (fetchData.length === 0) tableSelectAllRef.current.setSelectAll(false);
+                                                if (fetchData.length === tableData.length) tableSelectAllRef.current.setSelectAll(true);
+                                            }
+                                        }}    
+                                    />
+                                </div>
+                            </TableCell>
+                            <TableCell scope="row">{index}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.friend}</TableCell>
+                            <TableCell>{item.condition}</TableCell>
+                            <TableCell>
+                                {selectedRowData !== null && selectedRowData.map((v: any) => v.name).includes(item.name) ? <>
+                                    <button tabIndex={-1} type="button" onClick={(e: React.MouseEvent) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+
+                                    }}>Detail</button>
+                                </> : ''}
+                            </TableCell>
+                        </TableRow>
+
+                    })}
+                </TableBody>
+            </Table>   
+
+            <small>Selected: {selectedRowData && selectedRowData.map((v: any) => v.name).join(',')}</small>
+
+
+        </>
+    );
+}
+```
+
+
+
 ## API
 
 > ❤️ You could specify all remaining properties defined and all synthetic events from React on all components listed below. such as `tabIndex`, `style`, `id`, `data-xxx`, `onClick`, `onMouseEnter`, `onMouseLeave`, and so on.
