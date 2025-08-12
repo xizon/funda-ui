@@ -540,7 +540,6 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
             _modalRef.style.top = 'auto';
             _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
             _modalRef.style.setProperty('position', 'fixed', 'important');
-            _modalRef.style.setProperty('position', 'fixed', 'important');
             _modalRef.classList.add('pos-top');
         }
 

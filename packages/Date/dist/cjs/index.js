@@ -5346,7 +5346,6 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       _modalRef.style.top = 'auto';
       _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
       _modalRef.style.setProperty('position', 'fixed', 'important');
-      _modalRef.style.setProperty('position', 'fixed', 'important');
       _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {

@@ -362,10 +362,10 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
         // Adjust position
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
-            _modalRef.style.bottom = 'auto';
-            // Position the popup above the trigger without overlapping
-            const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
-            _modalRef.style.top = topPosition + 'px';
+            //_modalRef.style.top = y - POS_OFFSET - (listRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.top = 'auto';
+            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
+            _modalRef.style.setProperty('position', 'fixed', 'important');
             _modalRef.classList.add('pos-top');
 
         }
@@ -374,6 +374,7 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
             _modalRef.style.left = x + 'px';
             _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
 

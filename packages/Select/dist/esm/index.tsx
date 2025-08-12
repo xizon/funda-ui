@@ -505,9 +505,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     popwinPosInit();
                     popwinFilterItems(val);
 
-                    // Fix popup position after fetch loading completes
-                    fixPopupPositionAfterFetch();
-
                 }, 0);
 
                 setFetchLoading(false);
@@ -519,7 +516,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             setTimeout(() => {
                 popwinPosInit();
                 popwinFilterItems(val);
-                
             }, 0);
 
             setFetchLoading(false);
@@ -971,10 +967,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         // Adjust position
         if (targetPos === 'top') {
             _modalRef.style.left = x + 'px';
-            _modalRef.style.bottom = 'auto';
-            // Position the popup above the trigger without overlapping
-            const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
-            _modalRef.style.top = topPosition + 'px';
+            //_modalRef.style.top = y - POS_OFFSET - (listRef.current.clientHeight) - 2 + 'px';
+            _modalRef.style.top = 'auto';
+            _modalRef.style.bottom = (window.innerHeight - _triggerBox.top) + POS_OFFSET + 2 + 'px';
+            _modalRef.style.setProperty('position', 'fixed', 'important');
             _modalRef.classList.add('pos-top');
 
         }
@@ -983,6 +979,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             _modalRef.style.left = x + 'px';
             _modalRef.style.bottom = 'auto';
             _modalRef.style.top = y + height + POS_OFFSET + 'px';
+            _modalRef.style.setProperty('position', 'absolute', 'important');
             _modalRef.classList.remove('pos-top');
         }
 
@@ -1171,7 +1168,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (listContentRef.current === null) return;
 
         let oldHeight = listContentRef.current.dataset.height;
-        const pos = listContentRef.current.dataset.pos;
         let filteredHeight = listContentRef.current.firstChild.clientHeight;
 
         // height restrictions
@@ -1181,8 +1177,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         if (parseFloat(oldHeight) > filteredHeight) {
             listContentRef.current.style.height = filteredHeight + 'px';
+            console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
         } else {
             listContentRef.current.style.height = oldHeight + 'px';
+            console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
         }
 
     }
@@ -1227,26 +1225,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     }
 
-    
-    function fixPopupPositionAfterFetch() {
-        if (listContentRef.current === null || !isOpen) return;
-        
-        // Get the current position data
-        const currentPos = listContentRef.current.dataset.pos;
-        
-        if (currentPos === 'top') {
-            // Recalculate position for upward popup to fix offset issues
-            const _modalRef: any = document.querySelector(`#custom-select__options-wrapper-${idRes}`);
-            if (_modalRef && rootRef.current && selectInputRef.current) {
-                const { x } = getAbsolutePositionOfStage(rootRef.current);
-                const { y } = getAbsolutePositionOfStage(selectInputRef.current);
-                
-                _modalRef.style.left = x + 'px';
-                const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
-                _modalRef.style.top = topPosition + 'px';
-            }
-        }
-    }
 
     
     function cancel() {
@@ -1947,7 +1925,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
         if (MANUAL_REQ && val !== '') {
             popwinPosInit();
         }
-        
 
     }
 
@@ -2546,9 +2523,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                         popwinPosInit();
                                         popwinFilterItems(controlTempValue);
 
-                                        // Fix popup position after fetch loading completes
-                                        fixPopupPositionAfterFetch();
-
                                     }, 0);
                                 });
                                 
@@ -2821,9 +2795,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     setTimeout(() => {
                                         popwinPosInit();
                                         popwinFilterItems(controlTempValue);
-
-                                        // Fix popup position after fetch loading completes
-                                        fixPopupPositionAfterFetch();
 
                                     }, 0);
                                 });

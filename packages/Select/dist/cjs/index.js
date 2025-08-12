@@ -3995,9 +3995,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(val);
-
-          // Fix popup position after fetch loading completes
-          fixPopupPositionAfterFetch();
         }, 0);
         setFetchLoading(false);
       });
@@ -4427,16 +4424,17 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     // Adjust position
     if (targetPos === 'top') {
       _modalRef.style.left = x + 'px';
-      _modalRef.style.bottom = 'auto';
-      // Position the popup above the trigger without overlapping
-      var topPosition = y - POS_OFFSET - listContentRef.current.clientHeight - 2;
-      _modalRef.style.top = topPosition + 'px';
+      //_modalRef.style.top = y - POS_OFFSET - (listRef.current.clientHeight) - 2 + 'px';
+      _modalRef.style.top = 'auto';
+      _modalRef.style.bottom = window.innerHeight - _triggerBox.top + POS_OFFSET + 2 + 'px';
+      _modalRef.style.setProperty('position', 'fixed', 'important');
       _modalRef.classList.add('pos-top');
     }
     if (targetPos === 'bottom') {
       _modalRef.style.left = x + 'px';
       _modalRef.style.bottom = 'auto';
       _modalRef.style.top = y + height + POS_OFFSET + 'px';
+      _modalRef.style.setProperty('position', 'absolute', 'important');
       _modalRef.classList.remove('pos-top');
     }
 
@@ -4581,7 +4579,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   function popwinContainerHeightAdjust() {
     if (listContentRef.current === null) return;
     var oldHeight = listContentRef.current.dataset.height;
-    var pos = listContentRef.current.dataset.pos;
     var filteredHeight = listContentRef.current.firstChild.clientHeight;
 
     // height restrictions
@@ -4589,8 +4586,10 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     filteredHeight = listContainerHeightLimit(filteredHeight);
     if (parseFloat(oldHeight) > filteredHeight) {
       listContentRef.current.style.height = filteredHeight + 'px';
+      console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
     } else {
       listContentRef.current.style.height = oldHeight + 'px';
+      console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
     }
   }
   function popwinNoMatchInit() {
@@ -4621,25 +4620,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     //
     if (selectInputRef.current) selectInputRef.current.value = '';
-  }
-  function fixPopupPositionAfterFetch() {
-    if (listContentRef.current === null || !isOpen) return;
-
-    // Get the current position data
-    var currentPos = listContentRef.current.dataset.pos;
-    if (currentPos === 'top') {
-      // Recalculate position for upward popup to fix offset issues
-      var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));
-      if (_modalRef && rootRef.current && selectInputRef.current) {
-        var _getAbsolutePositionO3 = (0,getElementProperty.getAbsolutePositionOfStage)(rootRef.current),
-          x = _getAbsolutePositionO3.x;
-        var _getAbsolutePositionO4 = (0,getElementProperty.getAbsolutePositionOfStage)(selectInputRef.current),
-          y = _getAbsolutePositionO4.y;
-        _modalRef.style.left = x + 'px';
-        var topPosition = y - POS_OFFSET - listContentRef.current.clientHeight - 2;
-        _modalRef.style.top = topPosition + 'px';
-      }
-    }
   }
   function cancel() {
     // hide list
@@ -5851,9 +5831,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(controlTempValue);
-
-          // Fix popup position after fetch loading completes
-          fixPopupPositionAfterFetch();
         }, 0);
       });
     }
@@ -5979,9 +5956,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(controlTempValue);
-
-          // Fix popup position after fetch loading completes
-          fixPopupPositionAfterFetch();
         }, 0);
       });
     }
