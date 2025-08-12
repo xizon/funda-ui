@@ -3995,6 +3995,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(val);
+
+          // Fix popup position after fetch loading completes
+          fixPopupPositionAfterFetch();
         }, 0);
         setFetchLoading(false);
       });
@@ -4594,13 +4597,14 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     if (listContentRef.current === null) return;
     var _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
     var _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
-    var emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).every(function (node) {
+    var _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item'));
+    var itemsDoNotExist = _items.every(function (node) {
       if (!node.classList.contains('hide')) {
         return false;
       }
       return true;
     });
-    if (emptyFieldsCheck) {
+    if (itemsDoNotExist) {
       _noDataDiv.classList.remove('hide');
       if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
     } else {
@@ -4617,6 +4621,25 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
     //
     if (selectInputRef.current) selectInputRef.current.value = '';
+  }
+  function fixPopupPositionAfterFetch() {
+    if (listContentRef.current === null || !isOpen) return;
+
+    // Get the current position data
+    var currentPos = listContentRef.current.dataset.pos;
+    if (currentPos === 'top') {
+      // Recalculate position for upward popup to fix offset issues
+      var _modalRef = document.querySelector("#custom-select__options-wrapper-".concat(idRes));
+      if (_modalRef && rootRef.current && selectInputRef.current) {
+        var _getAbsolutePositionO3 = (0,getElementProperty.getAbsolutePositionOfStage)(rootRef.current),
+          x = _getAbsolutePositionO3.x;
+        var _getAbsolutePositionO4 = (0,getElementProperty.getAbsolutePositionOfStage)(selectInputRef.current),
+          y = _getAbsolutePositionO4.y;
+        _modalRef.style.left = x + 'px';
+        var topPosition = y - POS_OFFSET - listContentRef.current.clientHeight - 2;
+        _modalRef.style.top = topPosition + 'px';
+      }
+    }
   }
   function cancel() {
     // hide list
@@ -5468,6 +5491,15 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     }
   }
 
+  // Select all detection functions in the input box (for "Single selection")
+  function checkUserInputboxIsAllSelected(e) {
+    var input = e.target;
+    if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
+      setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
+    } else {
+      setUserInputboxIsAllSelected(false);
+    }
+  }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     // Call a function when the component has been rendered completely
     //--------------
@@ -5619,15 +5651,6 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     };
   }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
 
-  // Select all detection functions in the input box (for "Single selection")
-  function checkUserInputboxIsAllSelected(e) {
-    var input = e.target;
-    if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
-      setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
-    } else {
-      setUserInputboxIsAllSelected(false);
-    }
-  }
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, label ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "custom-select__label"
   }, typeof label === 'string' ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("label", {
@@ -5828,6 +5851,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(controlTempValue);
+
+          // Fix popup position after fetch loading completes
+          fixPopupPositionAfterFetch();
         }, 0);
       });
     }
@@ -5953,6 +5979,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         setTimeout(function () {
           popwinPosInit();
           popwinFilterItems(controlTempValue);
+
+          // Fix popup position after fetch loading completes
+          fixPopupPositionAfterFetch();
         }, 0);
       });
     }

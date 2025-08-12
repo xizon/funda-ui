@@ -47,7 +47,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface MultiSelectValue {
     items: { label: string; value: string }[];
     labels: string[];
@@ -273,7 +272,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
     // loading
-    const [fetchLoading, setFetchLoading] = useState(false);
+    const [fetchLoading, setFetchLoading] = useState<boolean>(false);
     const loadingOutput = <><div className="cus-select-loader">{loader || <svg height="12px" width="12px" viewBox="0 0 512 512"><g><path fill="inherit" d="M256,0c-23.357,0-42.297,18.932-42.297,42.288c0,23.358,18.94,42.288,42.297,42.288c23.357,0,42.279-18.93,42.279-42.288C298.279,18.932,279.357,0,256,0z" /><path fill="inherit" d="M256,427.424c-23.357,0-42.297,18.931-42.297,42.288C213.703,493.07,232.643,512,256,512c23.357,0,42.279-18.93,42.279-42.288C298.279,446.355,279.357,427.424,256,427.424z" /><path fill="inherit" d="M74.974,74.983c-16.52,16.511-16.52,43.286,0,59.806c16.52,16.52,43.287,16.52,59.806,0c16.52-16.511,16.52-43.286,0-59.806C118.261,58.463,91.494,58.463,74.974,74.983z" /><path fill="inherit" d="M377.203,377.211c-16.503,16.52-16.503,43.296,0,59.815c16.519,16.52,43.304,16.52,59.806,0c16.52-16.51,16.52-43.295,0-59.815C420.489,360.692,393.722,360.7,377.203,377.211z" /><path fill="inherit" d="M84.567,256c0.018-23.348-18.922-42.279-42.279-42.279c-23.357-0.009-42.297,18.932-42.279,42.288c-0.018,23.348,18.904,42.279,42.279,42.279C65.645,298.288,84.567,279.358,84.567,256z" /><path fill="inherit" d="M469.712,213.712c-23.357,0-42.279,18.941-42.297,42.288c0,23.358,18.94,42.288,42.297,42.297c23.357,0,42.297-18.94,42.279-42.297C512.009,232.652,493.069,213.712,469.712,213.712z" /><path fill="inherit" d="M74.991,377.22c-16.519,16.511-16.519,43.296,0,59.806c16.503,16.52,43.27,16.52,59.789,0c16.52-16.519,16.52-43.295,0-59.815C118.278,360.692,91.511,360.692,74.991,377.22z" /><path fill="inherit" d="M437.026,134.798c16.52-16.52,16.52-43.304,0-59.824c-16.519-16.511-43.304-16.52-59.823,0c-16.52,16.52-16.503,43.295,0,59.815C393.722,151.309,420.507,151.309,437.026,134.798z" /></g></svg>}</div></>;
 
 
@@ -500,21 +499,27 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
             // Make a request
             handleFetch(val).then((response: any) => {
-      
+
                 // pop win initalization
                 setTimeout(() => {
                     popwinPosInit();
                     popwinFilterItems(val);
+
+                    // Fix popup position after fetch loading completes
+                    fixPopupPositionAfterFetch();
+
                 }, 0);
 
                 setFetchLoading(false);
             });
         } else {
+            
    
             // pop win initalization
             setTimeout(() => {
                 popwinPosInit();
                 popwinFilterItems(val);
+                
             }, 0);
 
             setFetchLoading(false);
@@ -1190,14 +1195,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         const _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');
         const _noDataDiv = listContentRef.current.querySelector('.custom-select-multi__control-option-item--nomatch');
-        const emptyFieldsCheck = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item')).every((node: any) => {
+        const _items = [].slice.call(listContentRef.current.querySelectorAll('.custom-select-multi__control-option-item'));
+        const itemsDoNotExist = _items.every((node: any) => {
             if (!node.classList.contains('hide')) {
                 return false;
             }
             return true;
         });
 
-        if (emptyFieldsCheck) {
+        if (itemsDoNotExist) {
             _noDataDiv.classList.remove('hide');
             if (_btnSelectAll !== null) _btnSelectAll.classList.add('hide');
         } else {
@@ -1221,6 +1227,28 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
     }
 
+    
+    function fixPopupPositionAfterFetch() {
+        if (listContentRef.current === null || !isOpen) return;
+        
+        // Get the current position data
+        const currentPos = listContentRef.current.dataset.pos;
+        
+        if (currentPos === 'top') {
+            // Recalculate position for upward popup to fix offset issues
+            const _modalRef: any = document.querySelector(`#custom-select__options-wrapper-${idRes}`);
+            if (_modalRef && rootRef.current && selectInputRef.current) {
+                const { x } = getAbsolutePositionOfStage(rootRef.current);
+                const { y } = getAbsolutePositionOfStage(selectInputRef.current);
+                
+                _modalRef.style.left = x + 'px';
+                const topPosition = y - POS_OFFSET - (listContentRef.current.clientHeight) - 2;
+                _modalRef.style.top = topPosition + 'px';
+            }
+        }
+    }
+
+    
     function cancel() {
         // hide list
         setIsOpen(false);
@@ -2112,6 +2140,17 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }
 
 
+    // Select all detection functions in the input box (for "Single selection")
+    function checkUserInputboxIsAllSelected(e: any) {
+        const input = e.target;
+        if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
+            setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
+        } else {
+            setUserInputboxIsAllSelected(false);
+        }
+    }
+
+
     useEffect(() => {
 
         // Call a function when the component has been rendered completely
@@ -2278,15 +2317,6 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
     }, [orginalData]); // Avoid the issue that `setOptionsData(orginalData)` sets the original value to empty on the first entry
 
 
-    // Select all detection functions in the input box (for "Single selection")
-    function checkUserInputboxIsAllSelected(e: any) {
-        const input = e.target;
-        if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
-            setUserInputboxIsAllSelected(input.selectionStart === 0 && input.selectionEnd === input.value.length && input.value.length > 0);
-        } else {
-            setUserInputboxIsAllSelected(false);
-        }
-    }
 
 
     return (
@@ -2515,6 +2545,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     setTimeout(() => {
                                         popwinPosInit();
                                         popwinFilterItems(controlTempValue);
+
+                                        // Fix popup position after fetch loading completes
+                                        fixPopupPositionAfterFetch();
+
                                     }, 0);
                                 });
                                 
@@ -2787,6 +2821,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                                     setTimeout(() => {
                                         popwinPosInit();
                                         popwinFilterItems(controlTempValue);
+
+                                        // Fix popup position after fetch loading completes
+                                        fixPopupPositionAfterFetch();
+
                                     }, 0);
                                 });
                             }}>
