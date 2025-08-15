@@ -1954,7 +1954,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             src: src || null,
             size: size || null,
             alt: alt || null,
-            inputMode: inputMode || 'text',
+            inputMode: inputMode || undefined,
             pattern: pattern || null,
             placeholder: placeholder || '',
             value: changedVal,

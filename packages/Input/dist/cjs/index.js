@@ -1400,7 +1400,7 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     src: src || null,
     size: size || null,
     alt: alt || null,
-    inputMode: inputMode || 'text',
+    inputMode: inputMode || undefined,
     pattern: pattern || null,
     placeholder: placeholder || '',
     value: changedVal,

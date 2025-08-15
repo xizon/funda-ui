@@ -2,7 +2,7 @@
     "author": "UIUX Lab",
     "email": "uiuxlab@gmail.com",
     "name": "funda-ui",
-    "version": "4.7.562",
+    "version": "4.7.565",
     "description": "React components using pure Bootstrap 5+ which does not contain any external style and script libraries.",
     "repository": {
         "type": "git",

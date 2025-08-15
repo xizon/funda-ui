@@ -545,7 +545,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             src={src || null}
                             size={size || null}
                             alt={alt || null}
-                            inputMode={inputMode || 'text'}
+                            inputMode={inputMode || undefined}
                             pattern={pattern || null}
                             placeholder={placeholder || ''}
                             value={changedVal}
