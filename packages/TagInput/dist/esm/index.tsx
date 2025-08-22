@@ -44,7 +44,7 @@ export type TagInputProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, data: any, dataStr: any) => void;
+    onChange?: (el: HTMLElement, data: any, dataStr: any) => void;
     onBlur?: (e: any) => void;
     onFocus?: (e: any) => void;
 

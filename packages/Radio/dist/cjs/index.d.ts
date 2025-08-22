@@ -2,7 +2,7 @@ import React from 'react';
 export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
-export declare type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+export declare type RadioOptionChangeFnType = (e: React.ChangeEvent<HTMLInputElement> | null, val: string, currentData: OptionConfig | null, currentIndex: string | number | null, element: HTMLElement) => void;
 export declare type RadioProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

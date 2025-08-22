@@ -9,8 +9,14 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, currentData, currentIndex);
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement> | null, 
+        val: string, 
+        currentData: OptionConfig | null, 
+        currentIndex: string | number | null, 
+        element: HTMLElement  
+    ) {
+        console.log(e.target, val, currentData, currentIndex, element);
     }
 
     return (
@@ -201,9 +207,16 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, currentData, currentIndex);
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement> | null, 
+        val: string, 
+        currentData: OptionConfig | null, 
+        currentIndex: string | number | null, 
+        element: HTMLElement  
+    ) {
+        console.log(e.target, val, currentData, currentIndex, element);
     }
+
 
     return (
         <>         
@@ -251,9 +264,16 @@ import Radio from 'funda-ui/Radio';
 
 export default () => {
 
-    function handleChange(e: any, val: string, currentData: any, currentIndex: number) {
-        console.log(e.target, val, currentData, currentIndex);
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement> | null, 
+        val: string, 
+        currentData: OptionConfig | null, 
+        currentIndex: string | number | null, 
+        element: HTMLElement  
+    ) {
+        console.log(e.target, val, currentData, currentIndex, element);
     }
+
 
     return (
         <>           
@@ -406,9 +426,16 @@ class DataService {
 
 export default () => {
 
-    function handleChange(e, val, data) {
-        console.log(e.target, val, data);
+    function handleChange(
+        e: React.ChangeEvent<HTMLInputElement> | null, 
+        val: string, 
+        currentData: OptionConfig | null, 
+        currentIndex: string | number | null, 
+        element: HTMLElement  
+    ) {
+        console.log(e.target, val, currentData, currentIndex, element);
     }
+
 
     return (
         <>
@@ -564,7 +591,13 @@ function MemoRadio(props: any) {
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
                 ]}
-                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null, 
+                    val: string, 
+                    currentData: OptionConfig | null, 
+                    currentIndex: string | number | null, 
+                    element: HTMLElement  
+                ) => {
                     callback(val);
                 }}
             />
@@ -599,6 +632,15 @@ Use `onCallbackListItem` to return the desired style of the list.
 ```js
 import React, { useState, useMemo } from "react";
 import Radio from 'funda-ui/Radio';
+
+type RadioOptionChangeFnType = (
+    e: React.ChangeEvent<HTMLInputElement> | null, 
+    val: string, 
+    currentData: OptionConfig | null, 
+    currentIndex: string | number | null, 
+    element: HTMLElement
+) => void;
+
 
 export default () => {
 
@@ -643,7 +685,7 @@ export default () => {
         uniqueID: string;
         disabled: boolean | undefined;
         labelRes: any;
-        handleChange: any;
+        handleChange: RadioOptionChangeFnType;
         onClick: any;
         handleFocus: any;
         handleBlur: any;
@@ -803,7 +845,13 @@ export default () => {
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
                 ]}
-                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null, 
+                    val: string, 
+                    currentData: OptionConfig | null, 
+                    currentIndex: string | number | null, 
+                    element: HTMLElement  
+                ) => {
                     console.log(val);
                 }}
                 onCallbackListItem={customRadioOptionsItemsList}
@@ -844,7 +892,13 @@ function MemoRadio(props: any) {
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
                 ]}
-                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null, 
+                    val: string, 
+                    currentData: OptionConfig | null, 
+                    currentIndex: string | number | null, 
+                    element: HTMLElement  
+                ) => {
                     callback(val);
                 }}
             />
@@ -921,7 +975,13 @@ function MemoRadio(props: any) {
                     { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
                     { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
                 ]}
-                onChange={(e: any, val: string, currentData: any, currentIndex: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null, 
+                    val: string, 
+                    currentData: OptionConfig | null, 
+                    currentIndex: string | number | null, 
+                    element: HTMLElement  
+                ) => {
                     callback(val);
                 }}
             />
@@ -1009,7 +1069,7 @@ import Radio from 'funda-ui/Radio';
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) | - |
 | `onLoad` | function  | - | Call a function when the component has been rendered completely. It returns three callback values. <br /> <ol><li>The first is the passed data （**Array**）</li><li>The second is the default value (**String** \| **undefined**)</li><li> The third is the component wrapper (**HTMLDivElement**)</li></ol> | - |
 | `onClick` | function  | - | Call a function when the value of an HTML element is clicked. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li></ol> <blockquote>If the *first parameter* is `null`, it means that the exposure method of `contentRef` is used to modify the current value.</blockquote> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the current value (**String**)</li><li>The third is the data (Exposes the JSON format data) about the option.  (**JSON Object**)</li><li>The last is the current index number  (**Number**)</li><li>The last is the HTML element of the checked control (**HTML Element**)</li></ol> <blockquote>If the *first parameter* is `null`, it means that the exposure method of `contentRef` is used to modify the current value.</blockquote> | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**) | - |
 | `onCallbackListItem` | function  | - | This parameter allows developers to customize the options of ReactNode, which returns a JSON object containing system variables (**JSON Object**). Please refer to the [Custom option list](#custom-option-list) for how to use it. | - |

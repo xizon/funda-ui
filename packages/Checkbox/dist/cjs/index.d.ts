@@ -1,5 +1,5 @@
 import React from 'react';
-export declare type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
+export declare type CheckboxOptionChangeFnType = (e: React.ChangeEvent<HTMLInputElement> | null, val: boolean, element: HTMLElement) => void;
 export declare type CheckboxProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;

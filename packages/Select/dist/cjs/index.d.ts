@@ -9,7 +9,7 @@ export interface MultiSelectValue {
     labelsOfString: string;
     valuesOfString: string;
 }
-export declare type SelectOptionChangeFnType = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, element: HTMLElement, value: OptionConfig | MultiSelectValue) => void | Promise<void>;
+export declare type SelectOptionChangeFnType = (element: HTMLElement, valueElement: HTMLElement, value: OptionConfig | MultiSelectValue) => void | Promise<void>;
 export interface MultiSelectControlValConfig {
     values: string[];
     labels: string[];

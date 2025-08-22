@@ -1582,7 +1582,7 @@ const Chatbox = (props: ChatboxProps) => {
                             }
 
                         }}
-                        onChange={(e: React.MouseEvent, el: any, value: string) => {
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement | null, value: string) => {
                             args().onInputChange?.(inputContentRef.current, value);
                         }}
                         onFocus={() => {

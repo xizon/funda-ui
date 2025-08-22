@@ -617,11 +617,9 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
     }
 
-    function handleChange(event: ChangeEvent<HTMLInputElement>) {
-        const val = event.target.value;
+    function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) {
 
-        //
-        onChange?.(inputRef.current, val, isValidDate(val), getAllSplittingInputs());
+        onChange?.(inputRef.current, value, isValidDate(value), getAllSplittingInputs());
 
     }
 

@@ -555,14 +555,14 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
         setVal(false);
         cb === null || cb === void 0 ? void 0 : cb();
         if (typeof onChange === 'function') {
-          onChange(null, false);
+          onChange(null, false, valRef.current);
         }
       },
       set: function set(value, cb) {
         setVal(value);
         cb === null || cb === void 0 ? void 0 : cb();
         if (typeof onChange === 'function') {
-          onChange(null, value);
+          onChange(null, value, valRef.current);
         }
       }
     };
@@ -585,7 +585,7 @@ var Checkbox = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, _val);
+      onChange(event, _val, valRef.current);
     }
   }
   function handleBlur(event) {

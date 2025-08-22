@@ -4,7 +4,7 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-export type CheckboxOptionChangeFnType = (arg1: any, arg2: any) => void;
+export type CheckboxOptionChangeFnType = (e: React.ChangeEvent<HTMLInputElement> | null, val: boolean, element: HTMLElement) => void;
 
 
 export type CheckboxProps = {
@@ -75,7 +75,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                 cb?.();
 
                 if (typeof (onChange) === 'function') {
-                    onChange(null, false);
+                    onChange(null, false, valRef.current);
                 }
             },
             set: (value: boolean, cb?: any) => {
@@ -83,7 +83,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
                 cb?.();
 
                 if (typeof (onChange) === 'function') {
-                    onChange(null, value);
+                    onChange(null, value, valRef.current);
                 }
             }
         }),
@@ -111,7 +111,7 @@ const Checkbox = forwardRef((props: CheckboxProps, externalRef: any) => {
 
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, _val);
+            onChange(event, _val, valRef.current);
         }
 
 

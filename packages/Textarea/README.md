@@ -154,7 +154,7 @@ export default () => {
                 name="name1"
                 placeholder="String"
                 rows={4}
-                onChangeCallback={(e) => {
+                onChangeCallback={(e: React.ChangeEvent<HTMLTextAreaElement> | React.FocusEvent) => {
                     if (e.target.value.length > 20) {
                         return e.target.value.slice(0, 20);
                     }
@@ -195,7 +195,7 @@ export default () => {
                 name="name3"
                 rows={4}
                 value={reverseAutop(`<p>a<br />\nb<br />\nc<br />\nd</p>\n`)}
-                onChange={(e: React.MouseEvent, el: any, value: string) => {
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement | null, value: string) => {
                     console.log(autop(value));
                 }}
                 
@@ -255,7 +255,7 @@ export default () => {
 
     const [textareaValue, setTextareaValue] = useState('');
 
-    function handleChange(e: React.MouseEvent, el: any, value: string) {
+    function handleChange(e: React.ChangeEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement | null, value: string) {
         setTextareaValue(value);
     }
 
@@ -359,7 +359,7 @@ export default () => {
                     name="name"
                     rows={3}
                     autoSize
-                    onChange={(e: React.MouseEvent, el: any, value: string) => {
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement | null, value: string) => {
                         setUserContent(value);
                     }}
                     
@@ -474,7 +474,7 @@ export default () => {
                 aiPredictFetchCallback={(res) => {
                     return res;
                 }}
-                onChange={(e: React.MouseEvent, el: any, value: string) => {
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement> | React.KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement | null, value: string) => {
                     console.log(value);
                 }}
             />
@@ -503,7 +503,7 @@ export default () => {
             <Textarea
                 rows={4}
                 autoSize
-                onKeyDown={(event: React.KeyboardEvent) => {
+                onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
                     // line breaks
                     if ((event.key === 'Enter' || event.key === 'NumpadEnter') && (event.ctrlKey || event.metaKey)) {
                         return;

@@ -15,8 +15,14 @@ export interface OptionConfig {
     [propName: string]: string | number | React.ReactNode | boolean;
 }
 
-
-export type RadioOptionChangeFnType = (arg1: any, arg2: any, arg3?: any, arg4?: any) => void;
+// 
+export type RadioOptionChangeFnType = (
+    e: React.ChangeEvent<HTMLInputElement> | null, 
+    val: string, 
+    currentData: OptionConfig | null, 
+    currentIndex: string | number | null, 
+    element: HTMLElement
+) => void;
 
 
 export type RadioProps = {
@@ -165,25 +171,27 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
             getLatestVal: () => {
                 return controlValue || '';
             },
-            clear: (cb?: any) => {
+            clear: (cb?: () => void) => {
                 setControlValue('');
                 cb?.();
 
                 if (typeof (onChange) === 'function') {
                     const curData: Record<string, unknown> = optionsFlat(dataInit).find((v: any) => v.value == value);
                     const currentIndex: number = optionsFlat(dataInit).findIndex((v: any) => v.value == value);
-                    onChange(null, '', null, null);
+                    const targetInput = getAllControls().find((input: HTMLInputElement) => input.checked);
+                    onChange(null, '', null, null, typeof targetInput !== 'undefined' ? targetInput : getAllControls()[0]);
                 }
 
             },
-            set: (value: string, cb?: any) => {
+            set: (value: string, cb?: () => void) => {
                 setControlValue(`${value}`);
                 cb?.();
 
                 if (typeof (onChange) === 'function') {
                     const curData: Record<string, unknown> = optionsFlat(dataInit).find((v: any) => v.value == value);
                     const currentIndex: number = optionsFlat(dataInit).findIndex((v: any) => v.value == value);
-                    onChange(null, `${value}`, curData, currentIndex);
+                    const targetInput = getAllControls().find((input: HTMLInputElement) => input.value === value);
+                    onChange(null, `${value}`, curData as OptionConfig, currentIndex, typeof targetInput !== 'undefined' ? targetInput : getAllControls()[0]);
                 }
             }
         }),
@@ -371,10 +379,10 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
    
         //
         if (typeof (onChange) === 'function') {
-            onChange(event, val, curData, currentIndex);
+            onChange(event, val, curData as OptionConfig, currentIndex, event.target);
         }
         if (typeof (onClick) === 'function') {
-            onClick(event, val, curData, currentIndex);
+            onClick(event, val, curData as OptionConfig, currentIndex, event.target);
         }
     }
 

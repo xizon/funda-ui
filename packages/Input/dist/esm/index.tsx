@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, CompositionEvent, KeyboardEvent, FocusEvent, useImperativeHandle, MutableRefObject } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -22,20 +22,20 @@ export type InputProps = {
     label?: React.ReactNode | string;
     units?: React.ReactNode | string;
     name?: string;
-    step?: any;
-    min?: any;
-    max?: any;
-    src?: any;
-    size?: any;
-    minLength?: any;
-    maxLength?: any;
-    alt?: any;
+    step?: string | number;
+    min?: string | number;
+    max?: string | number;
+    src?: string;
+    size?: string | number;
+    minLength?: string | number;
+    maxLength?: string | number;
+    alt?: string;
     inputMode?: "search" | "text" | "email" | "tel" | "url" | "none" | "numeric" | "decimal" | undefined;
-    disabled?: any;
-    required?: any;
-    readOnly?: any;
+    disabled?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
     placeholder?: string;
-    pattern?: any;
+    pattern?: string;
     iconLeft?: React.ReactNode | string;
     iconRight?: React.ReactNode | string;
     appendControl?: React.ReactNode;
@@ -44,7 +44,7 @@ export type InputProps = {
     aiPredictConfirmKey?: Array<string[]>;
     aiPredictFetchFuncAsync?: any;
     aiPredictFetchFuncMethod?: string;
-    aiPredictFetchFuncMethodParams?: any[];
+    aiPredictFetchFuncMethodParams?: (string | number)[];
     aiPredictFetchCallback?: (data: any) => void;
     /** -- */
     id?: string;
@@ -54,18 +54,16 @@ export type InputProps = {
     spellCheck?: boolean;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any, el: any) => void;
-    onInputCallback?: (e: any, el: any) => void;
-    onKeyPressedCallback?: (e: any, el: any) => void;
-    onChange?: (e: any, param: any, el: any, value: string) => void;
-    onBlur?: (e: any, param: any, el: any) => void;
-    onFocus?: (e: any, param: any, el: any) => void;
-    onPressEnter?: (e: any, el: any) => void;
-    onKeyDown?: (e: any, el: any) => void;
-    onKeyUp?: (e: any, el: any) => void;
-
+    onChangeCallback?: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>, el: HTMLInputElement) => string | void;
+    onInputCallback?: (e: ChangeEvent<HTMLInputElement>, el: HTMLInputElement) => string | void;
+    onKeyPressedCallback?: (e: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement) => string | void;
+    onChange?: (e: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement>, param: boolean, el: HTMLInputElement) => void;
+    onFocus?: (e: FocusEvent<HTMLInputElement>, param: boolean, el: HTMLInputElement) => void;
+    onPressEnter?: (e: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement) => void;
+    onKeyUp?: (e: KeyboardEvent<HTMLInputElement>, el: HTMLInputElement) => void;
 };
-
 
 const Input = forwardRef((props: InputProps, externalRef: any) => {
     const {
@@ -127,8 +125,8 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     const uniqueID = useComId();
     const idRes = id || uniqueID;
-    const rootRef = useRef<any>(null);
-    const valRef = useRef<any>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const valRef = useRef<HTMLInputElement | null>(null);
     const typeRes = typeof (type) === 'undefined' ? 'text' : type;
     const [onComposition, setOnComposition] = useState<boolean>(false);
     const [changedVal, setChangedVal] = useState<string>(value || '');
@@ -140,15 +138,15 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const [currentSuggestion, setCurrentSuggestion] = useState<string>('');
     const [tempMatchedSuggestion, setTempMatchedSuggestion] = useState<string[]>([]);
     const [textWidth, setTextWidth] = useState<number>(0);
-    const aiInputRef = useRef<any>(null);
-    const originInputComputedStyle = useRef<Record<string, any>>({
+    const aiInputRef = useRef<HTMLDivElement>(null);
+    const originInputComputedStyle = useRef<Record<string, string | number>>({
         fontSize: 16,
         fontFamily: 'inherit',
         letterSpacing: 'normal',
         textTop: 10
     });
     const [hasErr, setHasErr] = useState<boolean>(false);
-    const currentSuggestionIndex = useRef<number>(0);
+    const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState<number>(0);
 
     
 
@@ -158,20 +156,20 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
 
     //performance
-    const handleChangeSuggestionsFetchSafe = useDebounce((e: any, curVal: string) => {
-        const _oparams: any[] = aiPredictFetchFuncMethodParams || [];
-        const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : curVal);
+    const handleChangeSuggestionsFetchSafe = useDebounce((e: ChangeEvent<HTMLInputElement>, curVal: string) => {
+        const _oparams: (string | number)[] = aiPredictFetchFuncMethodParams || [];
+        const _params: (string | number)[] = _oparams.map((item: string | number) => item !== '$QUERY_STRING' ? item : curVal);
         fetchSuggestionsData((_params).join(',')).then((resSuggestions: string[]) => {
             handleInputAiPredictChange(curVal, resSuggestions);
         });
     }, 350, []);
 
-    async function fetchSuggestionsData(params: any) {
+    async function fetchSuggestionsData(params: string): Promise<string[]> {
 
         if (typeof aiPredictFetchFuncAsync === 'object') {
 
-            const response: any = await aiPredictFetchFuncAsync[`${aiPredictFetchFuncMethod}`](...params.split(','));
-            let _ORGIN_DATA = response.data;
+            const response: { data: unknown } = await aiPredictFetchFuncAsync[`${aiPredictFetchFuncMethod}`](...params.split(','));
+            let _ORGIN_DATA: unknown = response.data;
 
             // reset data structure
             if (typeof (aiPredictFetchCallback) === 'function') {
@@ -185,11 +183,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                 _ORGIN_DATA = [];
             }
 
+            // Type assertion since we've verified it's an array
+            const suggestionsArray = _ORGIN_DATA as string[];
 
             //
-            setSuggestions(_ORGIN_DATA);
+            setSuggestions(suggestionsArray);
 
-            return _ORGIN_DATA;
+            return suggestionsArray;
         } else {
             return [];
         }
@@ -204,9 +204,11 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     const calculateTextWidth = (text: string) => {
         if (valRef.current) {
             const canvas = document.createElement('canvas');
-            const context: any = canvas.getContext('2d');
-            context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
-            return context.measureText(text).width;
+            const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+            if (context) {
+                context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
+                return context.measureText(text).width;
+            }
         }
         return 0;
     };
@@ -227,7 +229,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     // Match exactly from the start
     //----------------
-    const preciseMatch = (input: any, suggestions: string[]) => {
+    const preciseMatch = (input: string, suggestions: string[]) => {
         if (!input) return '';
 
         const filtered = suggestions.filter(s =>
@@ -241,7 +243,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     // Fuzzy matching
     //----------------
-    const fuzzyMatch = (input: any, suggestions: string[]) => {
+    const fuzzyMatch = (input: string, suggestions: string[]) => {
         if (!input) return '';
 
         // Convert input to a regular expression pattern with support for arbitrary position matching
@@ -312,17 +314,21 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
             getLatestVal: () => {
                 return changedVal || '';
             },
-            clear: (cb?: any) => {
+            clear: (cb?: () => void) => {
                 setChangedVal('');
                 cb?.();
 
-                onChange?.(null, onComposition, valRef.current, '');
+                if (valRef.current) {
+                    onChange?.(null, onComposition, valRef.current, '');
+                }
             },
-            set: (value: string, cb?: any) => {
+            set: (value: string, cb?: () => void) => {
                 setChangedVal(`${value}`);
                 cb?.();
 
-                onChange?.(null, onComposition, valRef.current, `${value}`);
+                if (valRef.current) {
+                    onChange?.(null, onComposition, valRef.current, `${value}`);
+                }
             },
             aiPredictReset: () => {
                 setTimeout(() => { // Avoid conflicts with other asynchronous states, resulting in invalid clearing
@@ -333,7 +339,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         [contentRef, onComposition, changedVal],
     );
 
-    const propExist = (p: any) => {
+    const propExist = (p: unknown) => {
         return typeof p !== 'undefined' && p !== null && p !== '';
     };
 
@@ -351,7 +357,9 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         rootRef.current?.classList.add('focus');
 
         //
-        onFocus?.(event, onComposition, valRef.current);
+        if (valRef.current) {
+            onFocus?.(event, onComposition, valRef.current);
+        }
     }
 
     function handleChange(event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | null, curVal: string) {
@@ -365,11 +373,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         }
 
         //
-        onChange?.(event, onComposition, valRef.current, curVal);
+        if (valRef.current) {
+            onChange?.(event, onComposition, valRef.current, curVal);
+        }
 
         // It fires in real time as the user enters
-        if (typeof (onInputCallback) === 'function') {
-            const newData: any = onInputCallback(event, valRef.current);
+        if (typeof (onInputCallback) === 'function' && event && valRef.current) {
+            const newData: string | void = onInputCallback(event as ChangeEvent<HTMLInputElement>, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
@@ -388,11 +398,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
         }
 
         //
-        onBlur?.(event, onComposition, valRef.current);
+        if (valRef.current) {
+            onBlur?.(event, onComposition, valRef.current);
+        }
 
         // It fires when focus is lost
-        if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(event, valRef.current);
+        if (typeof (onChangeCallback) === 'function' && valRef.current) {
+            const newData: string | void = onChangeCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
     }
@@ -400,17 +412,21 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     function handleKeyPressed(event: KeyboardEvent<HTMLInputElement>) {
 
-        onKeyDown?.(event, valRef.current);
+        if (valRef.current) {
+            onKeyDown?.(event, valRef.current);
+        }
 
-        if (typeof (onKeyPressedCallback) === 'function') {
-            const newData: any = onKeyPressedCallback(event, valRef.current);
+        if (typeof (onKeyPressedCallback) === 'function' && valRef.current) {
+            const newData: string | void = onKeyPressedCallback(event, valRef.current);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
 
         if (event.key === 'Enter' || event.key === 'NumpadEnter' ) {
             // DO NOT USE "preventDefault()"
-            onPressEnter?.(event, valRef.current);
+            if (valRef.current) {
+                onPressEnter?.(event, valRef.current);
+            }
         }
 
 
@@ -420,7 +436,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
             const keyBindings: Array<string[]> = aiPredictConfirmKey;
             // The parameter 'registerKeyEvents' is an array, and each element is an object
             // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
-            const registerKeyEvents: Record<string, any>[] = keyBindings.map((s: string[]) => {
+            const registerKeyEvents: Array<{ keys: string[]; action: () => void }> = keyBindings.map((s: string[]) => {
                 return {
                     keys: s,
                     action: () => {
@@ -429,7 +445,7 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                 };
             });
 
-            registerKeyEvents.forEach((binding: Record<string, any>) => {
+            registerKeyEvents.forEach((binding: { keys: string[]; action: () => void }) => {
                 const keysPressed = binding.keys.every((key: string) =>
                     key === "Shift" ? event.shiftKey :
                         key === "Control" ? event.ctrlKey :
@@ -446,13 +462,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
             // switch result of suggestions
             if (event.code === 'ArrowUp') {
-                currentSuggestionIndex.current = (currentSuggestionIndex.current - 1 + tempMatchedSuggestion.length) % tempMatchedSuggestion.length;
+                setCurrentSuggestionIndex((prev) => (prev - 1 + tempMatchedSuggestion.length) % tempMatchedSuggestion.length);
             }
 
             if (event.code === 'ArrowDown') {
-                currentSuggestionIndex.current = (currentSuggestionIndex.current + 1) % tempMatchedSuggestion.length;
+                setCurrentSuggestionIndex((prev) => (prev + 1) % tempMatchedSuggestion.length);
             }
-            setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex.current] || '');
+            setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex] || '');
 
         }
 
@@ -460,7 +476,9 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     }
 
     function handleKeyUp(event: KeyboardEvent<HTMLInputElement>) {
-        onKeyUp?.(event, valRef.current);
+        if (valRef.current) {
+            onKeyUp?.(event, valRef.current);
+        }
     }
 
     useEffect(() => {
@@ -539,24 +557,24 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             )}
                             id={idRes}
                             name={name}
-                            step={step || null}
-                            min={min || null}
-                            max={max || null}
-                            src={src || null}
-                            size={size || null}
-                            alt={alt || null}
+                            step={step || undefined}
+                            min={min || undefined}
+                            max={max || undefined}
+                            src={src || undefined}
+                            size={typeof size === 'number' ? size : undefined}
+                            alt={alt || undefined}
                             inputMode={inputMode || undefined}
-                            pattern={pattern || null}
+                            pattern={pattern || undefined}
                             placeholder={placeholder || ''}
                             value={changedVal}
-                            minLength={minLength || null}
-                            maxLength={maxLength || null}
+                            minLength={typeof minLength === 'number' ? minLength : undefined}
+                            maxLength={typeof maxLength === 'number' ? maxLength : undefined}
                             autoComplete={typeof autoComplete === 'undefined' ? 'on' : autoComplete}
                             autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
                             spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
-                            onChange={(e: any) => {
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                 handleChange(e, e.target.value);
 
                                 // AI Predict
@@ -570,9 +588,9 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                             onCompositionStart={handleComposition}
                             onCompositionUpdate={handleComposition}
                             onCompositionEnd={handleComposition}
-                            disabled={disabled || null}
-                            required={required || null}
-                            readOnly={readOnly || null}
+                            disabled={disabled || undefined}
+                            required={required || undefined}
+                            readOnly={readOnly || undefined}
                             style={style}
                             {...attributes}
                         />
@@ -586,13 +604,13 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
                                 className="position-absolute z-1"
                                 data-ai="predict"
                                 style={{
-                                    left: `${originInputComputedStyle.current.fontSize + textWidth}px`,
-                                    top: originInputComputedStyle.current.textTop + 'px',
+                                    left: `${(typeof originInputComputedStyle.current.fontSize === 'number' ? originInputComputedStyle.current.fontSize : 16) + textWidth}px`,
+                                    top: (typeof originInputComputedStyle.current.textTop === 'number' ? originInputComputedStyle.current.textTop : 10) + 'px',
                                     color: `rgba(${aiPredictRemainingTextRGB[0]}, ${aiPredictRemainingTextRGB[1]}, ${aiPredictRemainingTextRGB[2]}, ${calculateOpacity()})`,
                                     pointerEvents: 'none',
-                                    fontSize: originInputComputedStyle.current.fontSize + 'px',
-                                    fontFamily: originInputComputedStyle.current.fontFamily,
-                                    letterSpacing: originInputComputedStyle.current.letterSpacing
+                                    fontSize: (typeof originInputComputedStyle.current.fontSize === 'number' ? originInputComputedStyle.current.fontSize : 16) + 'px',
+                                    fontFamily: typeof originInputComputedStyle.current.fontFamily === 'string' ? originInputComputedStyle.current.fontFamily : 'inherit',
+                                    letterSpacing: typeof originInputComputedStyle.current.letterSpacing === 'string' ? originInputComputedStyle.current.letterSpacing : 'normal'
                                 }}
                             >
                                 {remainingText}

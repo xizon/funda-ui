@@ -10,10 +10,10 @@ import Input from 'funda-ui/Input';
 
 export default () => {
 
-    function handleChange(e: React.MouseEvent, onComposition: any, el: any, value: string) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) {
 
         let temp = e.target.value;
-        if (!onComposition) {
+        if (!isComposition) {
             console.log(temp, value);
         }
     }
@@ -135,7 +135,7 @@ export default () => {
                 name="name"
                 label="DateTime"
                 type="datetime-local"
-                onFocus={(e) => {
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
                     e.target.setAttribute("max", new Date().toISOString().split("T")[0] + 'T00:00');
                 }}
                 step={1}
@@ -191,7 +191,7 @@ export default () => {
 
     const [inputValue, setInputValue] = useState('');
 
-    function handleChange(e: React.MouseEvent, onComposition: any, el: any, value: string) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) {
         setInputValue(e.target.value, value);
     }
 
@@ -300,7 +300,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--year"
                             value={val.year}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -314,7 +314,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--month"
                             value={val.month}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -328,7 +328,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--day"
                             value={val.day}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -342,7 +342,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--hours"
                             value={val.hours}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -356,7 +356,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--minutes"
                             value={val.minutes}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -370,7 +370,7 @@ export default () => {
                             tabIndex={-1}
                             className="app-input-demo--seconds"
                             value={val.seconds}
-                            onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                                 setVal((prevState) => {
                                     return {
                                         ...prevState,
@@ -595,7 +595,7 @@ export default () => {
                 <Input
                     contentRef={conRef}
                     name="name"
-                    onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                         setUserContent(value);
                     }}
                 />
@@ -642,7 +642,7 @@ function MemoInput(props: any) {
         return <Input 
                 name="name"
                 value={val}
-                onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                     callback(value);
                 }}
             />
@@ -767,7 +767,7 @@ export default () => {
                 aiPredictFetchCallback={(res) => {
                     return res;
                 }}
-                onChange={(e: React.MouseEvent, onComposition: any, el: any, value: string) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
                     console.log(value);
                 }}
             />
@@ -797,7 +797,7 @@ export default () => {
         <>
             <Input
                 name="name"
-                onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
+                onKeyDown={(event: React.React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
                     const isMac = getOs().isOSX;
                     const currentTime = new window.Date().getTime();
                     const isCtrlKey = isMac ? event.metaKey : event.ctrlKey;
@@ -816,7 +816,7 @@ export default () => {
                     }
 
                 }}
-                onKeyUp={(event: React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
+                onKeyUp={(event: React.React.KeyboardEvent<HTMLInputElement>, el: HTMLElement) => {
                     const isMac = getOs().isOSX;
                     const isCtrlKey = isMac ? event.metaKey : event.ctrlKey;
                     if (isCtrlKey) {
@@ -889,9 +889,9 @@ import Input from 'funda-ui/Input';
 | `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns four callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The third is the control (**HTML Element**)</li><li>The last is the current value (**String**)</li></ol> <blockquote>If the *first parameter* is `null`, it means that the exposure method of `contentRef` is used to modify the current value.</blockquote> | - |
 | `onBlur` | function  | - | Call a function when a user leaves an form field. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns three callback values. <br /> <ol><li>The first is the Control Event (**Event**)</li><li>The second is the composition event (**Boolean**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onKeyDown` | function  | - | The callback function that is triggered when the user presses a key on the keyboard. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
-| `onKeyUp` | function  | - | The callback function that is triggered when the user releases a key. It returns two callback values. <br /> <ol><li>The first is the Control Event (**KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onPressEnter` | function  | - | The callback function that is triggered when Enter key is pressed. It returns two callback values. <br /> <ol><li>The first is the Control Event (**React.KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onKeyDown` | function  | - | The callback function that is triggered when the user presses a key on the keyboard. It returns two callback values. <br /> <ol><li>The first is the Control Event (**React.KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
+| `onKeyUp` | function  | - | The callback function that is triggered when the user releases a key. It returns two callback values. <br /> <ol><li>The first is the Control Event (**React.KeyboardEvent**)</li><li>The last is the control (**HTML Element**)</li></ol> | - |
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 

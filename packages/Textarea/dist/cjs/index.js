@@ -1392,7 +1392,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            if (!(_typeof(aiPredictFetchFuncAsync) === 'object')) {
+            if (!(_typeof(aiPredictFetchFuncAsync) === 'object' && aiPredictFetchFuncMethod)) {
               _context.next = 11;
               break;
             }
@@ -1429,8 +1429,10 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     if (valRef.current) {
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
-      context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
-      return context.measureText(text).width;
+      if (context) {
+        context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
+        return context.measureText(text).width;
+      }
     }
     return 0;
   };
@@ -1449,7 +1451,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   // Match exactly from the start
   //----------------
   var preciseMatch = function preciseMatch(input, suggestions) {
-    if (!input) return '';
+    if (!input) return [];
     var filtered = suggestions.filter(function (s) {
       return s.toLowerCase().startsWith(input.toLowerCase());
     });
@@ -1460,7 +1462,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   // Fuzzy matching
   //----------------
   var fuzzyMatch = function fuzzyMatch(input, suggestions) {
-    if (!input) return '';
+    if (!input) return [];
 
     // Convert input to a regular expression pattern with support for arbitrary position matching
     var pattern = input.split('').map(function (_char) {
@@ -1580,7 +1582,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     onChange === null || onChange === void 0 ? void 0 : onChange(event, valRef.current, curVal);
 
     // It fires in real time as the user enters
-    if (typeof onInputCallback === 'function') {
+    if (typeof onInputCallback === 'function' && event) {
       var newData = onInputCallback(event, valRef.current);
       if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
     }
@@ -1588,7 +1590,7 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
 
   function handleBlur(event) {
     var el = event.target;
-    var val = event.target.value;
+    var val = el.value;
 
     //----
     //remove focus style
@@ -1743,8 +1745,8 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     placeholder: placeholder || '',
     defaultValue: defaultValue,
     value: changedVal,
-    minLength: minLength || null,
-    maxLength: maxLength || null,
+    minLength: minLength || undefined,
+    maxLength: maxLength || undefined,
     onFocus: handleFocus,
     onBlur: handleBlur,
     onChange: function onChange(e) {
@@ -1757,9 +1759,9 @@ var Textarea = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     },
     onKeyDown: handleKeyPressed,
     onKeyUp: handleKeyUp,
-    disabled: disabled || null,
-    required: required || null,
-    readOnly: readOnly || null,
+    disabled: disabled || undefined,
+    required: required || undefined,
+    readOnly: readOnly || undefined,
     cols: cols || 20,
     rows: rows || 2,
     style: style

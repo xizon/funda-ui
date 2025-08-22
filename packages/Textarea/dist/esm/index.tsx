@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, KeyboardEvent, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, ChangeEvent, KeyboardEvent, useImperativeHandle, FocusEvent } from 'react';
 
 
 import useComId from 'funda-utils/dist/cjs/useComId';
@@ -20,13 +20,13 @@ export type TextareaProps = {
     requiredLabel?: React.ReactNode | string;
 	label?: React.ReactNode | string;
 	name?: string;
-    minLength?: any;
-	maxLength?: any;
+    minLength?: number;
+	maxLength?: number;
 	cols?: number;
 	rows?: number;
-	disabled?: any;
-	required?: any;
-    readOnly?: any;
+	disabled?: boolean;
+	required?: boolean;
+    readOnly?: boolean;
 	placeholder?: string;
     autoSize?: boolean;
     autoSizeMaxHeight?: number;
@@ -37,23 +37,23 @@ export type TextareaProps = {
     aiPredictConfirmKey?: Array<string[]>;
     aiPredictFetchFuncAsync?: any;
     aiPredictFetchFuncMethod?: string;
-    aiPredictFetchFuncMethodParams?: any[];
+    aiPredictFetchFuncMethodParams?: unknown[];
     aiPredictFetchCallback?: (data: any) => void;
 	/** -- */
 	id?: string;
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChangeCallback?: (e: any, el: any) => void;
-    onInputCallback?: (e: any, el: any) => void;
-    onKeyPressedCallback?: (e: any, el: any) => void;
-    onChange?: (e: any, el: any, value: string) => void;
-    onBlur?: (e: any, el: any) => void;
-    onFocus?: (e: any, el: any) => void;
-    onPressEnter?: (e: any, el: any) => void;
-    onKeyDown?: (e: any, el: any) => void;
-    onKeyUp?: (e: any, el: any) => void;
-    onResize?: (el: any, params: number[]) => void;
+    onChangeCallback?: (e: ChangeEvent<HTMLTextAreaElement> | FocusEvent, el: HTMLTextAreaElement) => string | void;
+    onInputCallback?: (e: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement>, el: HTMLTextAreaElement) => string | void;
+    onKeyPressedCallback?: (e: KeyboardEvent<HTMLTextAreaElement>, el: HTMLTextAreaElement) => string | void;
+    onChange?: (e: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement> | null, el: HTMLTextAreaElement, value: string) => void;
+    onBlur?: (e: FocusEvent, el: HTMLTextAreaElement) => void;
+    onFocus?: (e: FocusEvent, el: HTMLTextAreaElement) => void;
+    onPressEnter?: (e: KeyboardEvent<HTMLTextAreaElement>, el: HTMLTextAreaElement) => void;
+    onKeyDown?: (e: KeyboardEvent<HTMLTextAreaElement>, el: HTMLTextAreaElement) => void;
+    onKeyUp?: (e: KeyboardEvent<HTMLTextAreaElement>, el: HTMLTextAreaElement) => void;
+    onResize?: (el: HTMLTextAreaElement, params: number[]) => void;
     
 };
 
@@ -109,8 +109,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     const uniqueID = useComId();
     const idRes = id || uniqueID;
-    const rootRef = useRef<any>(null);
-    const valRef = useRef<any>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const valRef = useRef<HTMLTextAreaElement | null>(null);
     const [changedVal, setChangedVal] = useState<string>(value || '');
 
 
@@ -120,7 +120,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const [currentSuggestion, setCurrentSuggestion] = useState<string>('');
     const [tempMatchedSuggestion, setTempMatchedSuggestion] = useState<string[]>([]);
     const [textWidth, setTextWidth] = useState<number>(0);
-    const aiInputRef = useRef<any>(null);
+    const aiInputRef = useRef<HTMLDivElement>(null);
     const originInputComputedStyle = useRef<Record<string, any>>({
         fontSize: 16,
         fontFamily: 'inherit',
@@ -137,7 +137,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     
     //performance
-    const handleChangeSuggestionsFetchSafe = useDebounce((e: any, curVal: string) => {
+    const handleChangeSuggestionsFetchSafe = useDebounce((e: ChangeEvent<HTMLTextAreaElement>, curVal: string) => {
         const _oparams: any[] = aiPredictFetchFuncMethodParams || [];
         const _params: any[] = _oparams.map((item: any) => item !== '$QUERY_STRING' ? item : curVal);
         fetchSuggestionsData((_params).join(',')).then((resSuggestions: string[]) => {
@@ -145,9 +145,9 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         });
     }, 350, []);
 
-    async function fetchSuggestionsData(params: any) {
+    async function fetchSuggestionsData(params: string): Promise<string[]> {
 
-        if (typeof aiPredictFetchFuncAsync === 'object') {
+        if (typeof aiPredictFetchFuncAsync === 'object' && aiPredictFetchFuncMethod) {
 
             const response: any = await aiPredictFetchFuncAsync[`${aiPredictFetchFuncMethod}`](...params.split(','));
             let _ORGIN_DATA = response.data;
@@ -179,12 +179,14 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Calculates the width of the input text
     //----------------
-    const calculateTextWidth = (text: string) => {
+    const calculateTextWidth = (text: string): number => {
         if (valRef.current) {
             const canvas = document.createElement('canvas');
-            const context: any = canvas.getContext('2d');
-            context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
-            return context.measureText(text).width;
+            const context = canvas.getContext('2d');
+            if (context) {
+                context.font = `${originInputComputedStyle.current.fontSize}px ${originInputComputedStyle.current.fontFamily}`;
+                return context.measureText(text).width;
+            }
         }
         return 0;
     };
@@ -193,7 +195,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Get the rest of the suggested text
     //----------------
-    const getRemainingText = (fullSuggestion: string) => {
+    const getRemainingText = (fullSuggestion: string): string => {
         if (!changedVal || !fullSuggestion) return '';
        
 
@@ -206,8 +208,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Match exactly from the start
     //----------------
-    const preciseMatch = (input: any, suggestions: string[]) => {
-        if (!input) return '';
+    const preciseMatch = (input: string, suggestions: string[]): string[] => {
+        if (!input) return [];
 
         const filtered = suggestions.filter(s =>
             s.toLowerCase().startsWith(input.toLowerCase())
@@ -220,8 +222,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Fuzzy matching
     //----------------
-    const fuzzyMatch = (input: any, suggestions: string[]) => {
-        if (!input) return '';
+    const fuzzyMatch = (input: string, suggestions: string[]): string[] => {
+        if (!input) return [];
 
         // Convert input to a regular expression pattern with support for arbitrary position matching
         const pattern = input.split('').map((char: string) =>
@@ -237,7 +239,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Handle input variations
     //----------------
-    const handleInputAiPredictChange = (newValue: string, curSuggestions: string[]) => {
+    const handleInputAiPredictChange = (newValue: string, curSuggestions: string[]): void => {
         setTextWidth(calculateTextWidth(newValue));
 
         // Match results
@@ -251,7 +253,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     // Calculate the color shade of the prompt text
     //----------------
-    const calculateOpacity = () => {
+    const calculateOpacity = (): number => {
         // Transparency is calculated based on the input length
         const baseOpacity = 0.5;
         const inputLength = changedVal.length;
@@ -261,7 +263,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     
     // Confirm
     //----------------
-    const handleAiPredictKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleAiPredictKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>): void => {
         // Prevents the default behavior of the enter key
         e.preventDefault();
 
@@ -282,8 +284,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         el: autoSize ? valRef.current : null,
         value: autoSize ? changedVal : '',
         maxHeight: autoSizeMaxHeight,
-        cb: (res: any[]) => {
-            onResize?.(valRef.current, res);
+        cb: (res: number[]) => {
+            onResize?.(valRef.current as HTMLTextAreaElement, res);
         }
     });
 
@@ -300,17 +302,17 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             getLatestVal: () => {
                 return changedVal || '';
             },
-            clear: (cb?: any) => {
+            clear: (cb?: () => void) => {
                 setChangedVal('');
                 cb?.();
 
-                onChange?.(null, valRef.current, '');
+                onChange?.(null, valRef.current as HTMLTextAreaElement, '');
             },
-            set: (value: string, cb?: any) => {
+            set: (value: string, cb?: () => void) => {
                 setChangedVal(`${value}`);
                 cb?.();
 
-                onChange?.(null, valRef.current, `${value}`);
+                onChange?.(null, valRef.current as HTMLTextAreaElement, `${value}`);
             },
             resetHeight: () => {
                 reset();
@@ -324,22 +326,22 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         [contentRef, reset, changedVal]
     );
 
-    const propExist = (p: any) => {
+    const propExist = (p: unknown): boolean => {
         return typeof p !== 'undefined' && p !== null && p !== '';
     };
 
 
 
-    function handleFocus(event: any) {
+    function handleFocus(event: FocusEvent<HTMLTextAreaElement>): void {
         const el = event.target;
         rootRef.current?.classList.add('focus');
 
         //
-        onFocus?.(event, valRef.current);     
+        onFocus?.(event, valRef.current as HTMLTextAreaElement);     
     }
 
     
-    function handleChange(event: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement> | null, curVal: string) {
+    function handleChange(event: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement> | null, curVal: string): void {
 
         setChangedVal(curVal);
 
@@ -350,19 +352,19 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         }
 
         //
-        onChange?.(event, valRef.current, curVal);
+        onChange?.(event, valRef.current as HTMLTextAreaElement, curVal);
 
         // It fires in real time as the user enters
-        if (typeof (onInputCallback) === 'function') {
-            const newData: any = onInputCallback(event, valRef.current);
+        if (typeof (onInputCallback) === 'function' && event) {
+            const newData = onInputCallback(event, valRef.current as HTMLTextAreaElement);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
     }
 
-    function handleBlur(event: any) {
-        const el = event.target;
-        const val = event.target.value;
+    function handleBlur(event: FocusEvent<HTMLTextAreaElement>): void {
+        const el = event.target as HTMLTextAreaElement;
+        const val = el.value;
 
 
         //----
@@ -372,30 +374,30 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         }
 
         //
-        onBlur?.(event, valRef.current);
+        onBlur?.(event, valRef.current as HTMLTextAreaElement);
 
 
         // It fires when focus is lost
         if (typeof (onChangeCallback) === 'function') {
-            const newData: any = onChangeCallback(event, valRef.current);
+            const newData = onChangeCallback(event, valRef.current as HTMLTextAreaElement);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
     }
 
-    function handleKeyPressed(event: KeyboardEvent<HTMLTextAreaElement>) {
+    function handleKeyPressed(event: KeyboardEvent<HTMLTextAreaElement>): void {
 
-        onKeyDown?.(event, valRef.current);
+        onKeyDown?.(event, valRef.current as HTMLTextAreaElement);
 
 
         if (typeof (onKeyPressedCallback) === 'function') {
-            const newData: any = onKeyPressedCallback(event, valRef.current);
+            const newData = onKeyPressedCallback(event, valRef.current as HTMLTextAreaElement);
             if (newData) setChangedVal(newData);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
         }
 
         if (event.key === 'Enter' || event.key === 'NumpadEnter') {
             // DO NOT USE "preventDefault()"
-            onPressEnter?.(event, valRef.current);
+            onPressEnter?.(event, valRef.current as HTMLTextAreaElement);
         }
 
         // AI Predict
@@ -404,7 +406,10 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
             const keyBindings: Array<string[]> = aiPredictConfirmKey;
             // The parameter 'registerKeyEvents' is an array, and each element is an object
             // eg. { keys: ["Control", "S"], action: () => { console.log("Ctrl+S"); } }
-            const registerKeyEvents: Record<string, any>[] = keyBindings.map((s: string[]) => {
+            const registerKeyEvents: Array<{
+                keys: string[];
+                action: () => void;
+            }> = keyBindings.map((s: string[]) => {
                 return {
                     keys: s,
                     action: () => {
@@ -413,7 +418,7 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                 };
             });
 
-            registerKeyEvents.forEach((binding: Record<string, any>) => {
+            registerKeyEvents.forEach((binding) => {
                 const keysPressed = binding.keys.every((key: string) =>
                     key === "Shift" ? event.shiftKey :
                         key === "Control" ? event.ctrlKey :
@@ -443,8 +448,8 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     }
 
-    function handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>) {
-        onKeyUp?.(event, valRef.current);
+    function handleKeyUp(event: KeyboardEvent<HTMLTextAreaElement>): void {
+        onKeyUp?.(event, valRef.current as HTMLTextAreaElement);
     }
 
     useEffect(() => {
@@ -496,9 +501,9 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         //--------------
         if (aiPredict && valRef.current !== null) {
             originInputComputedStyle.current = {
-                fontSize: actualPropertyValue(valRef.current as HTMLInputElement, 'fontSize'),
-                fontFamily: actualPropertyValue(valRef.current as HTMLInputElement, 'fontFamily'),
-                letterSpacing: actualPropertyValue(valRef.current as HTMLInputElement, 'letterSpacing'),
+                fontSize: actualPropertyValue(valRef.current as unknown as HTMLInputElement, 'fontSize'),
+                fontFamily: actualPropertyValue(valRef.current as unknown as HTMLInputElement, 'fontFamily'),
+                letterSpacing: actualPropertyValue(valRef.current as unknown as HTMLInputElement, 'letterSpacing'),
                 textTop: getTextTop(valRef.current)
             };
         }
@@ -549,11 +554,11 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             placeholder={placeholder || ''}
                             defaultValue={defaultValue}
                             value={changedVal}
-                            minLength={minLength || null}
-                            maxLength={maxLength || null}
+                            minLength={minLength || undefined}
+                            maxLength={maxLength || undefined}
                             onFocus={handleFocus}
                             onBlur={handleBlur}
-                            onChange={(e: any) => {
+                            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                                 handleChange(e, e.target.value);
 
                                 // AI Predict
@@ -563,9 +568,9 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
                             }}
                             onKeyDown={handleKeyPressed}
                             onKeyUp={handleKeyUp}
-                            disabled={disabled || null}
-                            required={required || null}
-                            readOnly={readOnly || null}
+                            disabled={disabled || undefined}
+                            required={required || undefined}
+                            readOnly={readOnly || undefined}
                             cols={cols || 20}
                             rows={rows || 2}
                             style={style}

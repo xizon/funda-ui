@@ -1037,10 +1037,13 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
           var curData = optionsFlat(dataInit).find(function (v) {
             return v.value == value;
           });
-          var currentIndex = optionsFlat(dataInit).findIndex(function (v) {
+          var _currentIndex = optionsFlat(dataInit).findIndex(function (v) {
             return v.value == value;
           });
-          onChange(null, '', null, null);
+          var targetInput = getAllControls().find(function (input) {
+            return input.checked;
+          });
+          onChange(null, '', null, null, typeof targetInput !== 'undefined' ? targetInput : getAllControls()[0]);
         }
       },
       set: function set(value, cb) {
@@ -1050,10 +1053,13 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
           var curData = optionsFlat(dataInit).find(function (v) {
             return v.value == value;
           });
-          var currentIndex = optionsFlat(dataInit).findIndex(function (v) {
+          var _currentIndex2 = optionsFlat(dataInit).findIndex(function (v) {
             return v.value == value;
           });
-          onChange(null, "".concat(value), curData, currentIndex);
+          var targetInput = getAllControls().find(function (input) {
+            return input.value === value;
+          });
+          onChange(null, "".concat(value), curData, _currentIndex2, typeof targetInput !== 'undefined' ? targetInput : getAllControls()[0]);
         }
       }
     };
@@ -1234,10 +1240,10 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
     //
     if (typeof onChange === 'function') {
-      onChange(event, val, curData, currentIndex);
+      onChange(event, val, curData, currentIndex, event.target);
     }
     if (typeof onClick === 'function') {
-      onClick(event, val, curData, currentIndex);
+      onClick(event, val, curData, currentIndex, event.target);
     }
   }
   function handleBlur(event) {

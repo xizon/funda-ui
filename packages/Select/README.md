@@ -14,8 +14,8 @@ import 'funda-ui/Select/index.css';
 
 export default () => {
     const handleChange: SelectOptionChangeFnType = (
-        e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, 
-        e2: HTMLElement, 
+        el: HTMLElement, 
+        el2: HTMLElement, 
         val: OptionConfig | MultiSelectValue
     ): void => {
         console.log(event, element, value);
@@ -163,8 +163,8 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -182,7 +182,7 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
@@ -241,8 +241,8 @@ export default () => {
                 placeholder="Select"
                 name="name2"
                 options={selectOptions}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -259,7 +259,7 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
@@ -301,7 +301,7 @@ function SelectOneMemo(props) {
                 placeholder="Select"
                 name={name}
                 options={options}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     callback(val);
                 }}
             />
@@ -349,7 +349,7 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
@@ -399,8 +399,8 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -417,7 +417,7 @@ export default () => {
                     {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     setOneSelectChanged((val as OptionConfig).label);
                 }}
             />
@@ -577,7 +577,7 @@ export default () => {
 
                     return formattedData;
                 }}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const addValue = (name: string, targetValueField: string = 'label') => {
                         [].slice.call(document.querySelectorAll(`[name="${name}"]`)).forEach((node: any) => {
                             node.value = val[targetValueField];
@@ -589,8 +589,8 @@ export default () => {
                     
 
                 })}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
+                onFetch={(el, el2, value, res, data) => {
+                    console.log('onFetch: ', el, el2, value, res, data);
 
                     const curItem = res.find((v: any) => v.value == value);
                     if (typeof curItem !== 'undefined') {
@@ -638,8 +638,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
+                onFetch={(el, el2, value, res, data) => {
+                    console.log('onFetch: ', el, el2, value, res, data);
                 }}
             />
            
@@ -795,8 +795,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
+                onFetch={(el, el2, value, res, data) => {
+                    console.log('onFetch: ', el, el2, value, res, data);
                 }}
             />
 
@@ -842,8 +842,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
+                onFetch={(el, el2, value, res, data) => {
+                    console.log('onFetch: ', el, el2, value, res, data);
                 }}
             />
 
@@ -876,8 +876,8 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onFetch={(e, e2, value, res, data) => {
-                    console.log('onFetch: ', e, e2, value, res, data);
+                onFetch={(el, el2, value, res, data) => {
+                    console.log('onFetch: ', el, el2, value, res, data);
                 }}
             />
 
@@ -1151,8 +1151,8 @@ export default () => {
                     { "label": "Option 6", "value": "value-6","queryString":"" },
 
                 ]}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1195,8 +1195,8 @@ export default () => {
                         <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
                     </div>;
                 }}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1220,8 +1220,8 @@ export default () => {
                         <div><small style={{color: 'gray'}}>value: {optionData.value}</small></div>
                     </div>;
                 }}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1285,8 +1285,8 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}/(ID: ${i})`, value: `${i}`, queryString: ""}
                 })}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1461,7 +1461,7 @@ export default () => {
                     }); 
                     return formattedData;
                 }}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const queryId = val.queryId;
 
                     // value of "name-2" and "name-3"
@@ -1495,7 +1495,7 @@ export default () => {
                 name="name-2"
                 label="Level 2"
                 options={secondOptions}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
                     const queryId = val.queryId;
                 
                     // value of "name-3"
@@ -1724,8 +1724,8 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={JSON.stringify(data)}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1744,8 +1744,8 @@ export default () => {
                 placeholder="Select"
                 name="name"
                 options={JSON.stringify(data)}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1910,8 +1910,8 @@ export default () => {
 
                     return treeData;
                 }}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -1961,8 +1961,8 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -2045,8 +2045,8 @@ export default () => {
                     {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
                 ]  
                 `}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -2104,8 +2104,8 @@ export default () => {
                 options={Array.from({ length: 100 }).fill(0).map((v, i) => {
                     return { label: `${i}`, value: `${i}`, queryString: "" }
                 })}
-                onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(e, e2, val);
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
                 }}
             />
 
@@ -2339,8 +2339,8 @@ interface MultiSelectValue {
 }
 
 type SelectOptionChangeFnType = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
     element: HTMLElement,
+    valueElement: HTMLElement,
     value: OptionConfig | MultiSelectValue
 ) => void | Promise<void>;
 ```

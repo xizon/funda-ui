@@ -56,8 +56,8 @@ export interface MultiSelectValue {
 }
 
 export type SelectOptionChangeFnType = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
     element: HTMLElement,
+    valueElement: HTMLElement,
     value: OptionConfig | MultiSelectValue
 ) => void | Promise<void>;
 
@@ -409,6 +409,15 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
                 if (MULTI_SEL_VALID) {
                     updateOptionCheckboxes('remove');
+                    
+                    //
+                    if (typeof onChange === 'function') {
+                        onChange(
+                            selectInputRef.current,
+                            valueInputRef.current,
+                            multipleSelectionCallback([], [])
+                        );
+                    }
                 } else {
                     handleClearValue();
                 }
@@ -427,9 +436,30 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         labels: value.map((v: any) => v.label),
                         values: value.map((v: any) => v.value)
                     });
+                    
+                    // 
+                    if (typeof onChange === 'function') {
+                        onChange(
+                            selectInputRef.current,
+                            valueInputRef.current,
+                            multipleSelectionCallback(
+                                value.map((v: any) => v.value),
+                                value.map((v: any) => v.label)
+                            )
+                        );
+                    }
                 } else {
                     const _val = value[0];
                     handleSelect(null, (typeof _val === 'object' ? JSON.stringify(_val) : _val), [`${_val.value}`], [`${_val.label}`]);
+                    
+                    // 
+                    if (typeof onChange === 'function') {
+                        onChange(
+                            selectInputRef.current,
+                            valueInputRef.current,
+                            _val
+                        );
+                    }
                 }
 
 
@@ -2329,6 +2359,9 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                         <button
                             tabIndex={-1}
                             type="button"
+                            style={disabled ? {
+                                display: 'none'
+                            } : undefined}
                             onClick={async (e: React.MouseEvent) => {
                                 e.preventDefault();
                                 e.stopPropagation();

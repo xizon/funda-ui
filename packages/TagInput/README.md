@@ -23,7 +23,7 @@ export default () => {
             <TagInput 
                 placeholder="Add tag..." 
                 name="tagInput-name-1" 
-                onChange={(e, data, dataStr) => {
+                onChange={(el: HTMLElement, data: any, dataStr: any) => {
                     console.log(e, data, dataStr);
                     /*
                     <input ... placeholder="Add tag..." value="">,

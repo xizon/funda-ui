@@ -3899,6 +3899,11 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
         var _selectInputRef$curre3;
         if (MULTI_SEL_VALID) {
           updateOptionCheckboxes('remove');
+
+          //
+          if (typeof onChange === 'function') {
+            onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback([], []));
+          }
         } else {
           handleClearValue();
         }
@@ -3918,9 +3923,23 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
               return v.value;
             })
           });
+
+          // 
+          if (typeof onChange === 'function') {
+            onChange(selectInputRef.current, valueInputRef.current, multipleSelectionCallback(value.map(function (v) {
+              return v.value;
+            }), value.map(function (v) {
+              return v.label;
+            })));
+          }
         } else {
           var _val = value[0];
           handleSelect(null, _typeof(_val) === 'object' ? JSON.stringify(_val) : _val, ["".concat(_val.value)], ["".concat(_val.label)]);
+
+          // 
+          if (typeof onChange === 'function') {
+            onChange(selectInputRef.current, valueInputRef.current, _val);
+          }
         }
         cb === null || cb === void 0 ? void 0 : cb();
       }
@@ -5661,6 +5680,9 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("button", {
     tabIndex: -1,
     type: "button",
+    style: disabled ? {
+      display: 'none'
+    } : undefined,
     onClick: /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {

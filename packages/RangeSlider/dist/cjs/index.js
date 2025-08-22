@@ -1564,14 +1564,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             _useState12 = _slicedToArray(_useState11, 2),
             hasErr = _useState12[0],
             setHasErr = _useState12[1];
-          var currentSuggestionIndex = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+          var _useState13 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
+            _useState14 = _slicedToArray(_useState13, 2),
+            currentSuggestionIndex = _useState14[0],
+            setCurrentSuggestionIndex = _useState14[1];
 
           // A list of suggestions
           //----------------
-          var _useState13 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
-            _useState14 = _slicedToArray(_useState13, 2),
-            suggestions = _useState14[0],
-            setSuggestions = _useState14[1];
+          var _useState15 = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+            _useState16 = _slicedToArray(_useState15, 2),
+            suggestions = _useState16[0],
+            setSuggestions = _useState16[1];
 
           //performance
           var handleChangeSuggestionsFetchSafe = funda_utils_dist_cjs_useDebounce__WEBPACK_IMPORTED_MODULE_4___default()(function (e, curVal) {
@@ -1589,12 +1592,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           //----------------
           function _fetchSuggestionsData() {
             _fetchSuggestionsData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(params) {
-              var response, _ORGIN_DATA;
+              var response, _ORGIN_DATA, suggestionsArray;
               return _regeneratorRuntime().wrap(function _callee$(_context) {
                 while (1) switch (_context.prev = _context.next) {
                   case 0:
                     if (!(_typeof(aiPredictFetchFuncAsync) === 'object')) {
-                      _context.next = 11;
+                      _context.next = 12;
                       break;
                     }
                     _context.next = 3;
@@ -1613,12 +1616,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       _ORGIN_DATA = [];
                     }
 
-                    //
-                    setSuggestions(_ORGIN_DATA);
-                    return _context.abrupt("return", _ORGIN_DATA);
-                  case 11:
-                    return _context.abrupt("return", []);
+                    // Type assertion since we've verified it's an array
+                    suggestionsArray = _ORGIN_DATA; //
+                    setSuggestions(suggestionsArray);
+                    return _context.abrupt("return", suggestionsArray);
                   case 12:
+                    return _context.abrupt("return", []);
+                  case 13:
                   case "end":
                     return _context.stop();
                 }
@@ -1630,8 +1634,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             if (valRef.current) {
               var canvas = document.createElement('canvas');
               var context = canvas.getContext('2d');
-              context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
-              return context.measureText(text).width;
+              if (context) {
+                context.font = "".concat(originInputComputedStyle.current.fontSize, "px ").concat(originInputComputedStyle.current.fontFamily);
+                return context.measureText(text).width;
+              }
             }
             return 0;
           };
@@ -1727,12 +1733,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               clear: function clear(cb) {
                 setChangedVal('');
                 cb === null || cb === void 0 ? void 0 : cb();
-                onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, '');
+                if (valRef.current) {
+                  onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, '');
+                }
               },
               set: function set(value, cb) {
                 setChangedVal("".concat(value));
                 cb === null || cb === void 0 ? void 0 : cb();
-                onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, "".concat(value));
+                if (valRef.current) {
+                  onChange === null || onChange === void 0 ? void 0 : onChange(null, onComposition, valRef.current, "".concat(value));
+                }
               },
               aiPredictReset: function aiPredictReset() {
                 setTimeout(function () {
@@ -1758,7 +1768,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
             //
-            onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
+            if (valRef.current) {
+              onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
+            }
           }
           function handleChange(event, curVal) {
             setChangedVal(curVal);
@@ -1771,10 +1783,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
 
             //
-            onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current, curVal);
+            if (valRef.current) {
+              onChange === null || onChange === void 0 ? void 0 : onChange(event, onComposition, valRef.current, curVal);
+            }
 
             // It fires in real time as the user enters
-            if (typeof onInputCallback === 'function') {
+            if (typeof onInputCallback === 'function' && event && valRef.current) {
               var newData = onInputCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
@@ -1792,25 +1806,31 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
 
             //
-            onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition, valRef.current);
+            if (valRef.current) {
+              onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, onComposition, valRef.current);
+            }
 
             // It fires when focus is lost
-            if (typeof onChangeCallback === 'function') {
+            if (typeof onChangeCallback === 'function' && valRef.current) {
               var newData = onChangeCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
           }
 
           function handleKeyPressed(event) {
-            onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event, valRef.current);
-            if (typeof onKeyPressedCallback === 'function') {
+            if (valRef.current) {
+              onKeyDown === null || onKeyDown === void 0 ? void 0 : onKeyDown(event, valRef.current);
+            }
+            if (typeof onKeyPressedCallback === 'function' && valRef.current) {
               var newData = onKeyPressedCallback(event, valRef.current);
               if (newData) setChangedVal(newData); // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
             }
 
             if (event.key === 'Enter' || event.key === 'NumpadEnter') {
               // DO NOT USE "preventDefault()"
-              onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, valRef.current);
+              if (valRef.current) {
+                onPressEnter === null || onPressEnter === void 0 ? void 0 : onPressEnter(event, valRef.current);
+              }
             }
 
             // AI Predict
@@ -1838,16 +1858,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
               // switch result of suggestions
               if (event.code === 'ArrowUp') {
-                currentSuggestionIndex.current = (currentSuggestionIndex.current - 1 + tempMatchedSuggestion.length) % tempMatchedSuggestion.length;
+                setCurrentSuggestionIndex(function (prev) {
+                  return (prev - 1 + tempMatchedSuggestion.length) % tempMatchedSuggestion.length;
+                });
               }
               if (event.code === 'ArrowDown') {
-                currentSuggestionIndex.current = (currentSuggestionIndex.current + 1) % tempMatchedSuggestion.length;
+                setCurrentSuggestionIndex(function (prev) {
+                  return (prev + 1) % tempMatchedSuggestion.length;
+                });
               }
-              setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex.current] || '');
+              setCurrentSuggestion(tempMatchedSuggestion[currentSuggestionIndex] || '');
             }
           }
           function handleKeyUp(event) {
-            onKeyUp === null || onKeyUp === void 0 ? void 0 : onKeyUp(event, valRef.current);
+            if (valRef.current) {
+              onKeyUp === null || onKeyUp === void 0 ? void 0 : onKeyUp(event, valRef.current);
+            }
           }
           (0, react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
             // update default value
@@ -1914,18 +1940,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }),
             id: idRes,
             name: name,
-            step: step || null,
-            min: min || null,
-            max: max || null,
-            src: src || null,
-            size: size || null,
-            alt: alt || null,
+            step: step || undefined,
+            min: min || undefined,
+            max: max || undefined,
+            src: src || undefined,
+            size: typeof size === 'number' ? size : undefined,
+            alt: alt || undefined,
             inputMode: inputMode || undefined,
-            pattern: pattern || null,
+            pattern: pattern || undefined,
             placeholder: placeholder || '',
             value: changedVal,
-            minLength: minLength || null,
-            maxLength: maxLength || null,
+            minLength: typeof minLength === 'number' ? minLength : undefined,
+            maxLength: typeof maxLength === 'number' ? maxLength : undefined,
             autoComplete: typeof autoComplete === 'undefined' ? 'on' : autoComplete,
             autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
             spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,
@@ -1944,22 +1970,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             onCompositionStart: handleComposition,
             onCompositionUpdate: handleComposition,
             onCompositionEnd: handleComposition,
-            disabled: disabled || null,
-            required: required || null,
-            readOnly: readOnly || null,
+            disabled: disabled || undefined,
+            required: required || undefined,
+            readOnly: readOnly || undefined,
             style: style
           }, attributes)), appendControl || '', aiPredict && remainingText && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
             ref: aiInputRef,
             className: "position-absolute z-1",
             "data-ai": "predict",
             style: {
-              left: "".concat(originInputComputedStyle.current.fontSize + textWidth, "px"),
-              top: originInputComputedStyle.current.textTop + 'px',
+              left: "".concat((typeof originInputComputedStyle.current.fontSize === 'number' ? originInputComputedStyle.current.fontSize : 16) + textWidth, "px"),
+              top: (typeof originInputComputedStyle.current.textTop === 'number' ? originInputComputedStyle.current.textTop : 10) + 'px',
               color: "rgba(".concat(aiPredictRemainingTextRGB[0], ", ").concat(aiPredictRemainingTextRGB[1], ", ").concat(aiPredictRemainingTextRGB[2], ", ").concat(calculateOpacity(), ")"),
               pointerEvents: 'none',
-              fontSize: originInputComputedStyle.current.fontSize + 'px',
-              fontFamily: originInputComputedStyle.current.fontFamily,
-              letterSpacing: originInputComputedStyle.current.letterSpacing
+              fontSize: (typeof originInputComputedStyle.current.fontSize === 'number' ? originInputComputedStyle.current.fontSize : 16) + 'px',
+              fontFamily: typeof originInputComputedStyle.current.fontFamily === 'string' ? originInputComputedStyle.current.fontFamily : 'inherit',
+              letterSpacing: typeof originInputComputedStyle.current.letterSpacing === 'string' ? originInputComputedStyle.current.letterSpacing : 'normal'
             }
           }, remainingText), required ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, requiredLabel || requiredLabel === '' ? requiredLabel : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             className: "position-absolute end-0 top-0 my-2 mx-2"
