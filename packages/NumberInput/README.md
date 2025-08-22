@@ -21,7 +21,11 @@ export default () => {
                 decimalPlaces={0}
                 min={-55}
                 max={100}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>, el: HTMLInputElement, val: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null,
+                    el: HTMLInputElement | null,
+                    val: number
+                ) => {
                     console.log(val);
                 }}
             />
@@ -33,7 +37,11 @@ export default () => {
                 decimalPlaces={2}
                 min={0}
                 max={10}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>, el: HTMLInputElement, val: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null,
+                    el: HTMLInputElement | null,
+                    val: number
+                ) => {
                     console.log(val);
                 }}
                 required
@@ -47,7 +55,11 @@ export default () => {
                 decimalPlaces={3}
                 min={-10}
                 max={10}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>, el: HTMLInputElement, val: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null,
+                    el: HTMLInputElement | null,
+                    val: number
+                ) => {
                     console.log(val);
                 }}
 
@@ -155,7 +167,11 @@ export default () => {
                 decimalPlaces={0}
                 min={1}
                 max={100}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>, el: HTMLInputElement, val: number) => {
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null,
+                    el: HTMLInputElement | null,
+                    val: number
+                ) => {
                     console.log(val);
                 }}
             />
