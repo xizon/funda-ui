@@ -18,7 +18,7 @@ export default () => {
         el2: HTMLElement, 
         val: OptionConfig | MultiSelectValue
     ): void => {
-        console.log(event, element, value);
+        console.log(el, el2, val);
         /*
         <input ... value=​"[Option 3]​[Option 2]​[Option 1]​">​ 
         <input ... value=​"[value-3]​[value-2]​[value-1]​">​ 
