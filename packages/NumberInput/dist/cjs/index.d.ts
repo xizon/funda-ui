@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, FocusEvent } from 'react';
 export declare type NumberInputProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -32,9 +32,9 @@ export declare type NumberInputProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, el: HTMLElement, val: number) => void;
-    onBlur?: (e: any, el: any) => void;
-    onFocus?: (e: any, el: any) => void;
+    onChange?: (e: ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null, el: HTMLInputElement | null, val: number) => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement>, el: HTMLInputElement | null) => void;
+    onFocus?: (e: FocusEvent<HTMLInputElement>, el: HTMLInputElement | null) => void;
 };
 declare const NumberInput: React.ForwardRefExoticComponent<NumberInputProps & React.RefAttributes<unknown>>;
 export default NumberInput;

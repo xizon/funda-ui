@@ -5,7 +5,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import ModalDialog from 'funda-modaldialog';
 
 
-
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -772,9 +771,10 @@ const EventCalendar = (props: EventCalendarProps) => {
                                             {
                                                 'empty': !isInteractive,
                                                 'today': d === now.getDate(),
-                                                'selected': d === day,
+                                                'selected': d === day && isInteractive,
                                                 'last-cell': isLastCell,
                                                 'last-row': isLastRow,
+                                                 'disabled': !isInteractive
                                             }
                                         )}
                                         key={"col" + i}

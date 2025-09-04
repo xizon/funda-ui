@@ -14,6 +14,7 @@ import {
 
 
 
+
 declare global {
     interface Window {
         curVideo?: any;

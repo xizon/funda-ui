@@ -5090,8 +5090,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__cell-cushion-headercontent__container', {
                 'empty': !isInteractive,
                 'today': d === now.getDate(),
-                'selected': "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(day)) === "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(d)),
-                'last-cell': isLastCol
+                'selected': "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(day)) === "".concat(year, "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(month + 1), "-").concat((0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.padZero)(d)) && isInteractive,
+                'last-cell': isLastCol,
+                'disabled': !isInteractive
               }),
               key: "col" + i,
               "data-index": colIndex - 1,
@@ -5314,8 +5315,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
                 'has-event': eventSourcesData && _currentData.length > 0,
                 'empty': !isInteractive,
                 'today': d === now.getDate(),
-                'selected': isCellSelected(rowIndex, dayIndex),
-                'last-cell': isLastCol
+                'selected': isCellSelected(rowIndex, dayIndex) && isInteractive,
+                'last-cell': isLastCol,
+                'disabled': !isInteractive
               }),
               key: "col" + i,
               "data-index": colIndex - 1,

@@ -45,9 +45,13 @@ export type NumberInputProps = {
     style?: React.CSSProperties;
     tabIndex?: number;
     [key: `data-${string}`]: string | undefined;
-    onChange?: (e: any, el: HTMLElement, val: number) => void;
-    onBlur?: (e: any, el: any) => void;
-    onFocus?: (e: any, el: any) => void;
+    onChange?: (
+        e: ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement> | null,
+        el: HTMLInputElement | null,
+        val: number
+    ) => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement>, el: HTMLInputElement | null) => void;
+    onFocus?: (e: FocusEvent<HTMLInputElement>, el: HTMLInputElement | null) => void;
 
 };
 

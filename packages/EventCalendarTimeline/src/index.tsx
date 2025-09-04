@@ -1271,8 +1271,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                 {
                                     'empty': !isInteractive,
                                     'today': d === now.getDate(),
-                                    'selected': `${year}-${padZero(month + 1)}-${padZero(day)}` === `${year}-${padZero(month + 1)}-${padZero(d)}`,
-                                    'last-cell': isLastCol
+                                    'selected': `${year}-${padZero(month + 1)}-${padZero(day)}` === `${year}-${padZero(month + 1)}-${padZero(d)}` && isInteractive,
+                                    'last-cell': isLastCol,
+                                    'disabled': !isInteractive
                                 }
                             )}
                             key={"col" + i}
@@ -1559,8 +1560,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     'has-event': eventSourcesData && _currentData.length > 0,
                                     'empty': !isInteractive,
                                     'today': d === now.getDate(),
-                                    'selected': isCellSelected(rowIndex, dayIndex),
-                                    'last-cell': isLastCol
+                                    'selected': isCellSelected(rowIndex, dayIndex) && isInteractive,
+                                    'last-cell': isLastCol,
+                                    'disabled': !isInteractive
                                 }
                             )}
                             key={"col" + i}

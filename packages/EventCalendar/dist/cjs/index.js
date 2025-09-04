@@ -3602,9 +3602,10 @@ var EventCalendar = function EventCalendar(props) {
         className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)('custom-event-cal__cell custom-event-cal__day', {
           'empty': !isInteractive,
           'today': d === now.getDate(),
-          'selected': d === day,
+          'selected': d === day && isInteractive,
           'last-cell': isLastCell,
-          'last-row': isLastRow
+          'last-row': isLastRow,
+          'disabled': !isInteractive
         }),
         key: "col" + i,
         "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),
