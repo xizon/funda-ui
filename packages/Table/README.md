@@ -1084,6 +1084,7 @@ export default () => {
                                 <div className="checkbox-indeterminate">
                                     <ToggleSelection 
                                         row={index} 
+                                        checked={index === 1 || index === 2}
                                         onChange={(e: React.MouseEvent, val: boolean, fetchData: any[]) => {
                                             //  Initialize indeterminate status of all checkboxes 
                                             if (tableSelectAllRef.current) {

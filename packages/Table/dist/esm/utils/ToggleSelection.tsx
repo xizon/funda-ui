@@ -185,6 +185,36 @@ const ToggleSelection = forwardRef((props: ToggleSelectionProps, ref: any) => {
         }
     }, [resolvedRef, indeterminate]);
 
+    // Handle checked prop - use setSelectedItems to manage selection state
+    useEffect(() => {
+        if (checked !== undefined && row !== -1) {
+            const rowKey = String(row);
+            let nextSelectedItems: Set<any> | undefined;
+            setSelectedItems((prev: any) => {
+                const newSelectedItems = new Set(prev);
+                if (checked) {
+                    newSelectedItems.add(rowKey);
+                } else {
+                    newSelectedItems.delete(rowKey);
+                }
+                nextSelectedItems = newSelectedItems;
+
+
+                // 
+                const selectedIndex = nextSelectedItems ? Array.from(nextSelectedItems).map((v: any) => Number(v)) : [];
+                const filteredData = Array.isArray(originData) ? originData.filter((v: any, i: number) => selectedIndex.includes(i)) : [];
+
+                const syntheticEvent = { target: { value: rowKey, checked } } as any;
+                onChange?.(syntheticEvent, checked, filteredData);
+                onChangeRowSelect?.(filteredData);
+
+                return newSelectedItems;
+            });
+
+
+        }
+    }, [checked, row, setSelectedItems]);
+
 
     return (
         <>

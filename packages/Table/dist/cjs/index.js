@@ -1964,6 +1964,40 @@ var ToggleSelection = /*#__PURE__*/(0,external_root_React_commonjs2_react_common
       resolvedRef.current.indeterminate = indeterminate;
     }
   }, [resolvedRef, indeterminate]);
+
+  // Handle checked prop - use setSelectedItems to manage selection state
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (checked !== undefined && row !== -1) {
+      var rowKey = String(row);
+      var nextSelectedItems;
+      setSelectedItems(function (prev) {
+        var newSelectedItems = new Set(prev);
+        if (checked) {
+          newSelectedItems.add(rowKey);
+        } else {
+          newSelectedItems["delete"](rowKey);
+        }
+        nextSelectedItems = newSelectedItems;
+
+        // 
+        var selectedIndex = nextSelectedItems ? Array.from(nextSelectedItems).map(function (v) {
+          return Number(v);
+        }) : [];
+        var filteredData = Array.isArray(originData) ? originData.filter(function (v, i) {
+          return selectedIndex.includes(i);
+        }) : [];
+        var syntheticEvent = {
+          target: {
+            value: rowKey,
+            checked: checked
+          }
+        };
+        onChange === null || onChange === void 0 ? void 0 : onChange(syntheticEvent, checked, filteredData);
+        onChangeRowSelect === null || onChangeRowSelect === void 0 ? void 0 : onChangeRowSelect(filteredData);
+        return newSelectedItems;
+      });
+    }
+  }, [checked, row, setSelectedItems]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, rowSelectable && row === -1 ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("input", ToggleSelection_extends({
     type: useRadio ? 'radio' : 'checkbox',
     ref: resolvedRef,
