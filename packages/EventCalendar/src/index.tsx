@@ -774,7 +774,8 @@ const EventCalendar = (props: EventCalendarProps) => {
                                                 'selected': d === day && isInteractive,
                                                 'last-cell': isLastCell,
                                                 'last-row': isLastRow,
-                                                 'disabled': !isInteractive
+                                                 'disabled': !isInteractive,
+                                                 'has-events': _eventContent() !== null
                                             }
                                         )}
                                         key={"col" + i}

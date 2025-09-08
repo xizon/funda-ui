@@ -3605,7 +3605,8 @@ var EventCalendar = function EventCalendar(props) {
           'selected': d === day && isInteractive,
           'last-cell': isLastCell,
           'last-row': isLastRow,
-          'disabled': !isInteractive
+          'disabled': !isInteractive,
+          'has-events': _eventContent() !== null
         }),
         key: "col" + i,
         "data-date": (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_1__.getCalendarDate)(_dateShow),

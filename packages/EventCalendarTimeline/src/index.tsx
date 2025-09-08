@@ -1562,7 +1562,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                     'today': d === now.getDate(),
                                     'selected': isCellSelected(rowIndex, dayIndex) && isInteractive,
                                     'last-cell': isLastCol,
-                                    'disabled': !isInteractive
+                                    'disabled': !isInteractive,
+                                    'has-events': _eventContent() !== null
                                 }
                             )}
                             key={"col" + i}
