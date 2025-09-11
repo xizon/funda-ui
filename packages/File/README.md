@@ -367,6 +367,7 @@ type UploaderProps = {
     name?: string;
     id?: string;
     accept?: string;
+    maxSize?: number;
     wrapperClassName?: string;
     waitingClassName?: string;
     support?: string;
@@ -386,6 +387,7 @@ type UploaderProps = {
     onChange?: () => void;
     onProgress?: () => void;
     onEmpty?: () => void;
+    onLimitSize?: () => void;
     onIncorrectFormat?: () => void;
 };
 const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
@@ -393,6 +395,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         label,
         name,
         id,
+        maxSize = 20 * 1024 * 1024, // max 20M
         wrapperClassName,
         waitingClassName,
         accept,
@@ -413,6 +416,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         onProgress,
         onChange,
         onEmpty,
+        onLimitSize,
         onIncorrectFormat,
         ...attributes
     } = props;
@@ -451,10 +455,18 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         submitEl.classList.add(WAITING_CLASS);
 
         onProgress?.();
-        
+
         // check format
         [].slice.call(files).forEach((file: any) => {
-      
+    
+            if (file.size > maxSize) {
+                onLimitSize?.();
+                hasFormatErr.current = true;
+                submitEl.classList.remove(WAITING_CLASS);
+                return false;
+            }
+
+
             if (typeof support === 'undefined' || support !== '*') {
                 const re = new RegExp(`\.(${SUPPORT_EXT})$`, "i");
                 if (! re.test(file.name)) {
@@ -571,6 +583,9 @@ export default () => {
                 }}
                 onIncorrectFormat={() => {
                     alert('Incorrect file')
+                }}
+                onLimitSize={() => {
+                    alert('File exceeds 20MB limit');
                 }}
             />
             {upInfoProgImgs !== null ? <div><img src={upInfoProgImgs.imgData} height={70} /></div> : null}
