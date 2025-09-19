@@ -1,15 +1,25 @@
 /**
+ * Fix And Parse JSON (Support for handling complex escape JSON strings)
+ * @private
+ */
+interface ParseResult {
+    success: boolean;
+    data?: any;
+    error?: string;
+    details?: string;
+}
+export declare function fixAndParseJSON(input: string): ParseResult;
+/**
+ * Determine whether it is in JSON format
+ * @private
+ */
+declare function isJSON(input: any): boolean;
+/**
  * Check if a string is a valid number
  * @param str - The string to check
  * @returns boolean indicating if the string is a valid number
  */
 declare function isValidNumeric(str: unknown): boolean;
-/**
- * Determine whether it is in JSON format
- * @param str - The value to check
- * @returns boolean indicating if the value is valid JSON
- */
-declare function isJSON(str: unknown): boolean;
 /**
  * Check if input is empty
  * @param input - The input to check (string or array of strings)

@@ -7,15 +7,6 @@ export interface HtmlTagPlaceholder {
     type: 'table' | 'img' | 'svg';
 }
 
-export function isValidJSON(str: string){
-    try {
-        JSON.parse(str);
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
-
 export function formatLatestDisplayContent(str: string) {
     // Regular expression to match <details> tags and their content
     let output = str.replace(/<details class="think"[^>]*>([\s\S]*?)<\/details>/g, (match, content) => {
@@ -178,3 +169,12 @@ export function extractHtmlTags(html: string): { processedHtml: string; placehol
 
     return { processedHtml, placeholders };
 };
+
+
+export function toBoolean(val) {
+    if (typeof val === "boolean") return val;
+    if (typeof val === "string") {
+        return val.toLowerCase() === "true";
+    }
+    return Boolean(val); 
+}

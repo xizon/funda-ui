@@ -9,7 +9,9 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import useDebounce from 'funda-utils/dist/cjs/useDebounce';
 import useThrottle from 'funda-utils/dist/cjs/useThrottle';
 import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
+import useStreamController from 'funda-utils/dist/cjs/useStreamController';
 import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
+import { isJSON } from 'funda-utils/dist/cjs/validate';
 
 
 // loader
@@ -17,14 +19,13 @@ import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
 
 import {
-    isValidJSON,
     formatLatestDisplayContent,
     formatName,
     fixHtmlTags,
-    isStreamResponse
+    isStreamResponse,
+    toBoolean
 } from './utils/func';
 
-import useStreamController from './useStreamController';
 
 export interface CustomMethod {
     name: string;
@@ -354,16 +355,19 @@ const Chatbox = (props: ChatboxProps) => {
         // header config       
         const _headerConfig = headerConfig.replace(/\{apiKey\}/g, apiKey)
                                            .replace(/\'/g, '"'); //  !!! REQUIRED !!!
-        const headerConfigRes = typeof _headerConfig !== 'undefined' ? (isValidJSON(_headerConfig) ? JSON.parse(_headerConfig) : undefined) : {'Content-Type':'application/json'};
+        const headerConfigRes = typeof _headerConfig !== 'undefined' ? (isJSON(_headerConfig) ? JSON.parse(_headerConfig) : undefined) : {'Content-Type':'application/json'};
 
 
         // Determine whether it is in JSON format
-        if (!isValidJSON(_requestBodyTmpl)) {
+        if (!isJSON(_requestBodyTmpl)) {
             console.log('--> [ERROR] Wrong JSON format');
             _requestBodyTmpl = '{}';
             return {};
         } else {
-            _isStream = JSON.parse(_requestBodyTmpl).hasOwnProperty('stream') && JSON.parse(_requestBodyTmpl).stream === true;
+
+            if (JSON.parse(_requestBodyTmpl).hasOwnProperty('stream')) {
+                _isStream = toBoolean(JSON.parse(_requestBodyTmpl).stream) === true;
+            }
         }
 
         // Whether or not to show reasoning
@@ -709,7 +713,8 @@ const Chatbox = (props: ChatboxProps) => {
 
             // Streaming data is JSON split by rows
             const lines = chunk.split("\n").filter(line => line.trim() !== "");
-     
+
+    
             for (const line of lines) {
 
                 // debug
@@ -726,7 +731,7 @@ const Chatbox = (props: ChatboxProps) => {
                     const _content = `${line.replace(/^data:\s*/, '')}`;
 
                     // Determine whether it is in JSON format
-                    if (!isValidJSON(_content)) {
+                    if (!isJSON(_content)) {
                         console.log('--> [ERROR] Wrong JSON format');
 
                         //reset SSE
@@ -1048,8 +1053,8 @@ const Chatbox = (props: ChatboxProps) => {
         // Update stream mode
         setEnableStreamMode(currentStreamMode as boolean);
 
-
         try {
+
             // Parse and interpolate request body template
             let requestBodyRes = JSON.parse(
                 (args().requestBodyTmpl || '{}')
@@ -1115,6 +1120,7 @@ const Chatbox = (props: ChatboxProps) => {
                     // Start streaming
                     await streamController.start(contentRes as never);
 
+
                     return {
                         reply: tempAnimText, // The final content will be in tempAnimText
                         useStreamRender: true
@@ -1131,12 +1137,10 @@ const Chatbox = (props: ChatboxProps) => {
 
             }
 
-
             if (currentStreamMode) {
                 {/* ======================================================== */}
                 {/* ======================== STREAM  ====================== */}
                 {/* ======================================================== */}
-
                 const response: any = await fetch((args().requestApiUrl || ''), {
                     method: "POST",
                     body: JSON.stringify(requestBodyRes),
