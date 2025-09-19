@@ -312,6 +312,9 @@ export default () => {
                 verbose={aiConfig.verbose}
                 baseUrl={"http://localhost:11434"}
                 apiKey={aiConfig.APIKey}
+                token={() => {
+                    return localStorage.getItem('DEMO')
+                }}
                 customMethods={customMethods}
                 onInputCallback={async (input:string)=> {
                     return input.replace(/(\r\n|\r|\n)/g, '<br />');
@@ -710,7 +713,8 @@ import Chatbox from 'funda-ui/Chatbox';
 | `usePopUp` | boolean | true | Whether to use the pop-up window, if false, will be directly embedded with html | - |
 | `model` | string | - | The model name to use | - |
 | `baseUrl` | string | - | The base URL for API requests | - |
-| `apiKey` | string | - | API key for authentication | - |
+| `apiKey` | string | - | API key for authentication. | - |
+| `token` | string \| function | - | Dynamic identification string.  <blockquote>Functional return value is supported, such as: `() => return localStorage.getItem('DEMO')`</blockquote> | - |
 | `defaultMessages` | Array | - | Initial messages to display in the chat | - |
 | `verbose` | boolean | true | Whether to show reasoning details | - |
 | `showCopyBtn` | boolean | false | Whether to show copy button for each reply | - |
@@ -732,7 +736,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `noDataPlaceholder` | string | - | Text to show when no messages exist <blockquote>HTML tags are supported</blockquote>| - |
 | `maxHistoryLength` | number | 20 | Controls the length of the history | - |
 | `requestConfig` | JSON Object | - | Configuration for API requests | ✅ |
-| `headerConfig` | any | - | Configuration for request headers. <blockquote>**Placeholder string**<ul><li>`{apiKey}` -> Your Secret API key on the API key page, It will use the incoming `apiKey` instead</li></ul></blockquote> | - |
+| `headerConfig` | any | - | Configuration for request headers. <blockquote>**Placeholder string**<ul><li>`{apiKey}` -> Your Secret API key on the API key page. It will use the incoming `apiKey` instead</li><li>`{token}` -> Dynamic identification string. Functional return value is supported. It will use the incoming `token` instead</li></ul></blockquote> | - |
 | `contextData` | JSON Object | - | Dynamic JSON data for request formatting | - |
 | `defaultQuestions` | JSON Object | - | Configuration for default questions to display when chat is empty. Object contains: <br /><ol><li>`title`: Title text to show above questions (string)</li><li>`list`: Array of question strings to display</li></ol><br/>**Example:**<br/>`{title:"Suggested questions:",list:["What is React?","How do I use hooks?","Explain props vs state"]}`<br/>These questions will be displayed as clickable options when the chat has no messages. | - |
 | `customMethods` | Array | - | Array of custom methods that can be called via `contentRef`. Each method object contains: <br /><ol><li>`name`: Method name (string)</li><li>`func`: Function to execute</li></ol><br/>**Example:**<br/>`[{name:"sayHello",func:(name:string)=>{console.log("Hello, " + name + "!");}},{name:"updateUI",func:(data:any)=>{console.log('Updating UI with:',data);}}]`<br/>These methods can be accessed through:<br/><ol><li>`contentRef.current.executeCustomMethod('methodName', ...args)`: Execute a specific custom method</li><li>`contentRef.current.getCustomMethods()`: Get list of available custom method names</li></ol><br/>**Usage Example:**<br/>`contentRef.current.executeCustomMethod('sayHello', 'your name');`<br/>`contentRef.current.getCustomMethods();` | - |
@@ -774,7 +778,7 @@ JSON Object Literals configuration properties of the `requestConfig` (**JSON Obj
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
 | `apiUrl` | string | - | The URL from which the request was made. such as `http://127.0.0.1:11434/v1/chat/completions` <blockquote>**Placeholder string**<ul><li>`{baseUrl}` -> A URL assigned to API to convert "relative URLs" into "absolute URLs" by the addition of a document name or trailing slash  (including port), It will use the incoming `baseUrl` instead</li></ul></blockquote> | ✅ |
-| `requestBody` | string | - | JSON string for request body template. such as `{'model':'{model}','messages':[{'role':'user','content':'{message}'}],'stream': true}` <blockquote>**Placeholder string**<ul><li>`{model}` -> The name of the model</li><li>`{message}` -> Content sent by the user</li><li>`{token}` -> The identity string of the current session.</li></ul></blockquote> | ✅ |
+| `requestBody` | string | - | JSON string for request body template. such as `{'model':'{model}','messages':[{'role':'user','content':'{message}'}],'stream': true}` <blockquote>**Placeholder string**<ul><li>`{model}` -> The name of the model</li><li>`{message}` -> Content sent by the user</li><li>`{chatId}` -> The identity string of the current chat window.</li><li>`{token}` -> The identity string of the current session. Functional return value is supported. It will use the incoming `token` instead</li></ul></blockquote> | ✅ |
 | `responseExtractor` | string | - | JSON path to extract response. such as `data.choices.0.delta.content` <blockquote>Please use `.` to separate fields. `0` represents the first element of the array.</blockquote> | ✅ |
 
 

@@ -102,6 +102,7 @@ export type ChatboxProps = {
     model?: string;
     baseUrl?: string;
     apiKey?: string;
+    token?: string | (() => string);
     defaultMessages?: MessageDetail[];
     verbose?: boolean;
     reasoningSwitchLabel?: string;
@@ -167,6 +168,19 @@ const Chatbox = (props: ChatboxProps) => {
 }`,
         responseExtractor: "data.choices.0.delta.content"
     });
+
+
+    const tokenFormat = (inputTokenValue: any) => {
+        if (typeof inputTokenValue === 'undefined') return '';
+
+        // Resolve token value (string or function)
+        if (typeof inputTokenValue === 'function') {
+            return inputTokenValue();
+        } else {
+            return inputTokenValue || '';
+        }
+    };
+
 
 
     //
@@ -301,6 +315,7 @@ const Chatbox = (props: ChatboxProps) => {
             model,
             baseUrl,
             apiKey,
+            token,
             verbose,
             reasoningSwitchLabel,
             stopLabel,
@@ -351,9 +366,9 @@ const Chatbox = (props: ChatboxProps) => {
         // request API
         const requestApiUrl = apiUrl.replace(/\{baseUrl\}/g, baseUrl);
 
-
         // header config       
         const _headerConfig = headerConfig.replace(/\{apiKey\}/g, apiKey)
+                                           .replace(/\{token\}/g, tokenFormat(token))
                                            .replace(/\'/g, '"'); //  !!! REQUIRED !!!
         const headerConfigRes = typeof _headerConfig !== 'undefined' ? (isJSON(_headerConfig) ? JSON.parse(_headerConfig) : undefined) : {'Content-Type':'application/json'};
 
@@ -388,6 +403,7 @@ const Chatbox = (props: ChatboxProps) => {
             model,
             baseUrl,
             apiKey,
+            token,
             verbose,
             reasoningSwitchLabel,
             stopLabel,
@@ -1060,7 +1076,8 @@ const Chatbox = (props: ChatboxProps) => {
                 (args().requestBodyTmpl || '{}')
                 .replace(/\{model\}/g, args().model)
                 .replace(/\{message\}/g, msg)
-                .replace(/\{token\}/g, chatId)
+                .replace(/\{chatId\}/g, chatId)
+                .replace(/\{token\}/g, tokenFormat(args().token) as string)
             );
 
             // 

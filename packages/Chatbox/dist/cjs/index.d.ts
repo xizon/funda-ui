@@ -56,6 +56,7 @@ export declare type ChatboxProps = {
     model?: string;
     baseUrl?: string;
     apiKey?: string;
+    token?: string | (() => string);
     defaultMessages?: MessageDetail[];
     verbose?: boolean;
     reasoningSwitchLabel?: string;

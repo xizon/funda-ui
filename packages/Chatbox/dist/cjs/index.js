@@ -5320,6 +5320,16 @@ var Chatbox = function Chatbox(props) {
     requestBody: "{\n    \"model\": \"{model}\",\n    \"messages\": [{\n        \"role\": \"user\",\n        \"content\": \"{message}\"\n    }],\n    \"stream\": true\n}",
     responseExtractor: "data.choices.0.delta.content"
   });
+  var tokenFormat = function tokenFormat(inputTokenValue) {
+    if (typeof inputTokenValue === 'undefined') return '';
+
+    // Resolve token value (string or function)
+    if (typeof inputTokenValue === 'function') {
+      return inputTokenValue();
+    } else {
+      return inputTokenValue || '';
+    }
+  };
 
   //
   var rootRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -5476,6 +5486,7 @@ var Chatbox = function Chatbox(props) {
       model = currentProps.model,
       baseUrl = currentProps.baseUrl,
       apiKey = currentProps.apiKey,
+      token = currentProps.token,
       verbose = currentProps.verbose,
       reasoningSwitchLabel = currentProps.reasoningSwitchLabel,
       stopLabel = currentProps.stopLabel,
@@ -5521,7 +5532,7 @@ var Chatbox = function Chatbox(props) {
     var requestApiUrl = apiUrl.replace(/\{baseUrl\}/g, baseUrl);
 
     // header config       
-    var _headerConfig = headerConfig.replace(/\{apiKey\}/g, apiKey).replace(/\'/g, '"'); //  !!! REQUIRED !!!
+    var _headerConfig = headerConfig.replace(/\{apiKey\}/g, apiKey).replace(/\{token\}/g, tokenFormat(token)).replace(/\'/g, '"'); //  !!! REQUIRED !!!
     var headerConfigRes = typeof _headerConfig !== 'undefined' ? (0,validate.isJSON)(_headerConfig) ? JSON.parse(_headerConfig) : undefined : {
       'Content-Type': 'application/json'
     };
@@ -5554,6 +5565,7 @@ var Chatbox = function Chatbox(props) {
       model: model,
       baseUrl: baseUrl,
       apiKey: apiKey,
+      token: token,
       verbose: verbose,
       reasoningSwitchLabel: reasoningSwitchLabel,
       stopLabel: stopLabel,
@@ -6368,7 +6380,7 @@ var Chatbox = function Chatbox(props) {
             setEnableStreamMode(currentStreamMode);
             _context8.prev = 2;
             // Parse and interpolate request body template
-            requestBodyRes = JSON.parse((args().requestBodyTmpl || '{}').replace(/\{model\}/g, args().model).replace(/\{message\}/g, msg).replace(/\{token\}/g, chatId)); // 
+            requestBodyRes = JSON.parse((args().requestBodyTmpl || '{}').replace(/\{model\}/g, args().model).replace(/\{message\}/g, msg).replace(/\{chatId\}/g, chatId).replace(/\{token\}/g, tokenFormat(args().token))); // 
             // If a formatter function exists, it is used to process the request body
             if (!(typeof args().requestBodyFormatter === 'function')) {
               _context8.next = 8;
