@@ -1,14 +1,8 @@
 /**
  * Fix And Parse JSON (Support for handling complex escape JSON strings)
+ * @desc recursively fix top-level key/value (recursively handles when encountering top-level values that are objects/arrays)
  * @private
  */
-interface ParseResult {
-    success: boolean;
-    data?: any;
-    error?: string;
-    details?: string;
-}
-export declare function fixAndParseJSON(input: string): ParseResult;
 /**
  * Determine whether it is in JSON format
  * @private

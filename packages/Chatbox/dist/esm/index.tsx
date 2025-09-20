@@ -14,6 +14,7 @@ import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 import { isJSON } from 'funda-utils/dist/cjs/validate';
 
 
+
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from "./TypingEffect";
@@ -380,9 +381,14 @@ const Chatbox = (props: ChatboxProps) => {
             return {};
         } else {
 
-            if (JSON.parse(_requestBodyTmpl).hasOwnProperty('stream')) {
-                _isStream = toBoolean(JSON.parse(_requestBodyTmpl).stream) === true;
+            try {
+                if (JSON.parse(_requestBodyTmpl).hasOwnProperty('stream')) {
+                    _isStream = toBoolean(JSON.parse(_requestBodyTmpl).stream) === true;
+                }
+            } catch (err) {
+                console.error(err);
             }
+
         }
 
         // Whether or not to show reasoning
