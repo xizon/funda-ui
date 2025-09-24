@@ -1474,59 +1474,26 @@ const Chatbox = (props: ChatboxProps) => {
                     {/* ====================== STREAM  begin ==================== */}
                     {/* ======================================================== */}
                     {enableStreamMode ? <>
-                        {args().verbose ? <>
-                            {/* +++++++++++++++ With reasoning ++++++++++++++++++++ */}
-
-                            {/** ANIM TEXT (has thinking) */}
-                            {tempAnimText !== '' && loading ? <>
-                                <div className="reply reply-waiting">
-                                    <div className="qa-name">
-                                        <span dangerouslySetInnerHTML={{ __html: `${args().answerNameRes}` }} />
-                                        {loaderDisplay ? <>
-                                            <div className="msg-dotted-loader-container">
-                                                <span className="msg-dotted-loader"></span>
-                                                <span className="msg-dotted-loader-text">{args().sendLoadingLabel} ({elapsedTime}s)</span>
-                                            </div>
-                                        </> : null}
-
-                                    </div>
-
-                                    <div className="qa-content">
-                                        <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${tempAnimText}` }}></div>
-                                    </div>
-                                </div>
-                            </> : null}
-                            {/** /ANIM TEXT (has thinking) */}
-
-
-                        </> : <>
-                            {/* +++++++++++++++ Without reasoning ++++++++++++++++++++ */}
-                            {/** ANIM TEXT (has loading) */}
-                            {loading ? <>
-                                <div className="reply reply-waiting">
-                                    <div className="qa-name">
-                                        <span dangerouslySetInnerHTML={{ __html: `${args().answerNameRes}` }} />
-                                        {thinking ? <>
-                                            <div className="msg-dotted-loader-container">
-                                                <span className="msg-dotted-loader"></span>
-                                                <span className="msg-dotted-loader-text">{args().sendLoadingLabel} ({elapsedTime}s)</span>
-                                            </div>
-                                        </> : null}
-
-                                    </div>
-
-                                    {tempAnimText !== '' ? <>
-                                        <div className="qa-content">
-                                            <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${tempAnimText}` }}></div>
+                        {/** ANIM TEXT (has loading) */}
+                        {loading ? <>
+                            <div className="reply reply-waiting">
+                                <div className="qa-name">
+                                    <span dangerouslySetInnerHTML={{ __html: `${args().answerNameRes}` }} />
+                                    {loaderDisplay ? <>
+                                        <div className="msg-dotted-loader-container">
+                                            <span className="msg-dotted-loader"></span>
+                                            <span className="msg-dotted-loader-text">{args().sendLoadingLabel} ({elapsedTime}s)</span>
                                         </div>
                                     </> : null}
 
                                 </div>
-                            </> : null}
-                            {/** /ANIM TEXT (has loading) */}
 
-                        </>}
-
+                                <div className="qa-content">
+                                    <div className="qa-content" dangerouslySetInnerHTML={{ __html: `${tempAnimText}` }}></div>
+                                </div>
+                            </div>
+                        </> : null}
+                        {/** /ANIM TEXT (has loading) */}
                     </> : null}
                     {/* ======================================================== */}
                     {/* ====================== STREAM   end ===================== */}
