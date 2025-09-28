@@ -251,6 +251,7 @@ export default () => {
     const [data, setData] = useState<any>(null);
     const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
     const [modalFormData, setModalFormData] = useState<any>(null);
+    const [modalFormDataCache, setModalFormDataCahce] = useState<number>(0);
     const [modalOpenType, setModalOpenType] = useState<string>(''); // It is used to determine whether it is NEW or EDIT
 
     const updateOrginalData = (orginalData: any[], currentData: any, date: string, queryId: string, upadteData: Record<string, any>) => {
@@ -381,7 +382,7 @@ export default () => {
                             </div>
                             <div className="col">
                                 <Input
-
+                                    key={modalFormDataCache}
                                     type="text"
                                     value={modalFormData ? modalFormData.content : ''}
                                     name="post_title"
@@ -398,7 +399,6 @@ export default () => {
                             </div>
                             <div className="col">
                                 <Input
-
                                     type="date"
                                     value={modalFormData ? modalFormData.date : ''}
                                     name="post_date"
@@ -425,9 +425,11 @@ export default () => {
                         content: currentData.data,
                         date: currentData.date
                     })
+                    setModalFormDataCahce(Math.random());
                 }}
                 onModalEditClose={(currentData: any) => {
                     setModalFormData(null);
+                    setModalFormDataCahce(Math.random());
                 }}
                 onModalDeleteOpen={(currentData: any, openwin: any) => {
                     console.log('onModalDeleteOpen: ', currentData);
@@ -440,6 +442,7 @@ export default () => {
                         content: currentData.data,
                         date: currentData.date
                     })
+                    setModalFormDataCahce(Math.random());
                 }}
                 onModalEditEvent={(currentData: any, closewin: any) => {
                     console.log('edit event:currentData: ', currentData);
@@ -498,6 +501,7 @@ export default () => {
 
                         //
                         setModalFormData(null);
+                        setModalFormDataCahce(Math.random());
 
                         // close the modal
                         closewin();
