@@ -5446,6 +5446,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     e.preventDefault();
     e.stopPropagation(); // Avoid triggering other inputs
 
+    // If disabled or readOnly, the operations are not performed
+    if (disabled || readOnly) {
+      return;
+    }
     e.target.select();
     resetDefauleValueExist();
 
@@ -5704,12 +5708,16 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       tabIndex: -1,
       href: "#",
       className: (0,cls.combinedCls)('date2d__control-tools__close', {
-        'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist
+        'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist || disabled || readOnly
       }),
       onClick: function onClick(e) {
         e.preventDefault();
         e.stopPropagation(); // Avoid triggering pop-ups
 
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+          return;
+        }
         clearAll();
         onClear === null || onClear === void 0 ? void 0 : onClear(getFullTimeData(''));
       }
@@ -5728,6 +5736,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         e.preventDefault();
         e.stopPropagation(); // Avoid triggering pop-ups
 
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+          return;
+        }
         handleShow();
       }
     }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
@@ -5798,7 +5810,7 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     onFocus: handleFocus,
     onBlur: handleBlur,
     onKeyDown: handleKeyPressed,
-    onClick: enableEntireAreaPopup ? handleShow : function () {}
+    onClick: enableEntireAreaPopup && !disabled && !readOnly ? handleShow : function () {}
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
     className: "date2d__control"
   }, /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((cjs_default()), _extends({
@@ -5810,6 +5822,8 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         externalRef.current = node;
       }
     },
+    disabled: disabled,
+    readOnly: readOnly,
     tabIndex: -1,
     type: "text",
     inputMode: "none",
@@ -6135,6 +6149,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
     langMonthsFull: _langMonthsFull,
     langToday: _langToday,
     onChangeDate: function onChangeDate(e, currentData) {
+      // If disabled or readOnly, the operations are not performed
+      if (disabled || readOnly) {
+        return;
+      }
       resetDefauleValueExist();
 
       //
@@ -6153,6 +6171,10 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       resetPopupBlurStatus();
     },
     onChangeToday: function onChangeToday(currentData) {
+      // If disabled or readOnly, the operations are not performed
+      if (disabled || readOnly) {
+        return;
+      }
       resetDefauleValueExist();
 
       //
@@ -6221,6 +6243,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       tabIndex: -1,
       onClick: function onClick(e) {
         e.preventDefault();
+
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+          return;
+        }
         resetDefauleValueExist();
 
         //
@@ -6258,6 +6285,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       tabIndex: -1,
       onClick: function onClick(e) {
         e.preventDefault();
+
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+          return;
+        }
         resetDefauleValueExist();
 
         //
@@ -6295,6 +6327,11 @@ var src_Date = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
       tabIndex: -1,
       onClick: function onClick(e) {
         e.preventDefault();
+
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+          return;
+        }
         resetDefauleValueExist();
 
         //

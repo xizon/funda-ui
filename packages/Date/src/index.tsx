@@ -638,6 +638,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
         e.preventDefault();
         e.stopPropagation();  // Avoid triggering other inputs
 
+        // If disabled or readOnly, the operations are not performed
+        if (disabled || readOnly) {
+            return;
+        }
+
         e.target.select();
 
         
@@ -949,11 +954,16 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                 className={combinedCls(
                     'date2d__control-tools__close',
                     {
-                        'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist
+                        'd-none': HIDE_CLEAR_BTN_ENABLED || !dateDefaultValueExist || disabled || readOnly
                     }
                 )} onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     e.stopPropagation();  // Avoid triggering pop-ups
+
+                    // If disabled or readOnly, the operations are not performed
+                    if (disabled || readOnly) {
+                        return;
+                    }
 
                     clearAll();
                     onClear?.(getFullTimeData(''));
@@ -967,6 +977,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                 onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     e.stopPropagation();  // Avoid triggering pop-ups
+
+                    // If disabled or readOnly, the operations are not performed
+                    if (disabled || readOnly) {
+                        return;
+                    }
 
                     handleShow();
                 }}
@@ -1027,7 +1042,7 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onKeyDown={handleKeyPressed}
-                onClick={enableEntireAreaPopup ? handleShow : () => {}}
+                onClick={enableEntireAreaPopup && !disabled && !readOnly ? handleShow : () => {}}
 
             >
 
@@ -1042,6 +1057,8 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                 externalRef.current = node;
                             }
                         }}
+                        disabled={disabled}
+                        readOnly={readOnly}
                         tabIndex={-1}
                         type="text"
                         inputMode="none"
@@ -1474,6 +1491,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                     langMonthsFull={_langMonthsFull}
                                     langToday={_langToday}
                                     onChangeDate={(e: any, currentData: any) => {
+                                        // If disabled or readOnly, the operations are not performed
+                                        if (disabled || readOnly) {
+                                            return;
+                                        }
+                                        
                                         resetDefauleValueExist();
 
                                         //
@@ -1494,6 +1516,11 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
 
                                     }}
                                     onChangeToday={(currentData: any) => {
+                                        // If disabled or readOnly, the operations are not performed
+                                        if (disabled || readOnly) {
+                                            return;
+                                        }
+                                        
                                         resetDefauleValueExist();
 
                                         //
@@ -1579,6 +1606,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                 tabIndex={-1}
                                                 onClick={(e: React.MouseEvent) => {
                                                     e.preventDefault();
+                                                    
+                                                    // If disabled or readOnly, the operations are not performed
+                                                    if (disabled || readOnly) {
+                                                        return;
+                                                    }
+                                                    
                                                     resetDefauleValueExist();
 
                                                     //
@@ -1634,6 +1667,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                 tabIndex={-1}
                                                 onClick={(e: React.MouseEvent) => {
                                                     e.preventDefault();
+                                                    
+                                                    // If disabled or readOnly, the operations are not performed
+                                                    if (disabled || readOnly) {
+                                                        return;
+                                                    }
+                                                    
                                                     resetDefauleValueExist();
 
                                                     //
@@ -1692,6 +1731,12 @@ const Date = forwardRef((props: DateProps, externalRef: any) => {
                                                     tabIndex={-1}
                                                     onClick={(e: React.MouseEvent) => {
                                                         e.preventDefault();
+                                                        
+                                                        // If disabled or readOnly, the operations are not performed
+                                                        if (disabled || readOnly) {
+                                                            return;
+                                                        }
+                                                        
                                                         resetDefauleValueExist();
 
                                                         //
