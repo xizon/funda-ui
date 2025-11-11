@@ -101,6 +101,9 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     useImperativeHandle(
         contentRef,
         () => ({
+            addNew: () => {
+                handleClickAdd(null);
+            },
             showAddBtn: () => {
                 addBtnRef.current.style.setProperty('display', 'inline', 'important');
             },
@@ -111,7 +114,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
                 return rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
             }
         }),
-        [contentRef],
+        [contentRef, handleClickAdd],  // required "handleClickAdd"
     );
 
     function updateLastItemCls(el: HTMLDivElement, type: string) {
@@ -167,9 +170,11 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     }
 
 
-    function handleClickAdd(event: any) {
-        if (event !== null && typeof event !== 'undefined') event.preventDefault();
-
+    function handleClickAdd(event: any = null) {
+        if (event !== null) {
+            if (typeof event !== 'undefined') event.preventDefault();
+        }
+        
         //button status
         checkMaxStatus();
 

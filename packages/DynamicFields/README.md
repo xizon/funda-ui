@@ -1124,6 +1124,7 @@ type DynamicFieldsValueProps = {
 export default () => {
 
 
+    const dfRef = useRef<any>(null);
     const [dynamicFieldsInnerAppendHeadInit, setDynamicFieldsInnerAppendHeadInit] = useState<boolean>(false);
     const [dynamicFieldsInnerAppendHeadData, setDynamicFieldsInnerAppendHeadData] = useState<any[]>([]);
 
@@ -1136,7 +1137,7 @@ export default () => {
             <>
                 <span className="d-inline-block text-success btn-sm" style={{ transform: 'translateX(4px)', cursor: 'pointer' }} onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
-                    document.getElementById(addBtnId)?.click();
+                    if (dfRef.current) dfRef.current.addNew();
                 }}><svg width="25px" height="25px" viewBox="0 0 24 28" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#146c43" /></svg></span>
             </>
         ]);
@@ -1192,6 +1193,7 @@ export default () => {
     return (
         <>
             <DynamicFields
+                contentRef={dfRef}
                 wrapperClassName="mb-3 position-relative app-div-table__wrapper"
                 btnRemoveWrapperClassName="position-relative d-inline-block align-middle"  // Compatible with safari
                 data={{
@@ -1451,7 +1453,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
-| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.appendedItemsCounter()`</li><li>`contentRef.current.showAddBtn()`</li><li>`contentRef.current.hideAddBtn()`</li></ol>| - |
+| `contentRef` | React.RefObject | - | It exposes the following methods:  <br /> <ol><li>`contentRef.current.addNew()`</li><li>`contentRef.current.appendedItemsCounter()`</li><li>`contentRef.current.showAddBtn()`</li><li>`contentRef.current.hideAddBtn()`</li></ol>| - |
 | `key` | React.key | - | Trigger child component update when prop of parent changes. <blockquote>Ensure that complex dynamic form components update in real time on the page.</blockquote> | - |
 | `wrapperClassName` | string | `mb-3 position-relative` | The class name of the control wrapper. | - |
 | `btnAddWrapperClassName` | string | `align-middle` | The class name of the add button wrapper. | - |

@@ -568,6 +568,9 @@ var DynamicFields = function DynamicFields(props) {
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
     return {
+      addNew: function addNew() {
+        handleClickAdd(null);
+      },
       showAddBtn: function showAddBtn() {
         addBtnRef.current.style.setProperty('display', 'inline', 'important');
       },
@@ -578,7 +581,9 @@ var DynamicFields = function DynamicFields(props) {
         return rootRef.current.querySelectorAll(PER_ROW_DOM_STRING).length;
       }
     };
-  }, [contentRef]);
+  }, [contentRef, handleClickAdd] // required "handleClickAdd"
+  );
+
   function updateLastItemCls(el, type) {
     if (typeof el === 'undefined') return;
     if (type === 'add') {
@@ -624,8 +629,11 @@ var DynamicFields = function DynamicFields(props) {
       addBtnRef.current.style.setProperty('display', 'none', 'important');
     }
   }
-  function handleClickAdd(event) {
-    if (event !== null && typeof event !== 'undefined') event.preventDefault();
+  function handleClickAdd() {
+    var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    if (event !== null) {
+      if (typeof event !== 'undefined') event.preventDefault();
+    }
 
     //button status
     checkMaxStatus();
