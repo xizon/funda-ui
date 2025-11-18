@@ -60,6 +60,7 @@ Here is a table of the components and their status.
 | [Event Calendar Timeline ✅🔥](packages/EventCalendarTimeline/README.md) |  |  |  |  |
 | [Chatbox ✅🔥🤖](packages/Chatbox/README.md) |  |  |  |  |
 | [Stepper ✅](packages/Stepper/README.md) |  |  |  |  |
+| [Popover ✅](packages/Popover/README.md) |  |  |  |  |
 
 
 ## Usage

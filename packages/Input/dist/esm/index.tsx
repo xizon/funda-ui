@@ -354,8 +354,6 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
 
     function handleFocus(event: FocusEvent<HTMLInputElement>) {
-        rootRef.current?.classList.add('focus');
-
         //
         if (valRef.current) {
             onFocus?.(event, onComposition, valRef.current);
@@ -364,13 +362,6 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
 
     function handleChange(event: ChangeEvent<HTMLInputElement> | KeyboardEvent<HTMLInputElement> | null, curVal: string) {
         setChangedVal(curVal);
-
-   
-        //----
-        //remove focus style
-        if (curVal === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         if (valRef.current) {
@@ -389,13 +380,6 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
-
-
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         if (valRef.current) {
@@ -520,7 +504,12 @@ const Input = forwardRef((props: InputProps, externalRef: any) => {
     return (
         <>
 
-            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
+            <div className={combinedCls(
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': changedVal !== ''
+                }
+            )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
                 <div className={combinedCls(

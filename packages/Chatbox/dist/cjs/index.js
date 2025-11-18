@@ -2289,22 +2289,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             return typeof p !== 'undefined' && p !== null && p !== '';
           };
           function handleFocus(event) {
-            var _rootRef$current;
             var el = event.target;
-            (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
 
             //
             onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, valRef.current);
           }
           function handleChange(event, curVal) {
             setChangedVal(curVal);
-
-            //----
-            //remove focus style
-            if (curVal === '') {
-              var _rootRef$current2;
-              (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
-            }
 
             //
             onChange === null || onChange === void 0 ? void 0 : onChange(event, valRef.current, curVal);
@@ -2319,13 +2310,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           function handleBlur(event) {
             var el = event.target;
             var val = el.value;
-
-            //----
-            //remove focus style
-            if (val === '') {
-              var _rootRef$current3;
-              (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
-            }
 
             //
             onBlur === null || onBlur === void 0 ? void 0 : onBlur(event, valRef.current);
@@ -2433,7 +2417,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }, []);
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(wrapperClassName, 'mb-3 position-relative'),
+            className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.combinedCls)((0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_3__.clsWrite)(wrapperClassName, 'mb-3 position-relative'), {
+              'focus-floating': changedVal !== ''
+            }),
             ref: rootRef
           }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
             htmlFor: idRes,

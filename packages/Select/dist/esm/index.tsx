@@ -1207,10 +1207,10 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
         if (parseFloat(oldHeight) > filteredHeight) {
             listContentRef.current.style.height = filteredHeight + 'px';
-            console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
+            // console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
         } else {
             listContentRef.current.style.height = oldHeight + 'px';
-            console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
+           //  console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
         }
 
     }

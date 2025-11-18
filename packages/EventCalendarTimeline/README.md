@@ -393,6 +393,7 @@ export default () => {
                     draggable
                     showWeek
                     autoScroll
+                    tableCellMinWidth={(mode) => mode === 'week' ? 120 : 60} // Example: dynamically set width based on appearance mode
 
                 />
             </div>
@@ -2072,7 +2073,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `tableTooltipOffset` | number  | 10 | Table tooltip position offset | - |
 | `tableTooltipExceededSidePosOffset` | number | 15 | Table tooltip offset px that exceeds the far right or left side of the screen | - |
 | `tableTooltipSize` | `auto` \| `large` \| `medium` \| `small`  | auto | Table tooltip size of the content area. Defaults to `auto`. | - |
-| `tableCellMinWidth` | number  | 50 \| 100 | Define a minimum width in pixels for each cell in the content area. <blockquote>When `showWeek` is true, it defaults to **100**</blockquote> | - |
+| `tableCellMinWidth` | number \| `(mode: 'week' \| 'month') => number`  | `50` \| `100` | Define a minimum width in pixels for each cell in the content area. <blockquote>When `showWeek` is `true`, it defaults to **100**, otherwise it defaults to **50**. <br />You can also use a function to dynamically set the width based on the appearance mode: <br />`tableCellMinWidth={(mode) => mode === 'week' ? 120 : 60}`</blockquote> | - |
 | `draggable` | boolean | false | Indicates whether the content area can be dragged. | - |
 | `autoScroll` | boolean | false | Adds scrollbars only when necessary. | - |
 | `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns only two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> | - |

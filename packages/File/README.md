@@ -131,6 +131,260 @@ export default () => {
 
 
 
+## Customize FormData
+
+Use the `formDataAppend` attribute to customize how data is appended to FormData.
+
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+
+export default () => {
+
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log(input, submitEl, value);
+    }
+
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+       console.log(input, value);
+    }
+
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+        console.log(files);
+    }
+
+    // Custom function to append data to FormData
+    function customFormDataAppend(formData: FormData, files: FileList) {
+        // Add custom fields
+        formData.append('userId', '12345');
+        formData.append('category', 'documents');
+        formData.append('timestamp', Date.now().toString());
+        
+        // Append files with custom field name
+        for (let i = 0; i < files.length; i++) {
+            formData.append('uploadedFiles', files[i]);
+        }
+        
+        // Or append each file with a unique name
+        // for (let i = 0; i < files.length; i++) {
+        //     formData.append(`file_${i}`, files[i]);
+        // }
+    }
+
+    return (
+        <>
+            <File 
+                fetchUrl="http://api"
+                fetchMethod="POST"
+                fetchParams={{
+                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
+                }}
+                formDataAppend={customFormDataAppend}
+                label="Select file" 
+                labelClassName="btn btn-outline-secondary"       
+                labelHoverClassName="btn btn-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-primary mt-2"
+                onChange={handleChange}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
+            />
+
+        </>
+    );
+}
+```
+
+**Note:** If `formDataAppend` is not provided, the default behavior will append `action: 'upload_plug_action'` and `clientFiles: [files]` to the FormData.
+
+
+## Chunked Upload
+
+Use chunked upload for large files. The file will be split into multiple chunks and uploaded sequentially.
+
+### Basic Chunked Upload
+
+```js
+import React, { useState } from "react";
+import File from 'funda-ui/File';
+
+export default () => {
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
+    const [currentFile, setCurrentFile] = useState<string>('');
+
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        setUploadProgress(0);
+        setCurrentFile('');
+        console.log(input, submitEl, value);
+    }
+
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log('Upload completed:', value);
+        if (value.code === 0) {
+            alert('Upload successfully!');
+        } else {
+            alert('Upload failed: ' + value.message);
+        }
+    }
+
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+        console.log(files);
+    }
+
+    function handleChunkProgress(
+        uploadedBytes: number, 
+        totalBytes: number, 
+        file: File, 
+        chunkIndex: number, 
+        totalChunks: number
+    ) {
+        const progress = Math.round((uploadedBytes / totalBytes) * 100);
+        setUploadProgress(progress);
+        setCurrentFile(file.name);
+        console.log(
+            `File: ${file.name}, ` +
+            `Progress: ${progress}%, ` +
+            `Chunk: ${chunkIndex + 1}/${totalChunks}, ` +
+            `Uploaded: ${(uploadedBytes / 1024 / 1024).toFixed(2)}MB / ${(totalBytes / 1024 / 1024).toFixed(2)}MB`
+        );
+    }
+
+    return (
+        <>
+            {currentFile && (
+                <div className="mb-2">
+                    <div className="progress">
+                        <div 
+                            className="progress-bar" 
+                            role="progressbar" 
+                            style={{ width: `${uploadProgress}%` }}
+                        >
+                            {uploadProgress}%
+                        </div>
+                    </div>
+                    <small className="text-muted">Uploading: {currentFile}</small>
+                </div>
+            )}
+            
+            <File 
+                fetchUrl="http://api/upload"
+                fetchMethod="POST"
+                fetchParams={{
+                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
+                }}
+                enableChunkedUpload={true}
+                chunkSize={2 * 1024 * 1024} // 2MB per chunk
+                label="Select file" 
+                labelClassName="btn btn-outline-secondary"       
+                labelHoverClassName="btn btn-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-primary mt-2"
+                onChange={handleChange}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
+                onChunkProgress={handleChunkProgress}
+            />
+        </>
+    );
+}
+```
+
+### Custom Chunk Data Format
+
+You can customize how chunk data is appended to FormData using the `chunkDataAppend` function.
+
+```js
+import React from "react";
+import File from 'funda-ui/File';
+
+export default () => {
+
+    function handleChange(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log(input, submitEl, value);
+    }
+
+    function handleComplete(input: HTMLInputElement, submitEl: HTMLElement, value: any) {
+        console.log('Upload completed:', value);
+    }
+
+    function handleProgress(files: any[], input: HTMLInputElement, submitEl: HTMLElement) {
+        console.log(files);
+    }
+
+    // Custom function to append chunk data to FormData
+    function customChunkDataAppend(
+        formData: FormData, 
+        chunk: Blob, 
+        chunkIndex: number, 
+        totalChunks: number, 
+        file: File
+    ) {
+        // Add custom fields
+        formData.append('fileChunk', chunk);
+        formData.append('chunkNumber', chunkIndex.toString());
+        formData.append('totalChunks', totalChunks.toString());
+        formData.append('originalFileName', file.name);
+        formData.append('fileSize', file.size.toString());
+        formData.append('mimeType', file.type);
+        formData.append('userId', '12345');
+        formData.append('category', 'documents');
+    }
+
+    return (
+        <>
+            <File 
+                fetchUrl="http://api/upload"
+                fetchMethod="POST"
+                fetchParams={{
+                    Authorization: `Bearer xxxx-xxxx-xxxx-xxxx`,
+                }}
+                enableChunkedUpload={true}
+                chunkSize={5 * 1024 * 1024} // 5MB per chunk
+                chunkDataAppend={customChunkDataAppend}
+                label="Select file" 
+                labelClassName="btn btn-outline-secondary"       
+                labelHoverClassName="btn btn-primary"
+                submitLabel="Upload" 
+                submitClassName="btn btn-primary mt-2"
+                onChange={handleChange}
+                onComplete={handleComplete}
+                onProgress={handleProgress}
+            />
+        </>
+    );
+}
+```
+
+### Server-Side Requirements
+
+When using chunked upload, your server needs to:
+
+1. **Receive each chunk** with the following metadata (default format):
+   - `chunk`: The chunk blob data
+   - `chunkIndex`: Current chunk index (0-based)
+   - `totalChunks`: Total number of chunks
+   - `uploadId`: Unique upload identifier for this file
+   - `fileName`: Original file name
+   - `fileSize`: Total file size in bytes
+   - `fileType`: MIME type of the file
+
+2. **Store chunks temporarily** using the `uploadId` to associate chunks from the same file
+
+3. **Merge chunks** when the last chunk (`chunkIndex === totalChunks - 1`) is received
+
+4. **Return appropriate response**:
+   - Success: `{ code: 0, message: 'Chunk uploaded', data: {...} }`
+   - Error: `{ code: -1, message: 'Error message', error: {...} }`
+
+**Note:** 
+- Chunks are uploaded sequentially (one after another)
+- Each chunk upload must succeed before the next chunk is sent
+- If any chunk fails, the entire upload will fail
+- The `uploadId` is generated automatically and remains constant for all chunks of the same file
+- Multiple files can be uploaded in parallel, each with its own `uploadId`
+
+
 ## Use a custom API interface:
 
 
@@ -360,12 +614,13 @@ export default () => {
 `Uploader.tsx`:
 ```js
 import React, { forwardRef, useRef } from 'react';
-import File from 'funda-ui/File';
+import File from '../../components/funda-ui/File/src';
 
 type UploaderProps = {
     label?: React.ReactNode | string;
     name?: string;
     id?: string;
+    
     accept?: string;
     maxSize?: number;
     wrapperClassName?: string;
@@ -383,6 +638,7 @@ type UploaderProps = {
     submitClassName?: string;
     progressLabel?: React.ReactNode | string;
     progressClassName?: string;
+     formDataAppend?: (formData: FormData, files: FileList) => void;
     onSuccess?: (data: any, input: HTMLInputElement, submitEl: HTMLElement) => void;
     onChange?: () => void;
     onProgress?: () => void;
@@ -412,6 +668,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
         submitClassName,
         progressLabel,
         progressClassName,
+        formDataAppend,
         onSuccess,
         onProgress,
         onChange,
@@ -485,7 +742,6 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
     };
 
 
-
     return (
         <>
 
@@ -499,6 +755,7 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
                     name={name}
                     id={id}
                     accept={accept}
+                    formDataAppend={formDataAppend}
                     fetchUrl={fetchUrl}
                     fetchMethod={fetchMethod}
                     fetchParams={fetchParams}
@@ -679,9 +936,14 @@ import File from 'funda-ui/File';
 | `progressClassName` | string | same as `submitClassName` | The class name of the submit button in progress. | - |
 | `inline` | boolean | false | If true the group are on the same horizontal row. | - |
 | `autoSubmit` | boolean | false | Enable automatic upload, which will hide the upload button. | - |
+| `enableChunkedUpload` | boolean | false | Enable chunked upload for large files. The file will be split into multiple chunks and uploaded sequentially. <blockquote>Valid when the `fetchUrl` attribute is not empty.</blockquote> | - |
+| `chunkSize` | number | `2 * 1024 * 1024` (2MB) | Chunk size in bytes. Each file will be split into chunks of this size. | - |
+| `chunkDataAppend` | function | - | Custom function to append chunk data to FormData. It receives five parameters: `(formData: FormData, chunk: Blob, chunkIndex: number, totalChunks: number, file: File) => void`. <blockquote>Valid when `enableChunkedUpload` is true. If not provided, the default behavior will append `chunk`, `chunkIndex`, `totalChunks`, `uploadId`, `fileName`, `fileSize`, and `fileType` to the FormData.</blockquote> | - |
+| `onChunkProgress` | function | - | Callback function for chunk upload progress. It receives five parameters: `(uploadedBytes: number, totalBytes: number, file: File, chunkIndex: number, totalChunks: number) => void`. <blockquote>Valid when `enableChunkedUpload` is true.</blockquote> | - |
 | `fetchUrl` | string | - | If the URL exists, it is passed using the default fetch method ([Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)). <blockquote>If it does not exist, the file content is read by [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream)</blockquote> | - |
 | `fetchMethod` | string | `POST` | The request's method (GET, POST, etc.) <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote>| - |
 | `fetchParams` | JSON Object | - | Set of query parameters in the request <blockquote>Valid when the `fetchUrl` attribute is not empty</blockquote> | - |
+| `formDataAppend` | function | - | Custom function to append data to FormData. It receives two parameters: `(formData: FormData, files: FileList) => void`. <blockquote>Valid when the `fetchUrl` attribute is not empty. If not provided, the default behavior will append `action: 'upload_plug_action'` and `clientFiles: [files]` to the FormData.</blockquote> | - |
 | `multiple` | boolean | false | A file upload field that accepts multiple values | - |
 | `accept` | string | - | The accept attribute takes as its value a comma-separated list of one or more file types, or unique file type specifiers, describing which file types to allow. such as `video/*`, `image/*`, `image/png, image/jpeg`, `video/*`, `image/*,.pdf`, `` | - |
 | `value` | string | - | Set a default value for this control | - |
@@ -701,3 +963,4 @@ import File from 'funda-ui/File';
 
 
 It accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
+

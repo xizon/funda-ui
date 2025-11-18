@@ -87,7 +87,7 @@ export declare type EventCalendarTimelineProps = {
     onKeyCopy?: (el: any, selectedCellsData: any[]) => void;
     onKeyPaste?: (el: any, selectedCellsData: any[]) => void;
     tableListSectionTitle?: string | React.ReactNode;
-    tableCellMinWidth?: number;
+    tableCellMinWidth?: number | ((mode: 'week' | 'month') => number);
     tableTooltipDirection?: string;
     tableTooltipOffset?: number;
     tableTooltipExceededSidePosOffset?: number;

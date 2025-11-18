@@ -1932,7 +1932,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
   }
   function handleFocus(event) {
     var _rootRef$current;
-    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus-floating');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -1953,7 +1953,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
 
     //----
     //remove focus style
-    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus-floating');
 
     //
     if (typeof onChange === 'function') {
@@ -1965,7 +1965,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
     var _rootRef$current3;
     //----
     //remove focus style
-    (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
+    (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus-floating');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

@@ -4975,12 +4975,13 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
     filteredHeight = listContainerHeightLimit(filteredHeight);
     if (parseFloat(oldHeight) > filteredHeight) {
       listContentRef.current.style.height = filteredHeight + 'px';
-      console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
+      // console.log('popwinContainerHeightAdjust - height changed to:', filteredHeight);
     } else {
       listContentRef.current.style.height = oldHeight + 'px';
-      console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
+      //  console.log('popwinContainerHeightAdjust - height kept as:', oldHeight);
     }
   }
+
   function popwinNoMatchInit() {
     if (listContentRef.current === null) return;
     var _btnSelectAll = listContentRef.current.querySelector('.custom-select-multi__control-option-item--select-all');

@@ -1,46 +1,46 @@
 /* ======================================================
     <!-- Tag Input -->
 /* ====================================================== */
-.tag-input__wrapper {
-  --tag-input-control-border-radius: 0.375rem;
-  --tag-input-control-wrapper-bg: #fff;
-  --tag-input-control-wrapper-border-color: #dee2e6;
-  --tag-input-control-color: #adb5bd;
-  --tag-input-list-bg: #efefef;
-  --tag-input-removebtn-fill: #000;
-  --tag-input-removebtn-hover-fill: #f00;
-  --tag-input-focus-border-color:#86b7fe;
-  --tag-input-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+.taginput__wrapper {
+  --taginput-control-border-radius: 0.375rem;
+  --taginput-control-wrapper-bg: #fff;
+  --taginput-control-wrapper-border-color: #dee2e6;
+  --taginput-control-color: #adb5bd;
+  --taginput-list-bg: #efefef;
+  --taginput-removebtn-fill: #000;
+  --taginput-removebtn-hover-fill: #f00;
+  --taginput-focus-border-color:#86b7fe;
+  --taginput-focus-box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
   display: flex;
 }
-.tag-input__wrapper ul,
-.tag-input__wrapper li {
+.taginput__wrapper ul,
+.taginput__wrapper li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.tag-input__wrapper .tag-input__control-wrapper {
+.taginput__wrapper .taginput__control-wrapper {
   display: flex;
 }
-.tag-input__wrapper .tag-input__control-wrapper > div {
+.taginput__wrapper .taginput__control-wrapper > div {
   position: relative;
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   /* bootstrap style that match ".form-control" */
   padding: 0.375rem;
-  background-color: var(--tag-input-control-wrapper-bg);
+  background-color: var(--taginput-control-wrapper-bg);
   background-clip: padding-box;
-  border: 1px solid var(--tag-input-control-wrapper-border-color);
+  border: 1px solid var(--taginput-control-wrapper-border-color);
   appearance: none;
-  border-radius: var(--tag-input-control-border-radius);
+  border-radius: var(--taginput-control-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   padding-bottom: 1px;
 }
-.tag-input__wrapper .tag-input__control-wrapper > div .tag-input__control {
+.taginput__wrapper .taginput__control-wrapper > div .taginput__control {
   margin-bottom: 0.375rem;
 }
-.tag-input__wrapper .tag-input__control-wrapper > div .tag-input__control input {
+.taginput__wrapper .taginput__control-wrapper > div .taginput__control input {
   background: transparent;
   border: none;
   outline: none;
@@ -51,25 +51,25 @@
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: var(--tag-input-control-color);
+  color: var(--taginput-control-color);
 }
-.tag-input__wrapper .tag-input__control-wrapper > div .tag-input__control input:focus {
+.taginput__wrapper .taginput__control-wrapper > div .taginput__control input:focus {
   outline: none;
   box-shadow: none;
 }
-.tag-input__wrapper ul.tag-input__list li {
+.taginput__wrapper ul.taginput__list li {
   display: inline-block;
   margin: 5px;
   margin-bottom: 0;
   padding: 0.1rem 1.5rem 0.1rem 1rem;
   font-size: 0.875rem;
-  background: var(--tag-input-list-bg);
+  background: var(--taginput-list-bg);
   border-radius: 30px;
   overflow: hidden;
   text-overflow: ellipsis;
   position: relative;
 }
-.tag-input__wrapper ul.tag-input__list li > a {
+.taginput__wrapper ul.taginput__list li > a {
   font-weight: 400;
   opacity: 0.6;
   font-size: 18px;
@@ -79,13 +79,13 @@
   top: 50%;
   transform: translateY(-50%);
 }
-.tag-input__wrapper ul.tag-input__list li > a path {
-  fill: var(--tag-input-removebtn-fill);
+.taginput__wrapper ul.taginput__list li > a path {
+  fill: var(--taginput-removebtn-fill);
 }
-.tag-input__wrapper ul.tag-input__list li > a:hover path {
-  fill: var(--tag-input-removebtn-hover-fill);
+.taginput__wrapper ul.taginput__list li > a:hover path {
+  fill: var(--taginput-removebtn-hover-fill);
 }
-.tag-input__wrapper.focus .tag-input__control-wrapper > div {
-  box-shadow: var(--tag-input-focus-box-shadow);
-  border-color: var(--tag-input-focus-border-color);
+.taginput__wrapper.focus-floating .taginput__control-wrapper > div {
+  box-shadow: var(--taginput-focus-box-shadow);
+  border-color: var(--taginput-focus-border-color);
 }

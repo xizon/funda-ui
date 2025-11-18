@@ -4117,7 +4117,6 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var AUTO_SCROLL = autoScroll || false;
   var SHOW_WEEK = showWeek || false;
   var BODY_DRAG = draggable || false;
-  var CELL_MIN_W = typeof tableCellMinWidth === 'undefined' ? SHOW_WEEK ? 100 : 50 : tableCellMinWidth;
   var tableGridRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var tableGridHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -4158,6 +4157,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     _useState38 = _slicedToArray(_useState37, 2),
     appearanceMode = _useState38[0],
     setAppearanceMode = _useState38[1];
+
+  // Calculate CELL_MIN_W based on appearanceMode and tableCellMinWidth
+  var CELL_MIN_W = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
+    if (typeof tableCellMinWidth === 'undefined') {
+      return appearanceMode === 'week' ? 100 : 50;
+    }
+    if (typeof tableCellMinWidth === 'function') {
+      return tableCellMinWidth(appearanceMode);
+    }
+    return tableCellMinWidth;
+  }, [tableCellMinWidth, appearanceMode]);
   var findMondayAndTruncate = function findMondayAndTruncate(dates) {
     var _res = dates.map(function (s) {
       return new Date(s);

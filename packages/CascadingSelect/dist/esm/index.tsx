@@ -499,7 +499,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
 
     function handleFocus(event: any) {
-        rootRef.current?.classList.add('focus');
+        rootRef.current?.classList.add('focus-floating');
 
         //
         handleDisplayOptions(null);
@@ -513,7 +513,7 @@ const CascadingSelect = forwardRef((props: CascadingSelectProps, externalRef: an
 
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
 
         //

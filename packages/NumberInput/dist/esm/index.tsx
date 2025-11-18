@@ -183,7 +183,6 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
 
     
     function handleFocus(event: FocusEvent<HTMLInputElement>) {
-        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, valRef.current);    
@@ -220,12 +219,7 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
         setChangedVal(resToInput);
 
 
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
-        
+
         //
         onChange?.(event, valRef.current, Number(!isNumeric(newVal) ? '0' : resToInput));
         
@@ -245,13 +239,6 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
         // Determine whether it is a null or negative symbol
         if (val === '' || val === '-') {
             setChangedVal('0');
-        }
-
-
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
         }
 
         //
@@ -286,7 +273,12 @@ const NumberInput = forwardRef((props: NumberInputProps, externalRef: any) => {
     return (
         <>
 
-            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
+            <div className={combinedCls(
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': changedVal !== ''
+                }
+            )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
                 <div className="position-relative">

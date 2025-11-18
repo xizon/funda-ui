@@ -335,7 +335,6 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
 
     function handleFocus(event: FocusEvent<HTMLTextAreaElement>): void {
         const el = event.target;
-        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, valRef.current as HTMLTextAreaElement);     
@@ -345,12 +344,6 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     function handleChange(event: ChangeEvent<HTMLTextAreaElement> | KeyboardEvent<HTMLTextAreaElement> | null, curVal: string): void {
 
         setChangedVal(curVal);
-
-        //----
-        //remove focus style
-        if (curVal === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         onChange?.(event, valRef.current as HTMLTextAreaElement, curVal);
@@ -367,12 +360,6 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
         const el = event.target as HTMLTextAreaElement;
         const val = el.value;
 
-
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         onBlur?.(event, valRef.current as HTMLTextAreaElement);
@@ -516,7 +503,12 @@ const Textarea = forwardRef((props: TextareaProps, externalRef: any) => {
     return (
         <>
 
-            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
+            <div className={combinedCls(
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': changedVal !== ''
+                }
+            )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 
 

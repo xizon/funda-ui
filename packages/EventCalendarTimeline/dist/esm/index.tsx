@@ -115,7 +115,7 @@ export type EventCalendarTimelineProps = {
 
     // table
     tableListSectionTitle?: string | React.ReactNode;
-    tableCellMinWidth?: number;
+    tableCellMinWidth?: number | ((mode: 'week' | 'month') => number);
 
     // tooltip
     tableTooltipDirection?: string;
@@ -274,7 +274,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const AUTO_SCROLL = autoScroll || false;
     const SHOW_WEEK = showWeek || false;
     const BODY_DRAG = draggable || false;
-    const CELL_MIN_W = typeof tableCellMinWidth === 'undefined' ? (SHOW_WEEK ? 100 : 50) : tableCellMinWidth;
     const tableGridRef = useRef<any>(null);
     const tableGridHeaderRef = useRef<any>(null);
     const scrollHeaderRef = useRef(null);
@@ -301,6 +300,16 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // appearance mode
     const [appearanceMode, setAppearanceMode] = useState<string>(appearance);
 
+    // Calculate CELL_MIN_W based on appearanceMode and tableCellMinWidth
+    const CELL_MIN_W = useMemo(() => {
+        if (typeof tableCellMinWidth === 'undefined') {
+            return appearanceMode === 'week' ? 100 : 50;
+        }
+        if (typeof tableCellMinWidth === 'function') {
+            return tableCellMinWidth(appearanceMode as 'week' | 'month');
+        }
+        return tableCellMinWidth;
+    }, [tableCellMinWidth, appearanceMode]);
 
     const findMondayAndTruncate = (dates: string[]) => {
         const _res = dates.map((s: string) => new Date(s));

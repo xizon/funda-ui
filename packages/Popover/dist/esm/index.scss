@@ -1,0 +1,272 @@
+
+
+/* ======================================================
+    <!-- Popover -->
+/* ====================================================== */
+
+
+/*
+ * 1. Base Styles
+ * 2. Position Modifiers - Top
+ * 3. Position Modifiers - Top Left
+ * 4. Position Modifiers - Top Right
+ * 5. Position Modifiers - Bottom
+ * 6. Position Modifiers - Bottom Left
+ * 7. Position Modifiers - Bottom Right
+ * 8. Position Modifiers - Left
+ * 9. Position Modifiers - Right
+ * 10. Size
+*/
+
+.cus-popover__wrapper {
+
+    --cus-popover-box-shadow: 0 5px 15px 0 rgba(0,0,0,.07), 0 15px 35px 0 rgba(50,50,93,.1);
+    --cus-popover-content-bg: rgba(17, 17, 17, 0.9);
+    --cus-popover-content-color: #fff;
+    --cus-popover-content-font-size: 0.75em;
+    --cus-popover-content-padding-x: 1em;
+    --cus-popover-content-padding-y: .5em;
+    --cus-popover-content-line-height: 1.5;
+    --cus-popover-arrow-bg-top: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%280%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat;
+    --cus-popover-arrow-bg-bottom: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28180%2018%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat;
+    --cus-popover-arrow-bg-left: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%28-90%2018%2018%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat;
+    --cus-popover-arrow-bg-right: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2212px%22%20height%3D%2236px%22%3E%3Cpath%20fill%3D%22rgba%2817,%2017,%2017,%200.9%29%22%20transform%3D%22rotate%2890%206%206%29%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E") no-repeat;
+
+    --cus-popover-arrow-width: 18px;
+    --cus-popover-arrow-height: 6px;
+    
+
+    position: absolute;
+    z-index: 1055;  /* --bs-modal-zindex */
+    pointer-events: none;
+    display: none;
+    margin-top: -.2rem;
+
+    &::before {
+        background-size: 100% auto !important;
+        content: "";
+        position: absolute;
+    }
+
+    &.active {
+        display: block !important;
+
+        &::before,
+        > .cus-popover__content {
+            opacity: 1;
+        }
+    }
+
+    &:focus {
+
+        &::before,
+        > .cus-popover__content {
+            opacity: 1;
+        }
+    }
+
+
+    &::before,
+    > .cus-popover__content {
+        backface-visibility: hidden;
+        will-change: transform;
+        opacity: 0;
+        box-sizing: border-box;
+        z-index: 10;
+        transform-origin: top;
+        box-shadow: var(--cus-popover-box-shadow);
+        transition: none !important;  /* Don't use transition if position is outside window */
+    }
+
+
+
+    /*
+	---------------------------
+	1. Base Styles
+	---------------------------
+	*/
+
+    > .cus-popover__content {
+        pointer-events: auto;
+        background: var(--cus-popover-content-bg);
+        border-radius: 4px;
+        color: var(--cus-popover-content-color);
+        content: attr(aria-label);
+        font-size: var(--cus-popover-content-font-size);
+        font-weight: normal;
+        text-transform: none;
+        padding: var(--cus-popover-content-padding-y) var(--cus-popover-content-padding-x);
+        white-space: nowrap;
+        box-sizing: content-box;
+        line-height: var(--cus-popover-content-line-height);
+        
+
+        img {
+            height: auto !important;
+            margin: .5rem 0;
+        }
+
+    }
+
+
+
+    /*
+    ---------------------------
+    2. Position Modifiers - Top
+    ---------------------------
+    */
+
+    &[data-microtip-position|="top"] {
+        &::before {
+            background: var(--cus-popover-arrow-bg-top);
+            height: var(--cus-popover-arrow-height);
+            width: var(--cus-popover-arrow-width);
+        }
+
+        > .cus-popover__content {
+            margin-bottom: var(--cus-popover-arrow-height);
+        }
+
+        &::before {
+            top: calc(100% - var(--cus-popover-arrow-height));
+            left: calc(var(--cus-popover-arrow-width)/2 * -1);
+        }
+
+        > .cus-popover__content {
+            bottom: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+
+    /*
+    ---------------------------
+    3. Position Modifiers - Top Left
+    ---------------------------
+    */
+
+    &[data-microtip-position="top-left"] {
+        > .cus-popover__content {
+            bottom: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(calc(-100% + var(--cus-popover-arrow-width)));
+        }
+
+    }
+
+
+
+    /*
+    ---------------------------
+    4. Position Modifiers - Top Right
+    ---------------------------
+    */
+
+    &[data-microtip-position="top-right"] {
+        > .cus-popover__content {
+            bottom: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(calc(0% - var(--cus-popover-arrow-width)));
+        }
+    }
+
+    /*
+    ---------------------------
+    5. Position Modifiers - Bottom
+    ---------------------------
+    */
+
+
+    &[data-microtip-position|="bottom"] {
+        &::before {
+            background: var(--cus-popover-arrow-bg-bottom);
+            height: var(--cus-popover-arrow-height);
+            width: var(--cus-popover-arrow-width);
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+
+        > .cus-popover__content {
+            margin-top: var(--cus-popover-arrow-height);
+        }
+
+        &::before {
+            bottom: calc(100% - var(--cus-popover-arrow-height));
+            left: calc(var(--cus-popover-arrow-width)/2 * -1);
+        }
+
+        > .cus-popover__content {
+            bottom: auto;
+            top: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+
+
+    /*
+    ---------------------------
+    6. Position Modifiers - Bottom Left
+    ---------------------------
+    */
+
+
+    &[data-microtip-position="bottom-left"] {
+        > .cus-popover__content {
+            bottom: auto;
+            top: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(calc(-100% + var(--cus-popover-arrow-width)));
+        }
+    }
+
+    /*
+    ---------------------------
+    7. Position Modifiers - Bottom Right
+    ---------------------------
+    */
+
+
+    &[data-microtip-position="bottom-right"] {
+        > .cus-popover__content {
+            bottom: auto;
+            top: calc(100% + var(--cus-popover-arrow-height));
+            left: 50%;
+            transform: translateX(calc(0% - var(--cus-popover-arrow-width)));
+        }
+    }
+
+
+
+
+    /*
+    ---------------------------
+    10. Size
+    ---------------------------
+    */
+    &[data-microtip-size="auto"].cus-popover__content {
+        white-space: nowrap;
+        width: auto;
+        max-width: 530px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &[data-microtip-size="small"].cus-popover__content {
+        white-space: initial;
+        width: 80px;
+    }
+
+    &[data-microtip-size="medium"].cus-popover__content {
+        white-space: initial;
+        width: 150px;
+    }
+
+    &[data-microtip-size="large"].cus-popover__content {
+        white-space: initial;
+        width: 260px;
+    }
+
+}
+  

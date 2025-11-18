@@ -1244,9 +1244,6 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
   }
   function handleFocus(event) {
-    var _rootRef$current;
-    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
-
     //
     if (valRef.current) {
       onFocus === null || onFocus === void 0 ? void 0 : onFocus(event, onComposition, valRef.current);
@@ -1254,13 +1251,6 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
   }
   function handleChange(event, curVal) {
     setChangedVal(curVal);
-
-    //----
-    //remove focus style
-    if (curVal === '') {
-      var _rootRef$current2;
-      (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
-    }
 
     //
     if (valRef.current) {
@@ -1277,13 +1267,6 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
   function handleBlur(event) {
     var el = event.target;
     var val = event.target.value;
-
-    //----
-    //remove focus style
-    if (val === '') {
-      var _rootRef$current3;
-      (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
-    }
 
     //
     if (valRef.current) {
@@ -1382,7 +1365,9 @@ var Input = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
     }
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(wrapperClassName, 'mb-3 position-relative'),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)((0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(wrapperClassName, 'mb-3 position-relative'), {
+      'focus-floating': changedVal !== ''
+    }),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: idRes,

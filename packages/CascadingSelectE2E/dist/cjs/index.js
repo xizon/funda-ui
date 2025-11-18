@@ -3102,7 +3102,7 @@ var CascadingSelectE2E = /*#__PURE__*/(0,external_root_React_commonjs2_react_com
   }
   function handleFocus(event) {
     var _rootRef$current;
-    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus');
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus-floating');
 
     //
     handleDisplayOptions(null);
@@ -3114,7 +3114,7 @@ var CascadingSelectE2E = /*#__PURE__*/(0,external_root_React_commonjs2_react_com
     var _rootRef$current2;
     //----
     //remove focus style
-    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus');
+    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.remove('focus-floating');
 
     //
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);

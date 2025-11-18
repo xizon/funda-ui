@@ -79,7 +79,6 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
 
 
     function handleFocus(event: FocusEvent<HTMLInputElement>) {
-        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event);
@@ -91,12 +90,6 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
         setChangedVal(val);
 
 
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
-
         //
         onChange?.(event);
 
@@ -105,13 +98,6 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
     function handleBlur(event: FocusEvent<HTMLInputElement>) {
         const el = event.target;
         const val = event.target.value;
-
-
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         onBlur?.(event);
@@ -133,7 +119,10 @@ const ColorPicker = forwardRef((props: ColorPickerProps, externalRef: any) => {
             <div className={combinedCls(
                 'custom-colorpicker__wrapper',
                 shapeClassName,
-                clsWrite(wrapperClassName, 'mb-3 position-relative')
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': changedVal !== ''
+                }
             )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label">{label}</label>}</> : null}
 

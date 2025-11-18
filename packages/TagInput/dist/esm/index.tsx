@@ -209,12 +209,6 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
     function handleChange(event: ChangeEvent<HTMLInputElement>) {
 
         const val = event.target.value;
-        
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         let _alreadyInItems = alreadyInItems;
@@ -239,7 +233,8 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
 
 
     function handleFocus(event: FocusEvent<HTMLInputElement>) {
-        rootRef.current?.classList.add('focus');
+        // tag style
+        rootRef.current?.classList.add('focus-floating');
 
         //
         onFocus?.(event);
@@ -250,14 +245,9 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         const el = event.target;
         const val = event.target.value;
 
+        setUserInput('');
+        setAlreadyInItems(false);
 
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
-
-        //
         onBlur?.(event);
     }
 
@@ -277,16 +267,19 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
         <>
 
             <div className={combinedCls(
-                'tag-input__wrapper',
-                clsWrite(wrapperClassName, 'mb-3 position-relative')
+                'taginput__wrapper',
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': userInput !== ''
+                }
             )} ref={rootRef}>
 
                 {label ? <>{typeof label === 'string' ? <label htmlFor={`label-${idRes}`} className="form-label" dangerouslySetInnerHTML={{__html: `${label}`}}></label> : <label htmlFor={`label-${idRes}`} className="form-label">{label}</label>}</> : null}
 
 
-                <div className="tag-input__control-wrapper">
+                <div className="taginput__control-wrapper">
                     <div>
-                        <ul className="tag-input__list">
+                        <ul className="taginput__list">
 
                              {/* ITEMS LIST */}
                             {typeof renderSelectedValue === 'function' ? <>
@@ -308,7 +301,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
 
 
                         <div className={combinedCls(
-                            'tag-input__control',
+                            'taginput__control',
                             {
                                 'disabled': disabled
                             }
@@ -321,7 +314,7 @@ const TagInput = forwardRef((props: TagInputProps, externalRef: any) => {
 
                                 // Don't use "name", it's just a container to display the label
                                 data-name={name?.match(/(\[.*?\])/gi) ? `${name.split('[')[0]}-label[]` : `${name}-label`}
-                                data-tag-input
+                                data-taginput
                                 autoComplete={typeof autoComplete === 'undefined' ? 'off' : autoComplete}
                                 autoCapitalize={typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize}
                                 spellCheck={typeof spellCheck === 'undefined' ? false : spellCheck}

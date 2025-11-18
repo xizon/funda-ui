@@ -32,6 +32,15 @@ export declare type FileProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
+    formDataAppend?: (formData: FormData, files: FileList) => void;
+    /** Enable chunked upload for large files */
+    enableChunkedUpload?: boolean;
+    /** Chunk size in bytes (default: 2MB) */
+    chunkSize?: number;
+    /** Custom function to append chunk data to FormData. Receives (formData: FormData, chunk: Blob, chunkIndex: number, totalChunks: number, file: File) */
+    chunkDataAppend?: (formData: FormData, chunk: Blob, chunkIndex: number, totalChunks: number, file: File) => void;
+    /** Callback for chunk upload progress. Receives (uploadedBytes: number, totalBytes: number, file: File, chunkIndex: number, totalChunks: number) */
+    onChunkProgress?: (uploadedBytes: number, totalBytes: number, file: File, chunkIndex: number, totalChunks: number) => void;
     onChange?: (e: any, e2: any, value: any) => void;
     onComplete?: (e: any, e2: any, callback: any, incomingData: string | null | undefined) => void;
     onProgress?: (files: any, e: any, e2: any) => void;

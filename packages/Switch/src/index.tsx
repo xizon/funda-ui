@@ -55,7 +55,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
     const [val, setVal] = useState<boolean>(false);  // Avoid the error "react checkbox changing an uncontrolled input to be controlled"
 
     function handleFocus(event: any) {
-        rootRef.current?.classList.add('focus');
+        rootRef.current?.classList.add('focus-floating');
 
         //
         onFocus?.(event);    
@@ -69,7 +69,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
         
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
         //
         if (typeof (onChange) === 'function') {
@@ -85,7 +85,7 @@ const Switch = forwardRef((props: SwitchProps, externalRef: any) => {
 
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
         //
         onBlur?.(event);

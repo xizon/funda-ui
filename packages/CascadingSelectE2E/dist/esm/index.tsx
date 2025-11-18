@@ -630,7 +630,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
 
 
     function handleFocus(event: any) {
-        rootRef.current?.classList.add('focus');
+        rootRef.current?.classList.add('focus-floating');
 
         //
         handleDisplayOptions(null);
@@ -644,7 +644,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
 
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
 
         //

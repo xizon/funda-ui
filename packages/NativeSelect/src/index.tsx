@@ -260,7 +260,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
     //
     function handleFocus(event: any) {
-        rootRef.current?.classList.add('focus');
+        rootRef.current?.classList.add('focus-floating');
 
         //
         onFocus?.(event);    
@@ -283,7 +283,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
         //
 		if ( typeof(onChange) === 'function' ) {
@@ -298,7 +298,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
         //----
         //remove focus style
-        rootRef.current?.classList.remove('focus');
+        rootRef.current?.classList.remove('focus-floating');
 
         //
         onBlur?.(event);

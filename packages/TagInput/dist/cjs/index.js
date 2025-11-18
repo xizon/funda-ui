@@ -1075,13 +1075,6 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   function handleChange(event) {
     var val = event.target.value;
 
-    //----
-    //remove focus style
-    if (val === '') {
-      var _rootRef$current;
-      (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.remove('focus');
-    }
-
     //
     var _alreadyInItems = alreadyInItems;
     if (items && items.length > 0) {
@@ -1098,8 +1091,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     setUserInput(val);
   }
   function handleFocus(event) {
-    var _rootRef$current2;
-    (_rootRef$current2 = rootRef.current) === null || _rootRef$current2 === void 0 ? void 0 : _rootRef$current2.classList.add('focus');
+    var _rootRef$current;
+    // tag style
+    (_rootRef$current = rootRef.current) === null || _rootRef$current === void 0 ? void 0 : _rootRef$current.classList.add('focus-floating');
 
     //
     onFocus === null || onFocus === void 0 ? void 0 : onFocus(event);
@@ -1107,15 +1101,8 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
   function handleBlur(event) {
     var el = event.target;
     var val = event.target.value;
-
-    //----
-    //remove focus style
-    if (val === '') {
-      var _rootRef$current3;
-      (_rootRef$current3 = rootRef.current) === null || _rootRef$current3 === void 0 ? void 0 : _rootRef$current3.classList.remove('focus');
-    }
-
-    //
+    setUserInput('');
+    setAlreadyInItems(false);
     onBlur === null || onBlur === void 0 ? void 0 : onBlur(event);
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -1124,7 +1111,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     initDefaultValue(value);
   }, [value]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.combinedCls)('tag-input__wrapper', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.clsWrite)(wrapperClassName, 'mb-3 position-relative')),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.combinedCls)('taginput__wrapper', (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.clsWrite)(wrapperClassName, 'mb-3 position-relative'), {
+      'focus-floating': userInput !== ''
+    }),
     ref: rootRef
   }, label ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, typeof label === 'string' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
     htmlFor: "label-".concat(idRes),
@@ -1136,9 +1125,9 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     htmlFor: "label-".concat(idRes),
     className: "form-label"
   }, label)) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "tag-input__control-wrapper"
+    className: "taginput__control-wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-    className: "tag-input__list"
+    className: "taginput__list"
   }, typeof renderSelectedValue === 'function' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, renderSelectedValue(items, handleRemove)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, items ? items.map(function (item, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: index
@@ -1156,7 +1145,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
       d: "M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
     }))));
   }) : null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.combinedCls)('tag-input__control', {
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_4__.combinedCls)('taginput__control', {
       'disabled': disabled
     }),
     style: {
@@ -1171,7 +1160,7 @@ var TagInput = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fu
     // Don't use "name", it's just a container to display the label
     ,
     "data-name": name !== null && name !== void 0 && name.match(/(\[.*?\])/gi) ? "".concat(name.split('[')[0], "-label[]") : "".concat(name, "-label"),
-    "data-tag-input": true,
+    "data-taginput": true,
     autoComplete: typeof autoComplete === 'undefined' ? 'off' : autoComplete,
     autoCapitalize: typeof autoCapitalize === 'undefined' ? 'off' : autoCapitalize,
     spellCheck: typeof spellCheck === 'undefined' ? false : spellCheck,

@@ -114,7 +114,6 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
     }
 
     function handleFocus(event: FocusEvent<HTMLInputElement>) {
-        rootRef.current?.classList.add('focus');
 
         //
         onFocus?.(event, onComposition);
@@ -125,11 +124,7 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
 
         setChangedVal(val);
 
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
+
 
         //
         onChange?.(event, onComposition);
@@ -140,11 +135,7 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
         const val = event.target.value;
 
 
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
+
 
         //
         onBlur?.(event, onComposition);
@@ -178,7 +169,12 @@ const SearchBar = forwardRef((props: SearchBarProps, externalRef: any) => {
         <>
 
 
-            <div className={clsWrite(wrapperClassName, 'mb-3 position-relative')} ref={rootRef}>
+            <div className={combinedCls(
+                clsWrite(wrapperClassName, 'mb-3 position-relative'),
+                {
+                    'focus-floating': changedVal !== ''
+                }
+            )} ref={rootRef}>
                 {label ? <>{typeof label === 'string' ? <label htmlFor={idRes} className="form-label" dangerouslySetInnerHTML={{ __html: `${label}` }}></label> : <label htmlFor={idRes} className="form-label" >{label}</label>}</> : null}
 
                 <div className={combinedCls(

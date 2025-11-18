@@ -8,6 +8,8 @@ import {
 } from 'funda-utils/dist/cjs/buffer';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
+
+
 export type FileProps = {
     contentRef?: React.ForwardedRef<any>;
     wrapperClassName?: string;
@@ -41,6 +43,15 @@ export type FileProps = {
     fetchFuncAsync?: any;
     fetchFuncMethod?: string;
     fetchFuncMethodParams?: any[];
+    formDataAppend?: (formData: FormData, files: FileList) => void;
+    /** Enable chunked upload for large files */
+    enableChunkedUpload?: boolean;
+    /** Chunk size in bytes (default: 2MB) */
+    chunkSize?: number;
+    /** Custom function to append chunk data to FormData. Receives (formData: FormData, chunk: Blob, chunkIndex: number, totalChunks: number, file: File) */
+    chunkDataAppend?: (formData: FormData, chunk: Blob, chunkIndex: number, totalChunks: number, file: File) => void;
+    /** Callback for chunk upload progress. Receives (uploadedBytes: number, totalBytes: number, file: File, chunkIndex: number, totalChunks: number) */
+    onChunkProgress?: (uploadedBytes: number, totalBytes: number, file: File, chunkIndex: number, totalChunks: number) => void;
     onChange?: (e: any, e2: any, value: any) => void;
     onComplete?: (e: any, e2: any, callback: any, incomingData: string | null | undefined) => void;
     onProgress?: (files: any, e: any, e2: any) => void;
@@ -79,9 +90,17 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         fetchFuncAsync,
         fetchFuncMethod,
         fetchFuncMethodParams,
+        formDataAppend,
         onChange,
         onComplete,
         onProgress,
+        
+        // Upload file in chunks
+        enableChunkedUpload,
+        chunkSize = 2 * 1024 * 1024, // Default 2MB
+        chunkDataAppend,
+        onChunkProgress,
+
         ...attributes
     } = props;
 
@@ -144,10 +163,9 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
 
         let res = {};
         if (typeof window === 'undefined') return res;
-        
-   
+
         try {
-            const response = await fetch(url + '?' + new URLSearchParams(fetchParams as any), {
+            const response = await fetch(typeof fetchParams !== 'undefined' ? url + '?' + new URLSearchParams(fetchParams as any) : url, {
                 method: methord,
                 body: data,
                 ...rest
@@ -163,6 +181,75 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
 
         return res;
 
+    }
+
+    /**
+     * Upload file in chunks
+     */
+    async function uploadFileInChunks(file: File, url: string, method: string = 'POST'): Promise<any> {
+        const totalChunks = Math.ceil(file.size / chunkSize);
+        const uploadId = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+        let uploadedBytes = 0;
+
+        // Upload each chunk sequentially
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+            const start = chunkIndex * chunkSize;
+            const end = Math.min(start + chunkSize, file.size);
+            const chunk = file.slice(start, end);
+
+            const formData = new FormData();
+            
+            if (chunkDataAppend) {
+                // Use custom chunk data append function
+                chunkDataAppend(formData, chunk, chunkIndex, totalChunks, file);
+            } else {
+                // Default chunk upload format
+                formData.append('chunk', chunk);
+                formData.append('chunkIndex', chunkIndex.toString());
+                formData.append('totalChunks', totalChunks.toString());
+                formData.append('uploadId', uploadId);
+                formData.append('fileName', file.name);
+                formData.append('fileSize', file.size.toString());
+                formData.append('fileType', file.type);
+            }
+
+            // Update progress
+            uploadedBytes += (end - start);
+            onChunkProgress?.(uploadedBytes, file.size, file, chunkIndex, totalChunks);
+
+            // Upload chunk
+            const response: any = await fetchDataDefault(
+                url,
+                formData,
+                method,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }
+            );
+
+            // Check if chunk upload failed
+            if (response.error) {
+                throw new Error(`Chunk ${chunkIndex + 1}/${totalChunks} upload failed: ${response.error}`);
+            }
+
+            // If server returns a specific response indicating chunk upload success/failure, handle it
+            if (response.code !== undefined && response.code !== 0 && response.code !== 200) {
+                throw new Error(`Chunk ${chunkIndex + 1}/${totalChunks} upload failed: ${response.message || 'Unknown error'}`);
+            }
+        }
+
+        // After all chunks are uploaded, return the final response
+        // The server should merge chunks and return the final result
+        return {
+            code: 0,
+            message: 'Upload completed',
+            data: {
+                uploadId,
+                fileName: file.name,
+                fileSize: file.size,
+                totalChunks
+            }
+        };
     }
 
 
@@ -192,26 +279,70 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         setProgressing(true);
 
 
+        // Use the default "fetch()" method to handle file references
         if (fetchUrl) {
 
-            const formData = new FormData();
-            formData.append('action', 'upload_plug_action');
+            // Check if chunked upload is enabled
+            if (enableChunkedUpload) {
+                // Upload files in chunks
+                (async () => {
+                    try {
+                        const uploadPromises: Promise<any>[] = [];
+                        
+                        for (let i = 0; i < curFiles.length; i++) {
+                            const file = curFiles[i];
+                            uploadPromises.push(uploadFileInChunks(file, fetchUrl, fetchMethod ? fetchMethod : 'POST'));
+                        }
 
-            for (let i = 0; i < curFiles.length; i++) {
-                formData.append("clientFiles", curFiles[i]);
+                        const results = await Promise.all(uploadPromises);
+                        
+                        // Combine results from all files
+                        const jsonData = {
+                            code: 0,
+                            message: 'All files uploaded successfully',
+                            data: results
+                        };
+                        
+                        onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
+                        setProgressing(false);
+                        resetDefaultVal();
+                    } catch (error: any) {
+                        const errorResponse = {
+                            code: -1,
+                            message: error.message || 'Upload failed',
+                            error: error
+                        };
+                        onComplete?.(fileInputRef.current, submitRef.current, errorResponse, incomingData);
+                        setProgressing(false);
+                    }
+                })();
+            } else {
+                // Original non-chunked upload
+                const formData = new FormData();
+                
+                if (formDataAppend) {
+                    // Use custom formData.append function
+                    formDataAppend(formData, curFiles);
+                } else {
+                    // Default behavior
+                    formData.append('action', 'upload_plug_action');
+                    for (let i = 0; i < curFiles.length; i++) {
+                        formData.append("clientFiles", curFiles[i]);
+                    }
+                }
+
+                fetchDataDefault(fetchUrl, formData, fetchMethod ? fetchMethod : 'POST', {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                }).then(function (response: any) {
+                    const jsonData = response;
+                    onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
+                    setProgressing(false);
+
+                    // update default value
+                    resetDefaultVal();
+
+                });
             }
-
-            fetchDataDefault(fetchUrl, formData, fetchMethod ? fetchMethod : 'POST', {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            }).then(function (response: any) {
-                const jsonData = response.data;
-                onComplete?.(fileInputRef.current, submitRef.current, jsonData, incomingData);
-                setProgressing(false);
-
-                // update default value
-                resetDefaultVal();
-
-            });
         } else {
 
 
@@ -321,12 +452,6 @@ const File = forwardRef((props: FileProps, externalRef: any) => {
         // update default value
         setDefaultValue(null);
 
-
-        //----
-        //remove focus style
-        if (val === '') {
-            rootRef.current?.classList.remove('focus');
-        }
 
         //
         onChange?.(fileInputRef.current, submitRef.current, fileInputRef.current.files);
