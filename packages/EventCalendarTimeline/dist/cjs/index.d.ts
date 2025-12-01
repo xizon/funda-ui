@@ -51,7 +51,7 @@ export declare type EventCalendarTimelineProps = {
     cellAddBtnLabel?: string | React.ReactNode;
     forwardAndBackFillDisabled?: boolean;
     draggable?: boolean;
-    showWeek?: boolean;
+    headerShowWeek?: boolean;
     autoScroll?: boolean;
     onChangeDate?: (e: any, currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;

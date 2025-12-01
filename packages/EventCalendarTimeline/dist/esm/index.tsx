@@ -14,7 +14,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
 
-
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -71,7 +70,7 @@ export type EventCalendarTimelineProps = {
     cellAddBtnLabel?: string | React.ReactNode;
     forwardAndBackFillDisabled?: boolean;
     draggable?: boolean;
-    showWeek?: boolean;
+    headerShowWeek?: boolean;
     autoScroll?: boolean;
     onChangeDate?: (e: any, currentData: any) => void;
     onChangeMonth?: (currentData: any) => void;
@@ -161,7 +160,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         cellAddBtnLabel,
         forwardAndBackFillDisabled,
         draggable,
-        showWeek,
+        headerShowWeek,
         autoScroll,
         onChangeDate,
         onChangeMonth,
@@ -272,7 +271,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     // table grid
     const AUTO_SCROLL = autoScroll || false;
-    const SHOW_WEEK = showWeek || false;
+    const HEADER_SHOW_WEEK = headerShowWeek || false;
     const BODY_DRAG = draggable || false;
     const tableGridRef = useRef<any>(null);
     const tableGridHeaderRef = useRef<any>(null);
@@ -303,13 +302,13 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // Calculate CELL_MIN_W based on appearanceMode and tableCellMinWidth
     const CELL_MIN_W = useMemo(() => {
         if (typeof tableCellMinWidth === 'undefined') {
-            return appearanceMode === 'week' ? 100 : 50;
+            return (headerShowWeek || false) ? 100 : 50;
         }
         if (typeof tableCellMinWidth === 'function') {
             return tableCellMinWidth(appearanceMode as 'week' | 'month');
         }
         return tableCellMinWidth;
-    }, [tableCellMinWidth, appearanceMode]);
+    }, [tableCellMinWidth, appearanceMode, headerShowWeek]);
 
     const findMondayAndTruncate = (dates: string[]) => {
         const _res = dates.map((s: string) => new Date(s));
@@ -1255,7 +1254,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                 // week day
                 const weekDay = item.week[i];
-                const _weekDayStr = SHOW_WEEK ? <span dangerouslySetInnerHTML={{
+                const _weekDayStr = HEADER_SHOW_WEEK ? <span dangerouslySetInnerHTML={{
                     __html: item.weekDisplay[i]
                 }} /> : null;
 
@@ -1355,7 +1354,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         'disabled': !isInteractive
                                     }
                                 )}
-                                style={{ width: (CELL_MIN_W - 1) + 'px' }}
+                                style={{ width: (CELL_MIN_W as number - 1) + 'px' }}
                             >
                                 
                                 {d}
@@ -1633,7 +1632,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                         'disabled': !isInteractive
                                     }
                                 )}
-                                style={{ width: (CELL_MIN_W - 1) + 'px' }}
+                                style={{ width: (CELL_MIN_W as number - 1) + 'px' }}
                             >
 
                                 {/*++++++++++++++++ EVENT ++++++++++++++++*/}
@@ -1865,17 +1864,25 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         const tableGridEl: any = tableGridRef.current;
 
         // initialize cell height
-        const headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
-        const trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
+        const headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
+        const contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
+        if (!headerTitleTbody || !contentTbody) return;
 
+        const headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
+        const trElements = contentTbody.getElementsByTagName('tr');
+
+        // Reset any previously set inline heights so we measure natural heights.
         for (let i = 0; i < headerTitleTrElements.length; i++) {
+            // set to 'auto' (or remove inline style) to allow shrink
+            headerTitleTrElements[i].style.height = 'auto';
+            if (trElements[i]) trElements[i].style.height = 'auto';
 
             const targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
             const tdOHeight = window.getComputedStyle(targetElement).height;
             headerTitleTrElements[i].style.height = tdOHeight;
             trElements[i].style.height = tdOHeight;
-
         }
+
 
     }
    
@@ -1886,7 +1893,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         const { forwardFillTotal, list: cellsList } = getCells();
         const tableGridEl: any = tableGridRef.current;
-        let _curCellMinWidth: number = CELL_MIN_W;
+        let _curCellMinWidth: number = CELL_MIN_W as number;
         let _curColCount: number = FILL_BLANK_DATE_DISABLD ? days[month] : 7 * cellsList.length;
 
 
@@ -2202,6 +2209,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         // Call a function when the list has been rendered completely
         onListRenderComplete?.();
+
 
     }, [eventsValue, customTodayDate, appearanceMode]);
 

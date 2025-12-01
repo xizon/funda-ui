@@ -391,7 +391,7 @@ export default () => {
                         console.log(currentData); // {day: '26', month: '03', year: '2024'}
                     }}
                     draggable
-                    showWeek
+                    headerShowWeek
                     autoScroll
                     tableCellMinWidth={(mode) => mode === 'week' ? 120 : 60} // Example: dynamically set width based on appearance mode
 
@@ -770,7 +770,7 @@ export default () => {
                         langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
                         appearanceToggle={false}
                         draggable
-                        showWeek
+                        headerShowWeek
                         autoScroll
 
                     />
@@ -1270,7 +1270,7 @@ export default () => {
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
                     draggable
-                    showWeek
+                    headerShowWeek
                     autoScroll
 
                     modalMaxWidth="850px"
@@ -1964,7 +1964,7 @@ export default () => {
                     tableListSectionTitle="Name"
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
                     multipleCells
-                    showWeek
+                    headerShowWeek
                     autoScroll
                     onCellMouseUp={(e: React.MouseEvent, selectedCellsData: any[]) => {
                         setSelectedCellsData(selectedCellsData);
@@ -2066,14 +2066,14 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `cellAddBtnClassName` | string  | - | Specify a class for add button of cell | - |
 | `cellAddBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the add button of cell | - |
 | `forwardAndBackFillDisabled` | boolean  | true | Disable forward and backfill values in a calendar. | - |
-| `showWeek` | boolean | false | Show week identifier. | - |
+| `headerShowWeek` | boolean | false | Show week identifier for table header. | - |
 | `tableListSectionTitle` | string \| ReactNode  | - | Table header title. | - |
 | `tableTooltipDisabled` | boolean  | false | Disable table tooltip | - |
 | `tableTooltipDirection` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | bottom | Table tooltip direction of the tip. Defaults to `top`. | - |
 | `tableTooltipOffset` | number  | 10 | Table tooltip position offset | - |
 | `tableTooltipExceededSidePosOffset` | number | 15 | Table tooltip offset px that exceeds the far right or left side of the screen | - |
 | `tableTooltipSize` | `auto` \| `large` \| `medium` \| `small`  | auto | Table tooltip size of the content area. Defaults to `auto`. | - |
-| `tableCellMinWidth` | number \| `(mode: 'week' \| 'month') => number`  | `50` \| `100` | Define a minimum width in pixels for each cell in the content area. <blockquote>When `showWeek` is `true`, it defaults to **100**, otherwise it defaults to **50**. <br />You can also use a function to dynamically set the width based on the appearance mode: <br />`tableCellMinWidth={(mode) => mode === 'week' ? 120 : 60}`</blockquote> | - |
+| `tableCellMinWidth` | number \| `(mode: 'week' \| 'month') => number`  | `50` \| `100` | Define a minimum width in pixels for each cell in the content area. <blockquote>When `headerShowWeek` is `true`, it defaults to **100**, otherwise it defaults to **50**. <br />You can also use a function to dynamically set the width based on the appearance mode: <br />`tableCellMinWidth={(mode) => mode === 'week' ? 120 : 60}`</blockquote> | - |
 | `draggable` | boolean | false | Indicates whether the content area can be dragged. | - |
 | `autoScroll` | boolean | false | Adds scrollbars only when necessary. | - |
 | `onChangeDate` | function  | - | Call a function when a date area is clicked. It returns only two values. <br /> <ol><li>The one is an HTMLElement of this area (**HTMLElement**) </li><li>The second parameter is the current value (**JSON Object**) </li></ol> | - |

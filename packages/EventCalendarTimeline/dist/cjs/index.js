@@ -3977,7 +3977,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     cellAddBtnLabel = props.cellAddBtnLabel,
     forwardAndBackFillDisabled = props.forwardAndBackFillDisabled,
     draggable = props.draggable,
-    showWeek = props.showWeek,
+    headerShowWeek = props.headerShowWeek,
     autoScroll = props.autoScroll,
     onChangeDate = props.onChangeDate,
     onChangeMonth = props.onChangeMonth,
@@ -4115,7 +4115,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
   // table grid
   var AUTO_SCROLL = autoScroll || false;
-  var SHOW_WEEK = showWeek || false;
+  var HEADER_SHOW_WEEK = headerShowWeek || false;
   var BODY_DRAG = draggable || false;
   var tableGridRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var tableGridHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -4161,13 +4161,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   // Calculate CELL_MIN_W based on appearanceMode and tableCellMinWidth
   var CELL_MIN_W = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(function () {
     if (typeof tableCellMinWidth === 'undefined') {
-      return appearanceMode === 'week' ? 100 : 50;
+      return headerShowWeek || false ? 100 : 50;
     }
     if (typeof tableCellMinWidth === 'function') {
       return tableCellMinWidth(appearanceMode);
     }
     return tableCellMinWidth;
-  }, [tableCellMinWidth, appearanceMode]);
+  }, [tableCellMinWidth, appearanceMode, headerShowWeek]);
   var findMondayAndTruncate = function findMondayAndTruncate(dates) {
     var _res = dates.map(function (s) {
       return new Date(s);
@@ -5076,7 +5076,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
 
         // week day
         var weekDay = item.week[i];
-        var _weekDayStr = SHOW_WEEK ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        var _weekDayStr = HEADER_SHOW_WEEK ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
           dangerouslySetInnerHTML: {
             __html: item.weekDisplay[i]
           }
@@ -5547,9 +5547,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var tableGridEl = tableGridRef.current;
 
     // initialize cell height
-    var headerTitleTrElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody').getElementsByTagName('tr');
-    var trElements = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('tr');
+    var headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
+    var contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
+    if (!headerTitleTbody || !contentTbody) return;
+    var headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
+    var trElements = contentTbody.getElementsByTagName('tr');
+
+    // Reset any previously set inline heights so we measure natural heights.
     for (var i = 0; i < headerTitleTrElements.length; i++) {
+      // set to 'auto' (or remove inline style) to allow shrink
+      headerTitleTrElements[i].style.height = 'auto';
+      if (trElements[i]) trElements[i].style.height = 'auto';
       var targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
       var tdOHeight = window.getComputedStyle(targetElement).height;
       headerTitleTrElements[i].style.height = tdOHeight;
