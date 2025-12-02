@@ -60,6 +60,7 @@ export declare type EventCalendarTimelineProps = {
     onChangeWeek?: (startDate: string, endDate: string) => void;
     onListRenderComplete?: () => void;
     onChangeAppearanceMode?: (mode: string) => void;
+    enableHeaderResize?: boolean;
     modalMaskOpacity?: string;
     modalMaxWidth?: number | string;
     modalMinHeight?: number | string;

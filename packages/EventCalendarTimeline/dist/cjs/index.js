@@ -3986,6 +3986,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onChangeWeek = props.onChangeWeek,
     onListRenderComplete = props.onListRenderComplete,
     onChangeAppearanceMode = props.onChangeAppearanceMode,
+    enableHeaderResize = props.enableHeaderResize,
     modalMaskOpacity = props.modalMaskOpacity,
     modalMaxWidth = props.modalMaxWidth,
     modalMinHeight = props.modalMinHeight,
@@ -4117,11 +4118,17 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var AUTO_SCROLL = autoScroll || false;
   var HEADER_SHOW_WEEK = headerShowWeek || false;
   var BODY_DRAG = draggable || false;
+  var ENABLE_HEADER_RESIZE = enableHeaderResize || false;
   var tableGridRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var tableGridHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollHeaderRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollBodyRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var scrollListRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+
+  // header resize drag
+  var isResizingRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  var resizeStartXRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
+  var resizeStartWidthRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(0);
 
   // Temporary date
   var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
@@ -5783,10 +5790,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     }
   }
 
-  // ================================================================
-  // 
-  // ================================================================
-  //if user change the selectedYear, then udate the years array that is displayed on year tab view
+  // if user change the selectedYear, then udate the years array that is displayed on year tab view
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     var years = [];
     for (var y = selectedYear - 10; y < selectedYear + 10; y++) {
@@ -5840,6 +5844,83 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       setCopiedCells(null);
     };
   }, []);
+
+  // ================================================================
+  // Handle header resize drag
+  // ================================================================
+  var handleHeaderResizeMove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+    var _e$touches$;
+    if (!isResizingRef.current || !tableGridRef.current) return;
+    var tableGridEl = tableGridRef.current;
+    // Find the header title element that should have the CSS variable
+    var headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle');
+    if (!headerTitleEl) return;
+
+    // Get clientX from either MouseEvent or TouchEvent
+    var clientX = 'touches' in e ? (_e$touches$ = e.touches[0]) === null || _e$touches$ === void 0 ? void 0 : _e$touches$.clientX : e.clientX;
+    if (clientX === undefined) return;
+    var deltaX = clientX - resizeStartXRef.current;
+    var newWidth = Math.max(100, resizeStartWidthRef.current + deltaX); // Minimum width 100px
+
+    // Update CSS variable on the header title element
+    headerTitleEl.style.setProperty('--custom-event-tl-table-header-w', "".concat(newWidth, "px"));
+  }, []);
+  var handleHeaderResizeEnd = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
+    if (!isResizingRef.current) return;
+    isResizingRef.current = false;
+    document.removeEventListener('mousemove', handleHeaderResizeMove);
+    document.removeEventListener('mouseup', handleHeaderResizeEnd);
+    document.removeEventListener('touchmove', handleHeaderResizeMove);
+    document.removeEventListener('touchend', handleHeaderResizeEnd);
+
+    // Recalculate table grid after resize
+    if (tableGridRef.current) {
+      tableGridInit();
+    }
+  }, [handleHeaderResizeMove]);
+  var handleHeaderResizeStart = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+    if (!ENABLE_HEADER_RESIZE || !tableGridRef.current) return;
+    e.preventDefault();
+    e.stopPropagation();
+    isResizingRef.current = true;
+    resizeStartXRef.current = e.clientX;
+    var tableGridEl = tableGridRef.current;
+    var headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle');
+    if (headerTitleEl) {
+      resizeStartWidthRef.current = headerTitleEl.clientWidth;
+    }
+    document.addEventListener('mousemove', handleHeaderResizeMove);
+    document.addEventListener('mouseup', handleHeaderResizeEnd);
+  }, [ENABLE_HEADER_RESIZE, handleHeaderResizeMove, handleHeaderResizeEnd]);
+  var handleHeaderResizeTouchStart = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
+    if (!ENABLE_HEADER_RESIZE || !tableGridRef.current) return;
+    e.preventDefault();
+    e.stopPropagation();
+    isResizingRef.current = true;
+    var touch = e.touches[0];
+    if (touch) {
+      resizeStartXRef.current = touch.clientX;
+    }
+    var tableGridEl = tableGridRef.current;
+    var headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle');
+    if (headerTitleEl) {
+      resizeStartWidthRef.current = headerTitleEl.clientWidth;
+    }
+    document.addEventListener('touchmove', handleHeaderResizeMove, {
+      passive: false
+    });
+    document.addEventListener('touchend', handleHeaderResizeEnd);
+  }, [ENABLE_HEADER_RESIZE, handleHeaderResizeMove, handleHeaderResizeEnd]);
+
+  // Cleanup on unmount
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    return function () {
+      document.removeEventListener('mousemove', handleHeaderResizeMove);
+      document.removeEventListener('mouseup', handleHeaderResizeEnd);
+      document.removeEventListener('touchmove', handleHeaderResizeMove);
+      document.removeEventListener('touchend', handleHeaderResizeEnd);
+    };
+  }, [handleHeaderResizeMove, handleHeaderResizeEnd]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl__wrapper custom-event-tl__wrapper--".concat(appearanceMode), calendarWrapperClassName)
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -5985,7 +6066,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     className: "custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle"
   }, tableListSectionTitle || ''))))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation",
-    className: "custom-event-tl-table__timeline-divider"
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__timeline-divider', ENABLE_HEADER_RESIZE ? 'custom-event-tl-table__timeline-divider--resizable' : ''),
+    onMouseDown: ENABLE_HEADER_RESIZE ? handleHeaderResizeStart : undefined,
+    onTouchStart: ENABLE_HEADER_RESIZE ? handleHeaderResizeTouchStart : undefined,
+    style: ENABLE_HEADER_RESIZE ? {
+      cursor: 'col-resize',
+      userSelect: 'none'
+    } : undefined
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", {
     role: "presentation"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -6024,7 +6111,13 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     role: "presentation"
   }, generateListSectionUi()))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__timeline-divider', tableListDividerClassName)
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)('custom-event-tl-table__timeline-divider', tableListDividerClassName, ENABLE_HEADER_RESIZE ? 'custom-event-tl-table__timeline-divider--resizable' : ''),
+    onMouseDown: ENABLE_HEADER_RESIZE ? handleHeaderResizeStart : undefined,
+    onTouchStart: ENABLE_HEADER_RESIZE ? handleHeaderResizeTouchStart : undefined,
+    style: ENABLE_HEADER_RESIZE ? {
+      cursor: 'col-resize',
+      userSelect: 'none'
+    } : undefined
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
     role: "presentation",
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)(tableListEndClassName)

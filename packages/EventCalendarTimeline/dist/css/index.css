@@ -235,7 +235,7 @@
   } 
   */
   /* cell */
-  /* header */
+  /* The width of the left column header */
   /* event container */
   /* days container */
   /* remove empty cells */
@@ -466,9 +466,20 @@
   background-color: var(--custom-event-tl-table-divider-bg);
   border-left: var(--custom-event-tl-table-divider-border);
   border-right: var(--custom-event-tl-table-divider-border);
+  position: relative;
 }
 .custom-event-tl-table__timeline-table__wrapper .custom-event-tl-table__timeline-divider > div {
   width: var(--custom-event-tl-table-divider-w);
+}
+.custom-event-tl-table__timeline-table__wrapper .custom-event-tl-table__timeline-divider--resizable {
+  cursor: col-resize;
+  user-select: none;
+}
+.custom-event-tl-table__timeline-table__wrapper .custom-event-tl-table__timeline-divider--resizable:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.custom-event-tl-table__timeline-table__wrapper .custom-event-tl-table__timeline-divider--resizable:active {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .custom-event-tl-table__timeline-table__wrapper .custom-event-tl-table__cell-cushion {
   padding: var(--custom-event-tl-table-cell-padding);

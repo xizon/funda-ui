@@ -14,6 +14,7 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
 
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -79,7 +80,7 @@ export type EventCalendarTimelineProps = {
     onChangeWeek?: (startDate: string, endDate: string) => void;
     onListRenderComplete?: () => void;
     onChangeAppearanceMode?: (mode: string) => void;
-
+    enableHeaderResize?: boolean; 
 
 
     // modal dialog
@@ -169,6 +170,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         onChangeWeek,
         onListRenderComplete,
         onChangeAppearanceMode,
+        enableHeaderResize,
 
         //
         modalMaskOpacity,
@@ -273,11 +275,17 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const AUTO_SCROLL = autoScroll || false;
     const HEADER_SHOW_WEEK = headerShowWeek || false;
     const BODY_DRAG = draggable || false;
+    const ENABLE_HEADER_RESIZE = enableHeaderResize || false;
     const tableGridRef = useRef<any>(null);
     const tableGridHeaderRef = useRef<any>(null);
     const scrollHeaderRef = useRef(null);
     const scrollBodyRef = useRef(null);
     const scrollListRef = useRef(null);
+    
+    // header resize drag
+    const isResizingRef = useRef<boolean>(false);
+    const resizeStartXRef = useRef<number>(0);
+    const resizeStartWidthRef = useRef<number>(0);
 
     // Temporary date
     const [tempDate, setTempDate] = useState<string>('');
@@ -2121,7 +2129,6 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     }
 
-
     function tableGridReset() {
         if (tableGridRef.current === null) return;
 
@@ -2153,13 +2160,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     }
 
-
-
-
-    // ================================================================
-    // 
-    // ================================================================
-    //if user change the selectedYear, then udate the years array that is displayed on year tab view
+    // if user change the selectedYear, then udate the years array that is displayed on year tab view
     useEffect(() => {
         const years: number[] = [];
         for (let y = selectedYear - 10; y < selectedYear + 10; y++) {
@@ -2230,6 +2231,102 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         }
 
     }, []);
+
+    
+    // ================================================================
+    // Handle header resize drag
+    // ================================================================
+    const handleHeaderResizeMove = useCallback((e: MouseEvent | TouchEvent) => {
+        if (!isResizingRef.current || !tableGridRef.current) return;
+        
+        const tableGridEl: any = tableGridRef.current;
+        // Find the header title element that should have the CSS variable
+        const headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle') as HTMLElement;
+        if (!headerTitleEl) return;
+        
+        // Get clientX from either MouseEvent or TouchEvent
+        const clientX = 'touches' in e ? e.touches[0]?.clientX : e.clientX;
+        if (clientX === undefined) return;
+        
+        const deltaX = clientX - resizeStartXRef.current;
+        const newWidth = Math.max(100, resizeStartWidthRef.current + deltaX); // Minimum width 100px
+        
+        // Update CSS variable on the header title element
+        headerTitleEl.style.setProperty('--custom-event-tl-table-header-w', `${newWidth}px`);
+    }, []);
+
+    const handleHeaderResizeEnd = useCallback(() => {
+        if (!isResizingRef.current) return;
+        
+        isResizingRef.current = false;
+        document.removeEventListener('mousemove', handleHeaderResizeMove);
+        document.removeEventListener('mouseup', handleHeaderResizeEnd);
+        document.removeEventListener('touchmove', handleHeaderResizeMove);
+        document.removeEventListener('touchend', handleHeaderResizeEnd);
+        
+        // Recalculate table grid after resize
+        if (tableGridRef.current) {
+            tableGridInit();
+        }
+    }, [handleHeaderResizeMove]);
+
+    const handleHeaderResizeStart = useCallback((e: React.MouseEvent) => {
+        if (!ENABLE_HEADER_RESIZE || !tableGridRef.current) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        isResizingRef.current = true;
+        resizeStartXRef.current = e.clientX;
+        
+        const tableGridEl: any = tableGridRef.current;
+        const headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle') as HTMLElement;
+        if (headerTitleEl) {
+            resizeStartWidthRef.current = headerTitleEl.clientWidth;
+        }
+        
+        document.addEventListener('mousemove', handleHeaderResizeMove);
+        document.addEventListener('mouseup', handleHeaderResizeEnd);
+    }, [ENABLE_HEADER_RESIZE, handleHeaderResizeMove, handleHeaderResizeEnd]);
+
+    const handleHeaderResizeTouchStart = useCallback((e: React.TouchEvent) => {
+        if (!ENABLE_HEADER_RESIZE || !tableGridRef.current) return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        isResizingRef.current = true;
+        const touch = e.touches[0];
+        if (touch) {
+            resizeStartXRef.current = touch.clientX;
+        }
+        
+        const tableGridEl: any = tableGridRef.current;
+        const headerTitleEl = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle') as HTMLElement;
+        if (headerTitleEl) {
+            resizeStartWidthRef.current = headerTitleEl.clientWidth;
+        }
+        
+        document.addEventListener('touchmove', handleHeaderResizeMove, { passive: false });
+        document.addEventListener('touchend', handleHeaderResizeEnd);
+    }, [ENABLE_HEADER_RESIZE, handleHeaderResizeMove, handleHeaderResizeEnd]);
+
+
+    
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            document.removeEventListener('mousemove', handleHeaderResizeMove);
+            document.removeEventListener('mouseup', handleHeaderResizeEnd);
+            document.removeEventListener('touchmove', handleHeaderResizeMove);
+            document.removeEventListener('touchend', handleHeaderResizeEnd);
+        };
+    }, [handleHeaderResizeMove, handleHeaderResizeEnd]);
+
+
+
+
+  
     return (
         <>
 
@@ -2417,6 +2514,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                                             <thead role="presentation">
                                                 <tr role="row">
                                                     <th role="columnheader">
+                                                        {/**
+                                                         * The width of the left column header is set using ".custom-event-tl-table__cell-cushion-headertitle".
+                                                         */}
                                                         <div className="custom-event-tl-table__cell-cushion custom-event-tl-table__cell-cushion-headertitle">
                                                             {tableListSectionTitle || ''}
                                                         </div>
@@ -2431,7 +2531,18 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                                 </th>
-                                <th role="presentation" className="custom-event-tl-table__timeline-divider"><div></div></th>
+                                <th 
+                                    role="presentation" 
+                                    className={combinedCls(
+                                        'custom-event-tl-table__timeline-divider',
+                                        ENABLE_HEADER_RESIZE ? 'custom-event-tl-table__timeline-divider--resizable' : ''
+                                    )}
+                                    onMouseDown={ENABLE_HEADER_RESIZE ? handleHeaderResizeStart : undefined}
+                                    onTouchStart={ENABLE_HEADER_RESIZE ? handleHeaderResizeTouchStart : undefined}
+                                    style={ENABLE_HEADER_RESIZE ? { cursor: 'col-resize', userSelect: 'none' } : undefined}
+                                >
+                                    <div></div>
+                                </th>
                                 <th role="presentation">
                                     <div
                                         ref={scrollHeaderRef}
@@ -2507,12 +2618,20 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
                                 </td>
+
+                                {/**
+                                 * The dividing line between the left title column and the right content
+                                 */}
                                 <td
                                     role="presentation"
                                     className={combinedCls(
                                         'custom-event-tl-table__timeline-divider',
-                                        tableListDividerClassName
+                                        tableListDividerClassName,
+                                        ENABLE_HEADER_RESIZE ? 'custom-event-tl-table__timeline-divider--resizable' : ''
                                     )}
+                                    onMouseDown={ENABLE_HEADER_RESIZE ? handleHeaderResizeStart : undefined}
+                                    onTouchStart={ENABLE_HEADER_RESIZE ? handleHeaderResizeTouchStart : undefined}
+                                    style={ENABLE_HEADER_RESIZE ? { cursor: 'col-resize', userSelect: 'none' } : undefined}
                                 >
                                     <div></div>
                                 </td>

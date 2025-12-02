@@ -1987,6 +1987,114 @@ export default () => {
 
 
 
+
+## Enable Header Resize
+
+Enable dragging the divider to resize header width. When `enableHeaderResize` is set to `true`, users can drag the divider between the header section and the calendar content area to adjust the header width.
+
+```js
+import React, { useState, useEffect } from "react";
+import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
+
+// component styles
+import 'funda-ui/EventCalendarTimeline/index.css';
+
+export default () => {
+
+    // default data
+    const defaultData = [
+        {
+            "listSection": {"id": 100, "title":"Smith One"},
+            "eventSources": [
+                {"date": "2024-01-06", "list": [{
+                    "id": 4505,
+                    "date": "2024-01-06",
+                    "time": "",
+                    "data": "<span class=\"text-warning\">Rest </span>",
+                    "dataTooltip": `<span>Rest</span>`,
+                    "eventStyles": {
+                        "background": "rgb(255, 240, 227)"
+                    }
+                }]},
+                {"date": "2023-12-04", "list": [{
+                    "id": 4508,
+                    "date": "2023-12-04",
+                    "time": "",
+                    "data": "<span class=\"text-primary\">Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>",
+                    "dataTooltip": `<span>Night Shift <span class=\"badge rounded-pill bg-primary mx-1\">IM</span></span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }]},
+                {"date": "2024-02-20", "list": [{
+                    "id": 4510,
+                    "date": "2024-02-20",
+                    "time": "",
+                    "data": "<span class=\"text-primary\">Work Title 1 </span>",
+                    "dataTooltip": `<span>Work Title 1</span>`,
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }]}
+            ]
+        },
+        {
+            "listSection": {"id": 101, "title":"Jerry"},
+            "eventSources": [
+                {"date": "2024-02-28", "list": [{
+                    "id": 4509,
+                    "date": "2024-02-28",
+                    "time": "",
+                    "data": "<span class=\"text-primary\">Night Shift </span>",
+                    "eventStyles": {
+                        "background": "rgb(203, 228, 240)"
+                    }
+                }]}
+            ]
+        },
+        {
+            "listSection": {"id": 102, "title":"Dony Marketplace"},
+            "eventSources": []
+        }
+    ];
+
+    const defaultCustomTodayDate = '2023-12-04';
+
+    const [data, setData] = useState<any>(null);
+    const [updateCalendarData, setUpdateCalendarData] = useState<boolean>(false);
+
+    useEffect(() => {
+        // update calendar data
+        if (!updateCalendarData && defaultData.length > 0) {
+            setData(defaultData);
+            setUpdateCalendarData(true);
+        }
+    }, [defaultData, defaultCustomTodayDate]);
+
+    return (
+        <>
+            {/* Added "overflow" to avoid temporary overflow of content when dragging */}
+            <div style={{width: '100%', overflow: 'hidden'}}>
+                <EventCalendarTimeline
+                    customTodayDate={defaultCustomTodayDate}
+                    eventsValue={data}
+                    cellCloseBtnClassName="d-none"
+                    cellAddBtnClassName="d-none"
+                    tableListSectionTitle="Name"
+                    langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
+                    draggable
+                    headerShowWeek
+                    autoScroll
+                    enableHeaderResize
+                />
+            </div>
+        </>
+    );
+}
+```
+
+
+
 ## Customize the width and text effect of the list on the left
 
 
@@ -2067,6 +2175,7 @@ import EventCalendarTimeline from 'funda-ui/EventCalendarTimeline';
 | `cellAddBtnLabel` | string \| ReactNode  | - | Set a piece of text or HTML code for the add button of cell | - |
 | `forwardAndBackFillDisabled` | boolean  | true | Disable forward and backfill values in a calendar. | - |
 | `headerShowWeek` | boolean | false | Show week identifier for table header. | - |
+| `enableHeaderResize` | boolean | false | Enable dragging the divider to resize header width. | - |
 | `tableListSectionTitle` | string \| ReactNode  | - | Table header title. | - |
 | `tableTooltipDisabled` | boolean  | false | Disable table tooltip | - |
 | `tableTooltipDirection` | `top` \| `top-right` \| `top-left` \| `bottom` \| `bottom-right` \| `bottom-left` | bottom | Table tooltip direction of the tip. Defaults to `top`. | - |
