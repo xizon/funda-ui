@@ -614,7 +614,7 @@ export default () => {
 `Uploader.tsx`:
 ```js
 import React, { forwardRef, useRef } from 'react';
-import File from '../../components/funda-ui/File/src';
+import File from 'funda-ui/File';
 
 type UploaderProps = {
     label?: React.ReactNode | string;
@@ -638,7 +638,7 @@ type UploaderProps = {
     submitClassName?: string;
     progressLabel?: React.ReactNode | string;
     progressClassName?: string;
-     formDataAppend?: (formData: FormData, files: FileList) => void;
+    formDataAppend?: (formData: FormData, files: FileList) => void;
     onSuccess?: (data: any, input: HTMLInputElement, submitEl: HTMLElement) => void;
     onChange?: () => void;
     onProgress?: () => void;
@@ -698,7 +698,13 @@ const Uploader = forwardRef((props: UploaderProps, externalRef: any) => {
 
         if (typeof value !== 'undefined') {
             submitEl.classList.remove(WAITING_CLASS);
-            onSuccess?.(value, input, submitEl);
+
+            // not fetch URL
+            if (typeof value.fileData !== 'undefined') {
+                onSuccess?.(value, input, submitEl);
+            } else {
+                onSuccess?.(value, input, submitEl);
+            }
         }
     };
 
