@@ -20,6 +20,7 @@ export type DynamicFieldsProps = {
     label?: React.ReactNode | string;
     data: DynamicFieldsValueProps | null;
     maxFields?: any;
+    defaultRows?: number;
     confirmText?: string;
     doNotRemoveDom?: boolean;
     iconAddBefore?: React.ReactNode | string;
@@ -55,6 +56,7 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         label,
         data,
         maxFields,
+        defaultRows,
         iconAddBefore,
         iconAddAfter,
         iconAdd,
@@ -96,6 +98,10 @@ const DynamicFields = (props: DynamicFieldsProps) => {
     const [tmpl, setTmpl] = useState<React.ReactNode>([]);
     const addBtnIdRef = useRef<string>('');
     addBtnIdRef.current = `dynamic-fields-add-${idRes}`;
+    const defaultRowsInitializedRef = useRef<boolean>(false);
+    const isInitializingDefaultRowsRef = useRef<boolean>(false);
+    const rafIdRef = useRef<number | null>(null);
+    const timeoutIdsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
     // exposes the following methods
     useImperativeHandle(
@@ -169,17 +175,12 @@ const DynamicFields = (props: DynamicFieldsProps) => {
         }
     }
 
-
-    function handleClickAdd(event: any = null) {
-        if (event !== null) {
-            if (typeof event !== 'undefined') event.preventDefault();
-        }
-        
+    function addRowWithTemplate(template: React.ReactNode) {
         //button status
         checkMaxStatus();
 
         //
-        setVal((prevState: any[]) => [...prevState, ...generateGroup(tmpl)]);
+        setVal((prevState: any[]) => [...prevState, ...generateGroup(template)]);
 
 
         //
@@ -207,6 +208,14 @@ const DynamicFields = (props: DynamicFieldsProps) => {
             //
             onAdd?.(perRow, rootRef.current, addBtnRef.current, PER_ROW_DOM_STRING);
         }, 0);
+    }
+
+    function handleClickAdd(event: any = null) {
+        if (event !== null) {
+            if (typeof event !== 'undefined') event.preventDefault();
+        }
+        
+        addRowWithTemplate(tmpl);
     }
 
 
@@ -331,6 +340,96 @@ const DynamicFields = (props: DynamicFieldsProps) => {
 
         //
         onLoad?.(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
+
+        // Reset initialization flag when data becomes null
+        if (!data) {
+            defaultRowsInitializedRef.current = false;
+            isInitializingDefaultRowsRef.current = false;
+        }
+
+        // Add default rows if specified (only initialize once per data setup)
+        if (!defaultRowsInitializedRef.current && typeof defaultRows === 'number' && defaultRows > 0 && data && data.tmpl) {
+            // Get the initial data length
+            const initDataLength = Array.isArray(data.init) ? data.init.length : 0;
+            
+            // Calculate how many rows need to be added
+            const maxRows = typeof maxFields !== 'undefined' ? parseFloat(maxFields) : Infinity;
+            const targetRows = Math.min(defaultRows, maxRows);
+            const rowsToAdd = Math.max(0, targetRows - initDataLength);
+            
+            // Mark as initialized immediately to prevent re-adding
+            defaultRowsInitializedRef.current = true;
+            
+            // Only add rows if needed
+            if (rowsToAdd > 0) {
+                // Mark that we're initializing default rows
+                isInitializingDefaultRowsRef.current = true;
+                
+                // Clear any existing timeouts
+                timeoutIdsRef.current.forEach(id => clearTimeout(id));
+                timeoutIdsRef.current = [];
+                
+                // Use requestAnimationFrame to ensure DOM is ready and state is updated
+                rafIdRef.current = requestAnimationFrame(() => {
+                    // Check if component is still mounted
+                    if (!rootRef.current) {
+                        isInitializingDefaultRowsRef.current = false;
+                        return;
+                    }
+                    
+                    const timeoutId1 = setTimeout(() => {
+                        // Check if component is still mounted
+                        if (!rootRef.current) {
+                            isInitializingDefaultRowsRef.current = false;
+                            return;
+                        }
+                        
+                        // Add rows one by one with a small delay to ensure state updates
+                        let addedCount = 0;
+                        const addNextRow = () => {
+                            // Check if component is still mounted before each operation
+                            if (addedCount < rowsToAdd && rootRef.current) {
+                                // Use data.tmpl directly to avoid dependency on state
+                                addRowWithTemplate(data.tmpl);
+                                addedCount++;
+                                // Wait a bit before adding the next row to ensure state updates
+                                if (addedCount < rowsToAdd) {
+                                    const timeoutId2 = setTimeout(addNextRow, 10);
+                                    timeoutIdsRef.current.push(timeoutId2);
+                                } else {
+                                    // All rows added, mark initialization as complete
+                                    isInitializingDefaultRowsRef.current = false;
+                                }
+                            } else {
+                                // No more rows to add or component unmounted
+                                isInitializingDefaultRowsRef.current = false;
+                            }
+                        };
+                        addNextRow();
+                    }, 50);
+                    timeoutIdsRef.current.push(timeoutId1);
+                });
+            }
+        }
+        
+        // Cleanup function to cancel requestAnimationFrame and timeouts
+        return () => {
+            // Don't cleanup if we're in the middle of initializing defaultRows
+            // This prevents the cleanup from canceling the async operations before they complete
+            if (isInitializingDefaultRowsRef.current) {
+                // Allow defaultRows initialization to complete
+                // The cleanup will happen naturally when initialization finishes
+                return;
+            }
+            
+            // Normal cleanup for other cases
+            if (rafIdRef.current !== null) {
+                cancelAnimationFrame(rafIdRef.current);
+                rafIdRef.current = null;
+            }
+            timeoutIdsRef.current.forEach(id => clearTimeout(id));
+            timeoutIdsRef.current = [];
+        };
     }, [data]);
 
 

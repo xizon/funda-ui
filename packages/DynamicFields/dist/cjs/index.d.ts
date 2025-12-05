@@ -12,6 +12,7 @@ export declare type DynamicFieldsProps = {
     label?: React.ReactNode | string;
     data: DynamicFieldsValueProps | null;
     maxFields?: any;
+    defaultRows?: number;
     confirmText?: string;
     doNotRemoveDom?: boolean;
     iconAddBefore?: React.ReactNode | string;

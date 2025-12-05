@@ -495,7 +495,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_useComId__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(188);
 /* harmony import */ var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
-var _excluded = ["contentRef", "wrapperClassName", "btnAddWrapperClassName", "btnRemoveWrapperClassName", "label", "data", "maxFields", "iconAddBefore", "iconAddAfter", "iconAdd", "iconAddPosition", "iconRemove", "doNotRemoveDom", "id", "confirmText", "innerAppendClassName", "innerAppendCellClassName", "innerAppendLastCellClassName", "innerAppendHideClassName", "innerAppendBodyClassName", "innerAppendHeadData", "innerAppendHeadRowShowFirst", "innerAppendHeadRowClassName", "innerAppendHeadCellClassName", "innerAppendHeadCellStyles", "innerAppendEmptyContent", "onAdd", "onRemove", "onLoad"];
+var _excluded = ["contentRef", "wrapperClassName", "btnAddWrapperClassName", "btnRemoveWrapperClassName", "label", "data", "maxFields", "defaultRows", "iconAddBefore", "iconAddAfter", "iconAdd", "iconAddPosition", "iconRemove", "doNotRemoveDom", "id", "confirmText", "innerAppendClassName", "innerAppendCellClassName", "innerAppendLastCellClassName", "innerAppendHideClassName", "innerAppendBodyClassName", "innerAppendHeadData", "innerAppendHeadRowShowFirst", "innerAppendHeadRowClassName", "innerAppendHeadCellClassName", "innerAppendHeadCellStyles", "innerAppendEmptyContent", "onAdd", "onRemove", "onLoad"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -520,6 +520,7 @@ var DynamicFields = function DynamicFields(props) {
     label = props.label,
     data = props.data,
     maxFields = props.maxFields,
+    defaultRows = props.defaultRows,
     iconAddBefore = props.iconAddBefore,
     iconAddAfter = props.iconAddAfter,
     iconAdd = props.iconAdd,
@@ -564,6 +565,10 @@ var DynamicFields = function DynamicFields(props) {
     setTmpl = _useState4[1];
   var addBtnIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)('');
   addBtnIdRef.current = "dynamic-fields-add-".concat(idRes);
+  var defaultRowsInitializedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  var isInitializingDefaultRowsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+  var rafIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var timeoutIdsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)([]);
 
   // exposes the following methods
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(contentRef, function () {
@@ -629,18 +634,13 @@ var DynamicFields = function DynamicFields(props) {
       addBtnRef.current.style.setProperty('display', 'none', 'important');
     }
   }
-  function handleClickAdd() {
-    var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-    if (event !== null) {
-      if (typeof event !== 'undefined') event.preventDefault();
-    }
-
+  function addRowWithTemplate(template) {
     //button status
     checkMaxStatus();
 
     //
     setVal(function (prevState) {
-      return [].concat(_toConsumableArray(prevState), _toConsumableArray(generateGroup(tmpl)));
+      return [].concat(_toConsumableArray(prevState), _toConsumableArray(generateGroup(template)));
     });
 
     //
@@ -666,6 +666,13 @@ var DynamicFields = function DynamicFields(props) {
       //
       onAdd === null || onAdd === void 0 ? void 0 : onAdd(perRow, rootRef.current, addBtnRef.current, PER_ROW_DOM_STRING);
     }, 0);
+  }
+  function handleClickAdd() {
+    var event = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    if (event !== null) {
+      if (typeof event !== 'undefined') event.preventDefault();
+    }
+    addRowWithTemplate(tmpl);
   }
   function handleClickRemove(e) {
     if (e !== null && typeof e !== 'undefined') e.preventDefault();
@@ -778,6 +785,99 @@ var DynamicFields = function DynamicFields(props) {
 
     //
     onLoad === null || onLoad === void 0 ? void 0 : onLoad(addBtnIdRef.current, rootRef.current, PER_ROW_DOM_STRING);
+
+    // Reset initialization flag when data becomes null
+    if (!data) {
+      defaultRowsInitializedRef.current = false;
+      isInitializingDefaultRowsRef.current = false;
+    }
+
+    // Add default rows if specified (only initialize once per data setup)
+    if (!defaultRowsInitializedRef.current && typeof defaultRows === 'number' && defaultRows > 0 && data && data.tmpl) {
+      // Get the initial data length
+      var initDataLength = Array.isArray(data.init) ? data.init.length : 0;
+
+      // Calculate how many rows need to be added
+      var maxRows = typeof maxFields !== 'undefined' ? parseFloat(maxFields) : Infinity;
+      var targetRows = Math.min(defaultRows, maxRows);
+      var rowsToAdd = Math.max(0, targetRows - initDataLength);
+
+      // Mark as initialized immediately to prevent re-adding
+      defaultRowsInitializedRef.current = true;
+
+      // Only add rows if needed
+      if (rowsToAdd > 0) {
+        // Mark that we're initializing default rows
+        isInitializingDefaultRowsRef.current = true;
+
+        // Clear any existing timeouts
+        timeoutIdsRef.current.forEach(function (id) {
+          return clearTimeout(id);
+        });
+        timeoutIdsRef.current = [];
+
+        // Use requestAnimationFrame to ensure DOM is ready and state is updated
+        rafIdRef.current = requestAnimationFrame(function () {
+          // Check if component is still mounted
+          if (!rootRef.current) {
+            isInitializingDefaultRowsRef.current = false;
+            return;
+          }
+          var timeoutId1 = setTimeout(function () {
+            // Check if component is still mounted
+            if (!rootRef.current) {
+              isInitializingDefaultRowsRef.current = false;
+              return;
+            }
+
+            // Add rows one by one with a small delay to ensure state updates
+            var addedCount = 0;
+            var addNextRow = function addNextRow() {
+              // Check if component is still mounted before each operation
+              if (addedCount < rowsToAdd && rootRef.current) {
+                // Use data.tmpl directly to avoid dependency on state
+                addRowWithTemplate(data.tmpl);
+                addedCount++;
+                // Wait a bit before adding the next row to ensure state updates
+                if (addedCount < rowsToAdd) {
+                  var timeoutId2 = setTimeout(addNextRow, 10);
+                  timeoutIdsRef.current.push(timeoutId2);
+                } else {
+                  // All rows added, mark initialization as complete
+                  isInitializingDefaultRowsRef.current = false;
+                }
+              } else {
+                // No more rows to add or component unmounted
+                isInitializingDefaultRowsRef.current = false;
+              }
+            };
+            addNextRow();
+          }, 50);
+          timeoutIdsRef.current.push(timeoutId1);
+        });
+      }
+    }
+
+    // Cleanup function to cancel requestAnimationFrame and timeouts
+    return function () {
+      // Don't cleanup if we're in the middle of initializing defaultRows
+      // This prevents the cleanup from canceling the async operations before they complete
+      if (isInitializingDefaultRowsRef.current) {
+        // Allow defaultRows initialization to complete
+        // The cleanup will happen naturally when initialization finishes
+        return;
+      }
+
+      // Normal cleanup for other cases
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+      timeoutIdsRef.current.forEach(function (id) {
+        return clearTimeout(id);
+      });
+      timeoutIdsRef.current = [];
+    };
   }, [data]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(wrapperClassName, 'mb-3 position-relative'),

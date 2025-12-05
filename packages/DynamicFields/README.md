@@ -1303,7 +1303,7 @@ export default () => {
 
         return <React.Fragment key={'tmpl-' + data.index}>
             {/* ///////////// */}
-            <div className="row align-items-center">
+            <div className="row align-items-start">
                <div className="text-end" style={{ width: '55px' }}>
                     ID
                 </div>
@@ -1444,6 +1444,280 @@ export default () => {
 ```
 
 
+## Using defaultRows
+
+The `defaultRows` property allows you to automatically create a specified number of rows when `data.init` is empty, similar to clicking the add button multiple times.
+
+### Example 1: No default values
+
+This example automatically creates 3 rows when the component initializes with empty `data.init`.
+
+```js
+import React from "react";
+import DynamicFields from 'funda-ui/DynamicFields';
+import Input from 'funda-ui/Input';
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+
+type DynamicFieldsValueProps = {
+    init: React.ReactNode[];
+    tmpl: React.ReactNode;
+};
+
+
+export default () => {
+
+    const LABEL_WIDTH = '200px';
+
+    //initialize default value
+    const tmpl = (val: any, init: boolean = true) => {
+        let data: any = null;
+        if (init) {
+            const {...rest} = val;
+            data = rest;
+        } else {
+            data = {index: Math.random()};
+        }
+
+        const currentRowNum = val !== null ? val.index : undefined;
+
+        return <React.Fragment key={'tmpl-' + data.index}>
+                {/* ///////////// */}
+                <div className="row align-items-center">
+                    <div className="text-end" style={{ width: LABEL_WIDTH }}>
+                        User Name
+                    </div>
+                    <div className="col">
+                        {/* CONTROL */}
+                        <Input
+                            wrapperClassName="position-relative"
+                            value={data.user_name}
+                            tabIndex={-1}
+                            name="user_name[]"
+                        />
+                        {/* /CONTROL */}
+                    </div>
+             
+                    <div className="text-end" style={{ width: LABEL_WIDTH }}>
+                        Role(ID)
+                    </div>
+                    <div className="col">
+                        {/* CONTROL */}
+                        <Select
+                            wrapperClassName="position-relative"
+                            value={data.role_id}
+                            name="role_id[]"
+                            placeholder="Select"
+                            options={`
+                            [
+                                {"label": "Option 1","value": "value-1","queryString": "option1"},
+                                {"label": "Option 2","value": "value-2","queryString": "option2"},
+                                {"label": "Option 3","value": "value-3","queryString": "option3"}
+                            ]  
+                            `}
+                            onChange={(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, e2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                                const targetId = e2.dataset.id;
+                                [].slice.call(document.querySelectorAll(`[name="role_name[]"]`)).forEach((node: any) => {
+                                    if (node.id === targetId) {
+                                        node.value = (val as OptionConfig).label;
+                                    }
+                                });
+                            }}
+                        />
+                        {/* /CONTROL */}
+                    </div>
+                
+
+                    <div style={{ width: '40px' }}></div>
+                </div>  
+
+                <hr />
+
+            {/* ///////////// */}
+        </React.Fragment>
+    };
+
+
+    return (
+        <>
+            <DynamicFields
+                data={{
+                    init: [],
+                    tmpl: tmpl(null, false)
+                } as DynamicFieldsValueProps}
+                defaultRows={3}
+                maxFields="10"
+                confirmText="Are you sure?"
+                iconAdd={<><div className="mt-1"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
+                iconRemove={<><div className="position-absolute top-0 end-0 mt-2 mx-1"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                onAdd={(items: HTMLDivElement[], rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => {
+                    console.log('add', items);
+                    // do something
+
+                }}
+                onRemove={(items: HTMLDivElement[], key: number | string, index: number | string, rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => {
+                    console.log('remove', items, key, index);
+                }}
+            />
+
+
+        </>
+    );
+}
+```
+
+### Example 2: Has default values
+
+
+```js
+import React, { useEffect, useState } from "react";
+import Textarea from 'funda-ui/Textarea';
+import DynamicFields from 'funda-ui/DynamicFields';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+type DynamicFieldsValueProps = {
+    init: React.ReactNode[];
+    tmpl: React.ReactNode;
+};
+
+const myData: any[] = [
+    {
+        myname: `string here\nstring here\nstring here\nstring here\nstring here\nstring here\nstring here\n`
+    },
+    {
+        myname: `long string, long string long string long string long string long string long string long string long stringlong string, long string long string long string long string long string long string long string long stringlong string, long string long string long string long string long string long string long string long stringlong string, long string long string long string long string long string long string long string long stringlong string, long string long string long string long string long string long string long string long stringlong string, long string long string long string long string long string long string long string long string`
+    }
+];
+
+export default () => {
+
+    const dfRef = useRef<any>(null);
+    const [dynamicFieldsValue, setDynamicFieldsValue] = useState<DynamicFieldsValueProps | null>(null);
+    const [dynamicFieldsJsonValue, setDynamicFieldsJsonValue] = useState<any[]>([]);
+
+    //initialize default value
+    const tmpl = (val: any, init: boolean = true) => {
+        let data: any = null;
+        if (init) {
+            const { ...rest } = val;
+            data = rest;
+        } else {
+            data = { index: Math.random() };
+        }
+
+        const currentRowNum = val !== null ? val.index : undefined;
+
+        return <React.Fragment key={'tmpl-' + data.index}>
+            {/* ///////////// */}
+            <div className="row align-items-start">
+               <div className="text-end" style={{ width: '55px' }}>
+                    ID
+                </div>
+                <div className="col-auto text-primary" data-id-show>
+                    {data.index+1}
+                </div>
+
+                <div className="text-end" style={{ width: '150px' }}>
+                    Content
+                </div>
+                <div className="col">
+                    {/* CONTROL */}
+                    <Textarea
+                        placeholder="String"
+                        rows={3}
+                        value={data.myname}
+                        name="myname[]"
+                        autoSize
+                    />
+                    {/* /CONTROL */}
+                </div>
+
+                <div style={{ width: '40px' }}></div>
+            </div>
+
+            <hr />
+
+            {/* ///////////// */}
+        </React.Fragment>
+    };
+
+    useEffect(() => {
+
+
+        if (dfRef.current && myData.length === 0) {
+            setTimeout(() => {
+                if (dfRef.current.appendedItemsCounter() === 0) dfRef.current.showAddBtn();
+            }, 500);
+        }
+
+        //initialize JSON value
+        setDynamicFieldsJsonValue(myData.map((item: any, index: number) => (
+            {
+                itemId: index+1,
+                myname: item.myname
+            }
+        )));
+
+        //initialize default value
+        const initData = myData.map((item: any, index: number) => {
+            const { ...rest } = item;
+            return tmpl({ ...rest, index });
+        });
+
+        const tmplData = tmpl(null, false);
+
+        setDynamicFieldsValue({
+            init: initData,
+            tmpl: tmplData
+        });
+
+    }, []);
+
+
+
+    return (
+        <>
+
+            <DynamicFields
+                contentRef={dfRef}
+                key={JSON.stringify(dynamicFieldsJsonValue)}  // Trigger child component update when prop of parent changes
+                data={dynamicFieldsValue}
+                defaultRows={3}
+                maxFields="10"
+                confirmText="Are you sure?"
+                iconAdd={<><div className="mt-1"><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#000" /></svg></div></>}
+                iconRemove={<><div className="position-absolute top-0 end-0 mx-2" style={{ marginTop: '-10px' }}><svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10ZM8 11a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Z" fill="#f00" /></svg></div></>}
+                onAdd={(items: HTMLDivElement[], rootNode: HTMLDivElement, btnNode: HTMLAnchorElement, perRowDomClassName: string) => {
+                    console.log('add', items);
+                
+                    //update `data-id` and `id` attributes of control
+                    items.forEach((node) => {
+                        const keyIndex = node.dataset.key;
+                        [].slice.call(node.querySelectorAll(`[data-id-show]`)).forEach((field) => {
+                            field.textContent = parseFloat(Number(keyIndex)+1);
+                        });
+                    });
+
+
+                }}
+            />
+        </>
+    );
+}
+```
+
 
 ## API
 
@@ -1460,6 +1734,7 @@ import DynamicFields from 'funda-ui/DynamicFields';
 | `btnRemoveWrapperClassName` | string | `align-middle` | The class name of the remove button wrapper. | - |
 | `label` | string \| ReactNode | - | It is used to specify a label for an element of a form.<blockquote>Support html tags</blockquote> | - |
 | `data` | JSON Object | - | Control group are dynamically added after the button is triggered | ✅ |
+| `defaultRows` | number | - | Number of rows to display by default when `data.init` is empty. Similar to clicking the add button multiple times. The value will be limited by `maxFields`. | - |
 | `confirmText` | string | - | The text to display in the confirm box. | - |
 | `doNotRemoveDom` | boolean | false | Click the delete button without removing the Dom element. You can customize the status to delete each group. | - |
 | `iconAddBefore` | ReactNode | - | The button before add. | - |
