@@ -15,7 +15,7 @@ It is generally used to create a React element at the root node (`document.body`
  - ✅ Tooltip
  - ✅ Date
  - ✅ Chatbox
-
+ - ✅ Popover
 
 ## General
 
