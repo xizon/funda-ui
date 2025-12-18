@@ -926,6 +926,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       dragHandleSelector = _options$dragHandleSe === void 0 ? '.custom-draggable-list__handle' : _options$dragHandleSe,
                       onDragStart = options.onDragStart,
                       onDragOver = options.onDragOver,
+                      onDragUpdate = options.onDragUpdate,
                       onDragEnd = options.onDragEnd;
                     var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
                       _useState2 = _slicedToArray(_useState, 2),
@@ -934,11 +935,35 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                     var dragItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
                     var dragOverItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
                     var dragNode = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+                    var draggedElement = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+                    var boundaryElement = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
                     var touchOffset = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
                       x: 0,
                       y: 0
                     });
                     var currentHoverItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+                    var rafId = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+                    var lastUpdateDragIndex = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+                    var lastUpdateDropIndex = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+
+                    /**
+                     * Performance Note:
+                     *
+                     * Drag-over events can fire at a very high frequency, especially on touch devices
+                     * or when dragging quickly. Directly performing DOM read/write operations in the
+                     * event handler (e.g. `getBoundingClientRect`, `classList` changes, style updates)
+                     * can easily cause layout thrashing and frame drops when there are many items.
+                     *
+                     * To mitigate this, we:
+                     * - Collect the pointer coordinates synchronously in the event handler.
+                     * - Schedule all DOM-intensive work inside `requestAnimationFrame`, so the browser
+                     *   batches these operations before the next paint.
+                     * - Cancel any pending frame (`cancelAnimationFrame`) before scheduling a new one,
+                     *   ensuring there is at most one pending DOM update per frame.
+                     *
+                     * This keeps drag interactions smooth even with large lists.
+                     */
+
                     var handleDragStart = function handleDragStart(e, position) {
                       var isTouch = ('touches' in e);
                       var target = e.target;
@@ -991,68 +1016,126 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                           opacity: '0.9'
                         });
                         document.body.appendChild(dragNode.current);
+
+                        // Keep track of the original element (acts as a placeholder inside the list)
+                        draggedElement.current = listItem;
+                        boundaryElement.current = boundary;
                         setIsDragging(true);
                         listItem.classList.add('dragging-placeholder');
                       } else {
-                        // ... desktop drag logic remains the same ...
+                        // Desktop: use native drag image, but still record dragged element / boundary
+                        draggedElement.current = listItem;
+                        boundaryElement.current = boundary;
+                        setIsDragging(true);
+                        var dragEvent = e;
+                        if (dragEvent.dataTransfer) {
+                          dragEvent.dataTransfer.effectAllowed = 'move';
+                          // Optional: customize drag preview if needed
+                          dragEvent.dataTransfer.setData('text/plain', '');
+                        }
+                        listItem.classList.add('dragging-placeholder');
                       }
                     };
                     var handleDragOver = function handleDragOver(e) {
+                      // Always prevent default synchronously
                       e.preventDefault();
                       var isTouch = ('touches' in e);
                       if (!isTouch) {
                         e.dataTransfer.dropEffect = 'move';
                       }
 
-                      // Get the current pointer/touch position
-                      var point = isTouch ? e.touches[0] : {
-                        clientX: e.clientX,
-                        clientY: e.clientY
-                      };
-
-                      // Update dragged element position for touch events
-                      if (isTouch && isDragging && dragNode.current) {
-                        dragNode.current.style.left = "".concat(point.clientX - touchOffset.current.x, "px");
-                        dragNode.current.style.top = "".concat(point.clientY - touchOffset.current.y, "px");
-                      }
-
-                      // Find the element below the pointer/touch
-                      var elemBelow = document.elementFromPoint(point.clientX, point.clientY);
-                      if (!elemBelow) return;
-
-                      // Find the closest list item
-                      var listItem = elemBelow.closest(itemSelector);
-                      if (!listItem || listItem === currentHoverItem.current) return;
-
-                      // Check boundary
-                      var boundary = listItem.closest(boundarySelector);
-                      if (!boundary) return;
-
-                      // Update hover states
-                      if (currentHoverItem.current) {
-                        currentHoverItem.current.classList.remove('drag-over', 'drag-over-top', 'drag-over-bottom');
-                      }
-                      currentHoverItem.current = listItem;
-                      listItem.classList.add('drag-over');
-
-                      // Calculate position in list
-                      var position = Array.from(listItem.parentNode.children).indexOf(listItem);
-                      dragOverItem.current = position;
-
-                      // Determine drop position (top/bottom)
-                      var rect = listItem.getBoundingClientRect();
-                      var middleY = rect.top + rect.height / 2;
-                      if (point.clientY < middleY) {
-                        listItem.classList.add('drag-over-top');
+                      // Extract primitive coordinates synchronously to avoid using pooled events in async callbacks
+                      var clientX;
+                      var clientY;
+                      if (isTouch) {
+                        var touch = e.touches[0];
+                        clientX = touch.clientX;
+                        clientY = touch.clientY;
                       } else {
-                        listItem.classList.add('drag-over-bottom');
+                        clientX = e.clientX;
+                        clientY = e.clientY;
                       }
-                      onDragOver === null || onDragOver === void 0 ? void 0 : onDragOver(dragItem.current, dragOverItem.current);
+
+                      // Cancel any pending frame to avoid stacking DOM operations
+                      if (rafId.current !== null) {
+                        cancelAnimationFrame(rafId.current);
+                      }
+                      rafId.current = requestAnimationFrame(function () {
+                        // Update dragged element position for touch events
+                        if (isTouch && isDragging && dragNode.current) {
+                          dragNode.current.style.left = "".concat(clientX - touchOffset.current.x, "px");
+                          dragNode.current.style.top = "".concat(clientY - touchOffset.current.y, "px");
+                        }
+
+                        // Find the element below the pointer/touch
+                        var elemBelow = document.elementFromPoint(clientX, clientY);
+                        if (!elemBelow) return;
+
+                        // Find the closest list item
+                        var listItem = elemBelow.closest(itemSelector);
+                        if (!listItem) return;
+
+                        // Check boundary
+                        var boundary = boundaryElement.current || listItem.closest(boundarySelector);
+                        if (!boundary) return;
+
+                        // Update hover states
+                        if (currentHoverItem.current && currentHoverItem.current !== listItem) {
+                          currentHoverItem.current.classList.remove('drag-over', 'drag-over-top', 'drag-over-bottom');
+                        }
+                        currentHoverItem.current = listItem;
+                        listItem.classList.add('drag-over');
+                        var dragEl = draggedElement.current;
+                        if (!dragEl || !dragEl.parentNode) return;
+                        var container = boundary;
+
+                        // Collect current ordered items in the container
+                        var children = Array.from(container.querySelectorAll(itemSelector));
+                        var currentIndex = children.indexOf(dragEl);
+                        var targetIndex = children.indexOf(listItem);
+                        if (currentIndex === -1 || targetIndex === -1) return;
+
+                        // Determine drop position (top/bottom)
+                        var rect = listItem.getBoundingClientRect();
+                        var middleY = rect.top + rect.height / 2;
+                        listItem.classList.remove('drag-over-top', 'drag-over-bottom');
+                        var insertBefore = clientY < middleY ? listItem : listItem.nextElementSibling;
+                        if (clientY < middleY) {
+                          listItem.classList.add('drag-over-top');
+                        } else {
+                          listItem.classList.add('drag-over-bottom');
+                        }
+
+                        // Only move in DOM when the effective position changes
+                        if (insertBefore !== dragEl && container.contains(dragEl)) {
+                          container.insertBefore(dragEl, insertBefore);
+                        }
+
+                        // Recompute index after DOM move
+                        var reorderedChildren = Array.from(container.querySelectorAll(itemSelector));
+                        var newIndex = reorderedChildren.indexOf(dragEl);
+                        dragOverItem.current = newIndex;
+                        onDragOver === null || onDragOver === void 0 ? void 0 : onDragOver(dragItem.current, dragOverItem.current);
+
+                        // Only fire onDragUpdate when the (dragIndex, dropIndex) pair actually changes.
+                        if (onDragUpdate && (dragItem.current !== lastUpdateDragIndex.current || dragOverItem.current !== lastUpdateDropIndex.current)) {
+                          lastUpdateDragIndex.current = dragItem.current;
+                          lastUpdateDropIndex.current = dragOverItem.current;
+                          onDragUpdate(dragItem.current, dragOverItem.current);
+                        }
+                        rafId.current = null;
+                      });
                     };
                     var handleDragEnd = function handleDragEnd(e) {
                       var isTouch = ('touches' in e);
                       if (isTouch && !isDragging) return;
                       onDragEnd === null || onDragEnd === void 0 ? void 0 : onDragEnd(dragItem.current, dragOverItem.current);
+
+                      // Cancel any pending animation frame
+                      if (rafId.current !== null) {
+                        cancelAnimationFrame(rafId.current);
+                        rafId.current = null;
+                      }
 
                       // Cleanup
                       if (dragNode.current) {
@@ -1067,6 +1150,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                       currentHoverItem.current = null;
                       dragItem.current = null;
                       dragOverItem.current = null;
+                      draggedElement.current = null;
+                      boundaryElement.current = null;
                     };
                     return {
                       isDragging: isDragging,
@@ -1108,7 +1193,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       /******/ // The require function
       /******/
-      function __nested_webpack_require_54634__(moduleId) {
+      function __nested_webpack_require_59897__(moduleId) {
         /******/ // Check if module is in cache
         /******/var cachedModule = __webpack_module_cache__[moduleId];
         /******/
@@ -1127,7 +1212,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         /******/
         /******/ // Execute the module function
         /******/
-        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_54634__);
+        __webpack_modules__[moduleId].call(module.exports, module, module.exports, __nested_webpack_require_59897__);
         /******/
         /******/ // Flag the module as loaded
         /******/
@@ -1144,14 +1229,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // getDefaultExport function for compatibility with non-harmony modules
-        /******/__nested_webpack_require_54634__.n = function (module) {
+        /******/__nested_webpack_require_59897__.n = function (module) {
           /******/var getter = module && module.__esModule ? /******/function () {
             return module['default'];
           } : /******/function () {
             return module;
           };
           /******/
-          __nested_webpack_require_54634__.d(getter, {
+          __nested_webpack_require_59897__.d(getter, {
             a: getter
           });
           /******/
@@ -1165,9 +1250,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define getter functions for harmony exports
-        /******/__nested_webpack_require_54634__.d = function (exports, definition) {
+        /******/__nested_webpack_require_59897__.d = function (exports, definition) {
           /******/for (var key in definition) {
-            /******/if (__nested_webpack_require_54634__.o(definition, key) && !__nested_webpack_require_54634__.o(exports, key)) {
+            /******/if (__nested_webpack_require_59897__.o(definition, key) && !__nested_webpack_require_59897__.o(exports, key)) {
               /******/Object.defineProperty(exports, key, {
                 enumerable: true,
                 get: definition[key]
@@ -1184,7 +1269,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/hasOwnProperty shorthand */
       /******/
       (function () {
-        /******/__nested_webpack_require_54634__.o = function (obj, prop) {
+        /******/__nested_webpack_require_59897__.o = function (obj, prop) {
           return Object.prototype.hasOwnProperty.call(obj, prop);
         };
         /******/
@@ -1194,7 +1279,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/
       (function () {
         /******/ // define __esModule on exports
-        /******/__nested_webpack_require_54634__.r = function (exports) {
+        /******/__nested_webpack_require_59897__.r = function (exports) {
           /******/if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
             /******/Object.defineProperty(exports, Symbol.toStringTag, {
               value: 'Module'
@@ -1213,7 +1298,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       /******/ /* webpack/runtime/node module decorator */
       /******/
       (function () {
-        /******/__nested_webpack_require_54634__.nmd = function (module) {
+        /******/__nested_webpack_require_59897__.nmd = function (module) {
           /******/module.paths = [];
           /******/
           if (!module.children) module.children = [];
@@ -1230,30 +1315,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       (function () {
         "use strict";
 
-        __nested_webpack_require_54634__.r(__webpack_exports__);
+        __nested_webpack_require_59897__.r(__webpack_exports__);
         /* harmony export */
-        __nested_webpack_require_54634__.d(__webpack_exports__, {
+        __nested_webpack_require_59897__.d(__webpack_exports__, {
           /* harmony export */"default": function _default() {
             return __WEBPACK_DEFAULT_EXPORT__;
           }
           /* harmony export */
         });
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_54634__(787);
+        var react__WEBPACK_IMPORTED_MODULE_0__ = __nested_webpack_require_59897__(787);
         /* harmony import */
-        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_54634__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+        var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nested_webpack_require_59897__.n(react__WEBPACK_IMPORTED_MODULE_0__);
         /* harmony import */
-        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_54634__(438);
+        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__ = __nested_webpack_require_59897__(438);
         /* harmony import */
-        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__);
+        var funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nested_webpack_require_59897__.n(funda_utils_dist_cjs_tree__WEBPACK_IMPORTED_MODULE_1__);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_54634__(188);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__ = __nested_webpack_require_59897__(188);
         /* harmony import */
-        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
+        var funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nested_webpack_require_59897__.n(funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__);
         /* harmony import */
-        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_54634__(759);
+        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__ = __nested_webpack_require_59897__(759);
         /* harmony import */
-        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_54634__.n(funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__);
+        var funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nested_webpack_require_59897__.n(funda_utils_dist_cjs_useBoundedDrag__WEBPACK_IMPORTED_MODULE_3__);
         var _excluded = ["wrapperClassName", "prefix", "data", "draggable", "handleHide", "handleIcon", "handlePos", "dragMode", "editable", "itemStyle", "hierarchical", "indentation", "doubleIndent", "alternateCollapse", "arrow", "renderOption", "onUpdate"];
         function _extends() {
           _extends = Object.assign ? Object.assign.bind() : function (target) {
@@ -1594,6 +1679,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               onDragOver: function onDragOver(dragIndex, dropIndex) {
                 // Additional drag over logic if needed
               },
+              onDragUpdate: function onDragUpdate(dragIndex, dropIndex) {
+                // console.log(dragIndex, dropIndex);
+              },
               onDragEnd: function onDragEnd(dragIndex, dropIndex) {
                 if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
                   var _newItems$dragIndex, _newItems$dragIndex2, _newItems$dropIndex;
@@ -1626,12 +1714,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                   });
 
                   // Calculate new insert position
+                  // Directly use dropIndex as the insertion position to avoid items snapping back
+                  // when dragging an item from above to directly below its neighbor.
                   var insertIndex = dropIndex;
-                  if (dropIndex > dragIndex) {
-                    insertIndex -= itemsToMove.length;
-                  }
 
-                  // Insert all items
+                  // Insert all items (remove first, then insert at the target index;
+                  // JavaScript's splice will handle index shifting automatically).
                   newItems.splice.apply(newItems, [insertIndex, 0].concat(_toConsumableArray(itemsBeingMoved)));
 
                   // Rebuild tree structure
@@ -1744,6 +1832,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             // If the item should be hidden, the rendering is skipped
             if (!shouldShowItem(item)) return null;
 
+            // Item level draggable control, default true when not specified
+            var isItemDraggable = draggable && item.itemDraggable !== false;
+
             // collapse
             var hasChildItems = hasChildren(item.id);
             var isCollapsed = collapsedItems.has(item.id);
@@ -1757,30 +1848,30 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
               "data-listitemlabel": item.listItemLabel,
               className: (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("".concat(prefix, "-draggable-list__item"), (0, funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(dragMode, 'handle'), {
                 'disabled': item.disabled,
-                'draggable': draggable,
+                'draggable': isItemDraggable,
                 'editing': editingItem === item.id,
                 // collapse
                 'has-children': hasChildItems,
                 'collapsed': isCollapsed
               }),
-              draggable: !draggable ? undefined : editingItem !== item.id && "true",
-              onDragStart: !draggable ? undefined : function (e) {
+              draggable: !isItemDraggable ? undefined : editingItem !== item.id && "true",
+              onDragStart: !isItemDraggable ? undefined : function (e) {
                 return dragHandlers.handleDragStart(e, index);
               },
-              onDragOver: !draggable ? undefined : dragHandlers.handleDragOver,
-              onDragEnd: !draggable ? undefined : dragHandlers.handleDragEnd,
-              onTouchStart: !draggable ? undefined : function (e) {
+              onDragOver: !isItemDraggable ? undefined : dragHandlers.handleDragOver,
+              onDragEnd: !isItemDraggable ? undefined : dragHandlers.handleDragEnd,
+              onTouchStart: !isItemDraggable ? undefined : function (e) {
                 return dragHandlers.handleDragStart(e, index);
               },
-              onTouchMove: !draggable ? undefined : dragHandlers.handleDragOver,
-              onTouchEnd: !draggable ? undefined : dragHandlers.handleDragEnd,
+              onTouchMove: !isItemDraggable ? undefined : dragHandlers.handleDragOver,
+              onTouchEnd: !isItemDraggable ? undefined : dragHandlers.handleDragEnd,
               style: itemStyle,
               onDoubleClick: function onDoubleClick() {
                 return handleDoubleClick(item);
               }
             }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
               className: "".concat(prefix, "-draggable-list__itemcontent")
-            }, renderOption ? renderOption(item, "".concat(prefix, "-draggable-list__handle"), index) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, draggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            }, renderOption ? renderOption(item, isItemDraggable ? "".concat(prefix, "-draggable-list__handle") : '', index) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0___default().Fragment, null, isItemDraggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
               className: "".concat(prefix, "-draggable-list__handle ").concat(handlePos !== null && handlePos !== void 0 ? handlePos : 'left'),
               draggable: dragMode === 'handle',
               dangerouslySetInnerHTML: {

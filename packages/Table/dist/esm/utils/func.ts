@@ -63,6 +63,14 @@ export function initOrderProps(rootElem: any) {
 
 export function initRowColProps(rootElem: any) {
     if (rootElem === null) return;
+
+    // !!! Important, performance optimization for large data renderings
+    // With this protection, it is only performed once
+    if (typeof rootElem.dataset.rowColPropsInit !== 'undefined') return;
+    rootElem.dataset.rowColPropsInit = '1';
+
+
+    //
     const _allRows = allRows(rootElem);
     const _allHeadRows = allHeadRows(rootElem);
 
@@ -167,7 +175,10 @@ export function cellMark(row: number | string | undefined, col: number | string 
 
 export function removeCellFocusClassName(root: any) {
     if (root) {
-        [].slice.call(root.querySelectorAll('td, th')).forEach((el: HTMLTableElement) => {
+        // !!! Important, performance optimization for large data renderings
+        // Only query elements with cell-focus classes
+        const focusedCells = root.querySelectorAll('td.cell-focus, th.cell-focus');
+        focusedCells.forEach((el: HTMLElement) => {
             el.classList.remove('cell-focus');
         });
     }

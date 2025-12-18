@@ -575,6 +575,13 @@ function initOrderProps(rootElem) {
 }
 function initRowColProps(rootElem) {
   if (rootElem === null) return;
+
+  // !!! Important, performance optimization for large data renderings
+  // With this protection, it is only performed once
+  if (typeof rootElem.dataset.rowColPropsInit !== 'undefined') return;
+  rootElem.dataset.rowColPropsInit = '1';
+
+  //
   var _allRows = allRows(rootElem);
   var _allHeadRows = allHeadRows(rootElem);
 
@@ -662,7 +669,10 @@ function cellMark(row, col) {
 }
 function removeCellFocusClassName(root) {
   if (root) {
-    [].slice.call(root.querySelectorAll('td, th')).forEach(function (el) {
+    // !!! Important, performance optimization for large data renderings
+    // Only query elements with cell-focus classes
+    var focusedCells = root.querySelectorAll('td.cell-focus, th.cell-focus');
+    focusedCells.forEach(function (el) {
       el.classList.remove('cell-focus');
     });
   }
@@ -800,6 +810,32 @@ const App = () => {
 
  */
 
+/**
+ * Performance Optimizations for Large Data Sets:
+ * 
+ * This hook has been optimized to handle large datasets (1000+ rows) efficiently.
+ * Key optimizations include:
+ * 
+ * 1. RequestAnimationFrame for DOM Updates
+ *    - DOM operations are batched within requestAnimationFrame callbacks
+ *    - Browser executes updates before next frame render, reducing visual lag
+ *    - Pending RAF callbacks are cancelled to prevent accumulation
+ * 
+ * 2. Caching Strategy
+ *    - tbodyRef: Cached to avoid repeated DOM queries
+ *    - colCount: Cached to eliminate repeated queries in placeholderGenerator
+ *    - allRowsCache: Cached with time-based invalidation (100ms)
+ * 
+ * 3. Redundant Operation Prevention
+ *    - Tracks last hovered row order (lastOverOrder)
+ *    - Skips placeholder operations when hovering over the same row
+ *    - Reduces unnecessary DOM manipulations during drag
+ * 
+ * 4. Batch DOM Operations
+ *    - removePlaceholder: Uses cached tbodyRef and batch removal
+ *    - handleDragEnd: Uses DocumentFragment for batch DOM updates
+ *    - Map-based lookups instead of repeated querySelector calls
+ */
 
 
 function useTableDraggable(_ref, deps) {
@@ -812,43 +848,126 @@ function useTableDraggable(_ref, deps) {
     _useState2 = _slicedToArray(_useState, 2),
     sortData = _useState2[0],
     setSortData = _useState2[1];
+  var _useState3 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
+    _useState4 = _slicedToArray(_useState3, 2),
+    isDragging = _useState4[0],
+    setIsDragging = _useState4[1];
+
+  // Performance optimization: cache for drag operations
+  var dragCacheRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)({
+    draggedObj: null,
+    overObj: null,
+    allRowsCache: null,
+    lastUpdateTime: 0,
+    tbodyRef: null,
+    colCount: 0,
+    lastOverOrder: null,
+    rafId: null
+  });
 
   // ================================================================
   // drag & drop
   // ================================================================
   var draggedObj = null;
   var overObj = null;
+
+  // Helper function to filter out cloned elements and get only real rows
+  var getRealRows = function getRealRows(rows) {
+    return rows.filter(function (row) {
+      return !row.classList.contains('row-obj-clonelast') && !row.classList.contains('row-obj-lastplaceholder');
+    });
+  };
   var placeholderGenerator = function placeholderGenerator(trHeight) {
-    var tbodyRef = getTbody(spyElement);
-    if (tbodyRef === null || tbodyRef.querySelector('tr') === null) return;
+    // Use cached tbodyRef and colCount for better performance
+    var tbodyRef = dragCacheRef.current.tbodyRef;
+    if (!tbodyRef) {
+      tbodyRef = getTbody(spyElement);
+      dragCacheRef.current.tbodyRef = tbodyRef;
+    }
+    if (tbodyRef === null) return null;
+
+    // Cache colCount to avoid repeated queries
+    var colCount = dragCacheRef.current.colCount;
+    if (colCount === 0) {
+      var firstRow = tbodyRef.querySelector('tr');
+      if (firstRow === null) return null;
+      colCount = firstRow.children.length;
+      dragCacheRef.current.colCount = colCount;
+    }
 
     // Insert a row at the "index" of the table
     var newRow = document.createElement('tr');
     newRow.className = 'row-placeholder';
     newRow.dataset.placeholder = 'true';
     newRow.style.height = trHeight + 'px';
+    newRow.style.minHeight = trHeight + 'px'; // Ensure minimum height
 
     // Insert a cell in the row at index
     var newCell = newRow.insertCell(0);
-    newCell.colSpan = tbodyRef.querySelector('tr').children.length;
+    newCell.colSpan = colCount;
+    newCell.style.minHeight = trHeight + 'px'; // Ensure cell has minimum height
 
-    // Append a text node to the cell
-    var newText = document.createTextNode(' ');
-    newCell.appendChild(newText);
+    // Use non-breaking space to ensure proper height rendering
+    // Multiple spaces or a placeholder element helps maintain consistent height
+    newCell.innerHTML = '&nbsp;'; // Use &nbsp; instead of regular space for better height consistency
+
     return newRow;
   };
+  var lastPlaceholderGenerator = function lastPlaceholderGenerator(trHeight) {
+    // Use cached tbodyRef and colCount for better performance
+    var tbodyRef = dragCacheRef.current.tbodyRef;
+    if (!tbodyRef) {
+      tbodyRef = getTbody(spyElement);
+      dragCacheRef.current.tbodyRef = tbodyRef;
+    }
+    if (tbodyRef === null) return null;
+    var curEl = tbodyRef.querySelector('.row-obj-lastplaceholder');
+    if (curEl !== null) return;
+
+    // Cache colCount to avoid repeated queries
+    var colCount = dragCacheRef.current.colCount;
+    if (colCount === 0) {
+      var firstRow = tbodyRef.querySelector('tr');
+      if (firstRow === null) return null;
+      colCount = firstRow.children.length;
+      dragCacheRef.current.colCount = colCount;
+    }
+
+    // Create a dedicated last placeholder row that is kept in DOM but hidden by default
+    var newRow = document.createElement('tr');
+    newRow.className = 'row-obj row-obj-lastplaceholder';
+    // NOTE: Do NOT set data-placeholder here, otherwise it will be removed by removePlaceholder
+    newRow.style.height = trHeight + 'px';
+    newRow.style.minHeight = trHeight + 'px';
+    newRow.style.display = 'none';
+    var newCell = newRow.insertCell(0);
+    newCell.colSpan = colCount;
+    newCell.style.minHeight = trHeight + 'px';
+    newCell.innerHTML = '&nbsp;';
+
+    // Insert after the last real row (excluding cloned rows)
+    var rows = getRealRows(allRows(spyElement));
+    var lastRealRow = rows.length > 0 ? rows[rows.length - 1] : null;
+    if (lastRealRow && lastRealRow.parentNode === tbodyRef) {
+      insertAfter(newRow, lastRealRow);
+    } else {
+      tbodyRef.appendChild(newRow);
+    }
+    return newRow;
+  };
+
+  // An invisible HELPER element used to trigger the touch of the last element
   var lastRowGenerator = function lastRowGenerator(trHeight) {
     var tbodyRef = getTbody(spyElement);
     if (tbodyRef === null || tbodyRef.querySelector('tr') === null) return;
-    var cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
-    if (cloneEl !== null) return;
+    var curEl = tbodyRef.querySelector('.row-obj-clonelast');
+    if (curEl !== null) return;
 
     // Insert a row at the "index" of the table
     var newRow = document.createElement('tr');
     newRow.className = 'row-obj row-obj-clonelast';
     newRow.dataset.order = allRows(spyElement).length.toString();
     newRow.style.height = trHeight + 'px';
-    newRow.style.display = 'none';
 
     // Insert a cell in the row at index
     var newCell = newRow.insertCell(0);
@@ -857,17 +976,30 @@ function useTableDraggable(_ref, deps) {
     // Append a text node to the cell
     var newText = document.createTextNode(' ');
     newCell.appendChild(newText);
+
+    //
+    lastPlaceholderGenerator(trHeight);
     return newRow;
   };
   var removePlaceholder = function removePlaceholder() {
-    var tbodyRef = getTbody(spyElement);
+    // Use cached tbodyRef
+    var tbodyRef = dragCacheRef.current.tbodyRef;
+    if (!tbodyRef) {
+      tbodyRef = getTbody(spyElement);
+      dragCacheRef.current.tbodyRef = tbodyRef;
+    }
     if (tbodyRef === null) return;
 
-    // Delete row at the "index" of the table
-    var placeholder = [].slice.call(tbodyRef.querySelectorAll("[data-placeholder]"));
-    placeholder.forEach(function (node) {
-      tbodyRef.removeChild(node);
-    });
+    // Optimize: use querySelectorAll and remove in batch
+    var placeholders = tbodyRef.querySelectorAll("[data-placeholder]");
+    if (placeholders.length > 0) {
+      // Use DocumentFragment for batch removal (though in this case direct removal is fine)
+      placeholders.forEach(function (node) {
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      });
+    }
   };
 
   // Initialize drag & drop data
@@ -904,114 +1036,289 @@ function useTableDraggable(_ref, deps) {
   };
 
   // events fired on the drop targets
+  // Optimized with requestAnimationFrame, throttling and caching
   var handledragOver = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
-    var tbodyRef = getTbody(spyElement);
-    if (tbodyRef === null) return;
+    // Always prevent default in sync code
     e.preventDefault();
-    if (draggedObj === null) return;
-    draggedObj.style.display = 'none';
+
+    // Use cached draggedObj and tbodyRef
+    var currentDraggedObj = dragCacheRef.current.draggedObj || draggedObj;
+    if (currentDraggedObj === null) return;
+    var tbodyRef = dragCacheRef.current.tbodyRef;
+    if (!tbodyRef) {
+      tbodyRef = getTbody(spyElement);
+      if (tbodyRef === null) return;
+      dragCacheRef.current.tbodyRef = tbodyRef;
+    }
+
+    // Early return for placeholder targets
     if (e.target.classList.contains('row-placeholder')) return;
     var itemsWrapper = e.target.parentNode;
-    if (itemsWrapper.classList.contains('row-obj')) {
-      overObj = itemsWrapper;
-      removePlaceholder();
-      if (Number(overObj.dataset.order) === allRows(spyElement).length - 1) {
-        tbodyRef.insertBefore(placeholderGenerator(allRows(spyElement).at(-2).clientHeight), overObj);
-      } else {
-        tbodyRef.insertBefore(placeholderGenerator(overObj.clientHeight), overObj);
-      }
+    if (!itemsWrapper || !itemsWrapper.classList || !itemsWrapper.classList.contains('row-obj')) {
+      return;
     }
-  }, [sortData]);
+
+    // Skip cloned elements - they should not be valid drop targets
+    if (itemsWrapper.classList.contains('row-obj-lastplaceholder')) {
+      return;
+    }
+
+    // Check if we're still over the same row (avoid unnecessary operations)
+    var currentOrder = Number(itemsWrapper.dataset.order);
+    if (dragCacheRef.current.lastOverOrder === currentOrder) {
+      return; // Same target, skip
+    }
+
+    // console.log(' --> overObj: ', itemsWrapper);
+
+    // Use requestAnimationFrame for smoother DOM updates
+    // Cancel previous frame if pending
+    if (dragCacheRef.current.rafId !== null) {
+      cancelAnimationFrame(dragCacheRef.current.rafId);
+    }
+
+    // Store references for use in RAF callback
+    var targetWrapper = itemsWrapper;
+    var targetOrder = currentOrder;
+    dragCacheRef.current.rafId = requestAnimationFrame(function () {
+      overObj = targetWrapper;
+      dragCacheRef.current.overObj = targetWrapper;
+      dragCacheRef.current.lastOverOrder = targetOrder;
+      currentDraggedObj.style.display = 'none';
+      removePlaceholder();
+
+      // Cache allRows result to avoid multiple queries
+      var cachedRows = dragCacheRef.current.allRowsCache;
+      var now = Date.now();
+      if (!cachedRows || now - dragCacheRef.current.lastUpdateTime > 100) {
+        cachedRows = allRows(spyElement);
+        dragCacheRef.current.allRowsCache = cachedRows;
+        dragCacheRef.current.lastUpdateTime = now;
+      }
+
+      // Filter out cloned elements to get real rows count
+      var realRows = getRealRows(cachedRows);
+      var totalRows = realRows.length;
+      var overOrder = Number(overObj.dataset.order);
+
+      // When hovering over the last real row, use its height for placeholder
+      // Otherwise use the overObj's height
+      var isOverLastRow = overOrder === totalRows - 1 && realRows.length > 0 && realRows[totalRows - 1];
+      var placeholderHeight = isOverLastRow ? realRows[totalRows - 1].clientHeight : overObj.clientHeight;
+      var placeholder = placeholderGenerator(placeholderHeight);
+      if (placeholder) {
+        var draggedOrder = Number(currentDraggedObj.dataset.order);
+        //console.log(' --> drag index list: ', draggedOrder, overOrder, totalRows - 1);
+        tbodyRef.insertBefore(placeholder, overObj);
+      }
+      dragCacheRef.current.rafId = null;
+    });
+  }, [sortData, spyElement]);
   var handleDragStart = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
     var tbodyRef = getTbody(spyElement);
     if (tbodyRef === null) return;
+    setIsDragging(true);
     draggedObj = e.currentTarget;
+    // Cache draggedObj and tbodyRef for performance
+    dragCacheRef.current.draggedObj = draggedObj;
+    dragCacheRef.current.tbodyRef = tbodyRef;
+    dragCacheRef.current.lastOverOrder = null; // Reset
+
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', draggedObj);
     draggedObj.classList.add('dragging');
-    allRows(spyElement).at(-1).style.setProperty('display', 'table-row', "important");
+
+    // Cache allRows and use cached result
+    var cachedRows = allRows(spyElement);
+    dragCacheRef.current.allRowsCache = cachedRows;
+    dragCacheRef.current.lastUpdateTime = Date.now();
+
+    // Cache colCount if not already cached
+    if (dragCacheRef.current.colCount === 0) {
+      var firstRow = tbodyRef.querySelector('tr');
+      if (firstRow) {
+        dragCacheRef.current.colCount = firstRow.children.length;
+      }
+    }
+    var lastRow = cachedRows[cachedRows.length - 1];
+    if (lastRow && !lastRow.classList.contains('row-obj-lastplaceholder')) {
+      lastRow.style.setProperty('display', 'table-row', "important");
+    }
 
     // callback
     var dragStart = function dragStart(callback) {
       callback.call(null, draggedObj, sortData, sortDataByIndex(sortData, data));
     };
     onRowDrag === null || onRowDrag === void 0 ? void 0 : onRowDrag(dragStart, null);
-
-    // init clone <tr>
-    // !!! It needs to be put at the end of the code to fix the location of the clone element
-    var cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
-    if (cloneEl !== null) {
-      cloneEl.style.display = 'none';
-    }
-  }, [handledragOver]);
+  }, [handledragOver, sortData, data, spyElement, onRowDrag]);
   var handleDragEnd = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useCallback)(function (e) {
     var tbodyRef = getTbody(spyElement);
     if (tbodyRef === null) return;
-    draggedObj.style.display = 'table-row';
+    setIsDragging(false);
+
+    // Use cached draggedObj if available
+    var currentDraggedObj = dragCacheRef.current.draggedObj || draggedObj;
+    var currentOverObj = dragCacheRef.current.overObj || overObj;
+    if (currentDraggedObj) {
+      currentDraggedObj.style.display = 'table-row';
+      currentDraggedObj.classList.remove('dragging');
+    }
     removePlaceholder();
-    draggedObj.classList.remove('dragging');
     tbodyRef === null || tbodyRef === void 0 ? void 0 : tbodyRef.classList.remove('drag-trigger-mousedown');
-    if (overObj === null) return;
+
+    // Cancel any pending animation frame
+    if (dragCacheRef.current.rafId !== null) {
+      cancelAnimationFrame(dragCacheRef.current.rafId);
+      dragCacheRef.current.rafId = null;
+    }
+    if (currentOverObj === null) {
+      // Reset cache
+      dragCacheRef.current.draggedObj = null;
+      dragCacheRef.current.overObj = null;
+      dragCacheRef.current.allRowsCache = null;
+      dragCacheRef.current.lastOverOrder = null;
+      return;
+    }
 
     // update state
     var curData = [];
     curData = JSON.parse(JSON.stringify(sortData));
-    var from = Number(draggedObj.dataset.order);
-    var to = Number(overObj.dataset.order);
-    if (from < to) to--;
+    var from = Number(currentDraggedObj.dataset.order);
+    var to = Number(currentOverObj.dataset.order);
 
-    //sort data
-    var newData = [];
+    // Get real rows to determine the actual last row index
+    var allRowsForLastIndex = allRows(spyElement);
+    var realRows = getRealRows(allRowsForLastIndex);
+    var actualLastRowIndex = realRows.length - 1;
 
-    // console.log('--> data1:', curData);
-
-    curData.splice(to, 0, curData.splice(from, 1)[0]);
-    for (var i = 0; i < curData.length; i++) {
-      for (var j = 0; j < curData.length; j++) {
-        if (curData[i] === curData[j]) {
-          newData.push(curData[j]);
-        }
+    // Standard drag-and-drop logic:
+    // When dragging from a lower index to a higher index, we need to decrement 'to'
+    // because removing the element at 'from' causes all subsequent elements to shift left by 1
+    // However, when dragging to the last position, we want to swap with the last element
+    // After removing 'from', if we want to swap with the last element, we should insert
+    // at the position that will result in the dragged element being at the last position
+    if (from < to) {
+      // Special case: dragging to the last position
+      // We want to swap with the last element, so after removing 'from',
+      // we should insert at the new last position (which is curData.length - 1)
+      // Since 'to' is the original last index, and we're removing 'from' (which is < 'to'),
+      // the new last position after removal is still 'to' (no shift because 'from' is before 'to')
+      // Wait, that's not right. If we remove 'from', elements from 'from+1' to 'to' shift left by 1
+      // So 'to' becomes 'to-1'. But we want to insert at the last position, which is 'to-1'
+      // So we should decrement 'to' as normal. But then the element will be at 'to-1', not 'to'
+      // 
+      // Actually, the issue is: when dragging to the last element, we want to SWAP with it
+      // So the dragged element should end up at the last position, and the last element should
+      // end up at the dragged element's original position
+      // 
+      // Let's think step by step with an example: [A, B, C, D, E], from=1 (B), to=4 (E)
+      // We want result: [A, C, D, E, B] (B and E swapped)
+      // Step 1: Remove B -> [A, C, D, E] (indices 0-3)
+      // Step 2: Insert B at position 4 -> [A, C, D, E, B] ✓
+      // So 'to' should be 4 (not decremented) to get the correct result
+      if (to === actualLastRowIndex) {
+        // Don't decrement 'to' when dragging to the last position
+        // This ensures the element is inserted at the last position after removal
+      } else {
+        // Normal case: dragging forward but not to the last position
+        to--;
       }
     }
+    // If from >= to, no adjustment needed (dragging backward)
 
-    // console.log("--> data2: ", newData);
+    // Optimize: simplify the sorting logic (the nested loop was inefficient)
+    curData.splice(to, 0, curData.splice(from, 1)[0]);
+    var newData = useTableDraggable_toConsumableArray(curData); // Direct copy instead of nested loop
+
     setSortData(newData);
 
-    // reset data-id in order to sort data
-    newData.forEach(function (curId, order) {
-      var _el = spyElement.querySelector('table').querySelector("tbody [data-key=\"row-".concat(curId, "\"]"));
-      if (_el !== null) _el.dataset.order = order;
+    // Performance optimization: batch DOM updates using a map
+    var table = spyElement.querySelector('table');
+    if (!table) return;
+    var tbody = table.querySelector('tbody');
+    if (!tbody) return;
+
+    // Get all rows once and create a map for faster lookups
+    // Support both data-key attribute (user-provided) and data-order fallback
+    var allRowsElements = Array.from(allRows(spyElement));
+
+    // Create a map: original index (from sortData) -> row element
+    var rowMap = new Map();
+    allRowsElements.forEach(function (row) {
+      // First try to use data-key attribute (if user provided it)
+      var dataKey = row.getAttribute('data-key');
+      if (dataKey) {
+        var match = dataKey.match(/row-(\d+)/);
+        if (match) {
+          var index = Number(match[1]);
+          rowMap.set(index, row);
+          return;
+        }
+      }
+
+      // Fallback: use data-order to match with sortData indices
+      var currentOrder = Number(row.dataset.order);
+      if (sortData && !isNaN(currentOrder) && currentOrder >= 0 && currentOrder < sortData.length) {
+        var originalIndex = sortData[currentOrder];
+        if (originalIndex !== undefined) {
+          rowMap.set(originalIndex, row);
+        }
+      }
     });
 
-    // sort elements
-    var categoryItemsArray = allRows(spyElement);
+    // Update order attributes using the map (batch operation)
+    newData.forEach(function (curId, order) {
+      var _el = rowMap.get(curId);
+      if (_el !== null && _el !== undefined) {
+        _el.dataset.order = order.toString();
+      }
+    });
+
+    // Performance optimization: Use DocumentFragment to batch DOM updates
+    // NOTE: Keep the special last placeholder row (`row-obj-lastplaceholder`)
+    // out of the main sort, otherwise it may jump to the top after each drag.
+    var lastPlaceholderRow = allRowsElements.find(function (row) {
+      return row.classList && row.classList.contains('row-obj-lastplaceholder');
+    });
+    var rowsToSort = lastPlaceholderRow ? allRowsElements.filter(function (row) {
+      return row !== lastPlaceholderRow;
+    }) : allRowsElements;
     var sorter = function sorter(a, b) {
-      var txt1 = Number(a.dataset.order),
-        txt2 = Number(b.dataset.order);
+      var txt1 = Number(a.dataset.order);
+      var txt2 = Number(b.dataset.order);
       return txt2 < txt1 ? -1 : txt2 > txt1 ? 1 : 0;
     };
-    var sorted = categoryItemsArray.sort(sorter).reverse();
+    var sorted = useTableDraggable_toConsumableArray(rowsToSort).sort(sorter).reverse();
+
+    // Ensure the last placeholder row always stays at the bottom
+    if (lastPlaceholderRow) {
+      sorted.push(lastPlaceholderRow);
+    }
+
+    // Use DocumentFragment to minimize reflows
+    var fragment = document.createDocumentFragment();
     sorted.forEach(function (e) {
-      return spyElement.querySelector('table').querySelector('tbody').appendChild(e);
+      return fragment.appendChild(e);
     });
+    tbody.appendChild(fragment);
 
     // callback
     var dragEnd = function dragEnd(callback) {
-      callback.call(null, draggedObj, newData, sortDataByIndex(newData, data));
+      callback.call(null, currentDraggedObj, newData, sortDataByIndex(newData, data));
     };
     onRowDrag === null || onRowDrag === void 0 ? void 0 : onRowDrag(null, dragEnd);
 
     // init clone <tr>
     // !!! It needs to be put at the end of the code to fix the location of the clone element
     var _allRows = allRows(spyElement);
-    var cloneEl = tbodyRef.querySelector('.row-obj-clonelast');
-    if (cloneEl !== null) {
-      if (typeof _allRows.at(-1) !== 'undefined') {
-        insertAfter(cloneEl, _allRows.at(-1));
-        cloneEl.style.display = 'none';
-      }
-    }
-  }, [sortData]);
+    dragCacheRef.current.allRowsCache = _allRows;
+    dragCacheRef.current.lastUpdateTime = Date.now();
+
+    // Reset cache
+    dragCacheRef.current.draggedObj = null;
+    dragCacheRef.current.overObj = null;
+    dragCacheRef.current.lastOverOrder = null;
+  }, [sortData, spyElement, data, onRowDrag]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (enabled) {
       if (Array.isArray(data) && data.length > 0) {
@@ -1030,9 +1337,12 @@ function useTableDraggable(_ref, deps) {
     }
   }, [data, enabled, spyElement].concat(useTableDraggable_toConsumableArray(deps)));
   return {
-    handleDragStart: handleDragStart,
-    handleDragEnd: handleDragEnd,
-    handledragOver: handledragOver,
+    isDragging: isDragging,
+    dragHandlers: {
+      handleDragStart: handleDragStart,
+      handleDragOver: handledragOver,
+      handleDragEnd: handleDragEnd
+    },
     handleTbodyEnter: handleTbodyEnter,
     handleTbodyLeave: handleTbodyLeave
   };
@@ -1361,10 +1671,10 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
       spyElement: rootRef.current,
       onRowDrag: onRowDrag
     }, [data, rootRef]),
-    handleDragStart = _useTableDraggable.handleDragStart,
-    handleDragEnd = _useTableDraggable.handleDragEnd,
-    handledragOver = _useTableDraggable.handledragOver,
-    handleTbodyEnter = _useTableDraggable.handleTbodyEnter;
+    isDragging = _useTableDraggable.isDragging,
+    dragHandlers = _useTableDraggable.dragHandlers,
+    handleTbodyEnter = _useTableDraggable.handleTbodyEnter,
+    handleTbodyLeave = _useTableDraggable.handleTbodyLeave;
   var tableKeyPress = hooks_useTableKeyPress({
     enabled: keyboardFocusable,
     data: data,
@@ -1462,9 +1772,10 @@ var Table = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_a
       onColSort: onColSort,
       // drag & drop
       rowDraggable: rowDraggable,
-      handleDragStart: handleDragStart,
-      handleDragEnd: handleDragEnd,
-      handledragOver: handledragOver,
+      isRowDragging: isDragging,
+      handleDragStart: dragHandlers.handleDragStart,
+      handleDragEnd: dragHandlers.handleDragEnd,
+      handledragOver: dragHandlers.handleDragOver,
       handleTbodyEnter: handleTbodyEnter,
       // filter
       filterFields: filterFields,
@@ -1695,11 +2006,17 @@ var TableRow = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
   // selection
   // ================================================================
   var _res = convertMapToArr(selectedItems);
+  // Performance optimization: stringify itemData only once instead of N times
+  var itemDataStr = itemData ? JSON.stringify(itemData) : '';
   var filteredSelectedItems = _res.map(function (v) {
     return Number(v);
   }).map(function (rowNum) {
-    if (JSON.stringify(itemData) === JSON.stringify(originData[rowNum])) {
-      return originData[rowNum];
+    var originItem = originData === null || originData === void 0 ? void 0 : originData[rowNum];
+    // Fast path: reference equality
+    if (itemData === originItem) return originItem;
+    // Fallback: JSON comparison (itemDataStr is cached)
+    if (itemDataStr && itemDataStr === JSON.stringify(originItem)) {
+      return originItem;
     }
   }).filter(Boolean);
   var selectedClassName = activeClassName || 'active';
@@ -1718,9 +2035,7 @@ var TableRow = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_reac
         var _item$s, _itemData$s;
         return !((_item$s = item[s]) !== null && _item$s !== void 0 && _item$s.toLowerCase().includes((_itemData$s = itemData[s]) === null || _itemData$s === void 0 ? void 0 : _itemData$s.toLowerCase()));
       });
-    }) ? 'd-none' : '' : '', " ").concat(itemData && originData ? filteredSelectedItems.some(function (item) {
-      return JSON.stringify(itemData) === JSON.stringify(item);
-    }) ? selectedClassName : '' : '')
+    }) ? 'd-none' : '' : '', " ").concat(itemData && originData && filteredSelectedItems.length > 0 ? selectedClassName : '')
   }), children));
 });
 /* harmony default export */ const src_TableRow = (TableRow);
@@ -2027,11 +2342,16 @@ var DragHandleSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commo
     icon = props.icon;
   var _useContext = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useContext)(TableContext),
     rowDraggable = _useContext.rowDraggable,
-    handleTbodyEnter = _useContext.handleTbodyEnter;
+    handleTbodyEnter = _useContext.handleTbodyEnter,
+    handleTbodyLeave = _useContext.handleTbodyLeave;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, rowDraggable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     ref: externalRef,
-    className: className || 'drag-trigger',
-    onMouseEnter: handleTbodyEnter
+    className: className || 'drag-trigger'
+    // Only when mousedown happens on this handle will we allow row dragging.
+    ,
+    onMouseDown: handleTbodyEnter,
+    onMouseUp: handleTbodyLeave,
+    onMouseLeave: handleTbodyLeave
   }, icon || /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("svg", {
     width: "1em",
     height: "1em",

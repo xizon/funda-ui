@@ -8,7 +8,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import useBoundedDrag from 'funda-utils/dist/cjs/useBoundedDrag';
 
 
-
 export interface ListItem {
     id: number;
     parentId?: number;
@@ -19,6 +18,7 @@ export interface ListItem {
     depth?: number;
     children?: ListItem[];
     disabled?: boolean;
+    itemDraggable?: boolean;
     appendControl?: React.ReactNode;
     [key: string]: any;
 }
@@ -222,6 +222,10 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
         onDragOver: (dragIndex: number | null, dropIndex: number | null) => {
             // Additional drag over logic if needed
         },
+        onDragUpdate: (dragIndex: number | null, dropIndex: number | null) => {
+            // console.log(dragIndex, dropIndex);
+          
+        },
         onDragEnd: (dragIndex: number | null, dropIndex: number | null) => {
             if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
                 // Handle item movement
@@ -251,12 +255,12 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                 });
 
                 // Calculate new insert position
-                let insertIndex = dropIndex;
-                if (dropIndex > dragIndex) {
-                    insertIndex -= itemsToMove.length;
-                }
+                // Directly use dropIndex as the insertion position to avoid items snapping back
+                // when dragging an item from above to directly below its neighbor.
+                const insertIndex = dropIndex;
 
-                // Insert all items
+                // Insert all items (remove first, then insert at the target index;
+                // JavaScript's splice will handle index shifting automatically).
                 newItems.splice(insertIndex, 0, ...itemsBeingMoved);
 
                 // Rebuild tree structure
@@ -397,6 +401,9 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                 // If the item should be hidden, the rendering is skipped
                 if (!shouldShowItem(item)) return null;
 
+                // Item level draggable control, default true when not specified
+                const isItemDraggable = draggable && item.itemDraggable !== false;
+
                 // collapse
                 const hasChildItems = hasChildren(item.id);
                 const isCollapsed = collapsedItems.has(item.id);
@@ -415,7 +422,7 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                         clsWrite(dragMode, 'handle'),
                         {
                             'disabled': item.disabled,
-                            'draggable': draggable,
+                            'draggable': isItemDraggable,
                             'editing': editingItem === item.id,
 
                             // collapse
@@ -423,13 +430,13 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                             'collapsed': isCollapsed
                         }
                     )}
-                    draggable={!draggable ? undefined : editingItem !== item.id && "true"}
-                    onDragStart={!draggable ? undefined : (e) => dragHandlers.handleDragStart(e, index)}
-                    onDragOver={!draggable ? undefined : dragHandlers.handleDragOver}
-                    onDragEnd={!draggable ? undefined : dragHandlers.handleDragEnd}
-                    onTouchStart={!draggable ? undefined : (e) => dragHandlers.handleDragStart(e, index)}
-                    onTouchMove={!draggable ? undefined : dragHandlers.handleDragOver}
-                    onTouchEnd={!draggable ? undefined : dragHandlers.handleDragEnd}
+                    draggable={!isItemDraggable ? undefined : editingItem !== item.id && "true"}
+                    onDragStart={!isItemDraggable ? undefined : (e) => dragHandlers.handleDragStart(e, index)}
+                    onDragOver={!isItemDraggable ? undefined : dragHandlers.handleDragOver}
+                    onDragEnd={!isItemDraggable ? undefined : dragHandlers.handleDragEnd}
+                    onTouchStart={!isItemDraggable ? undefined : (e) => dragHandlers.handleDragStart(e, index)}
+                    onTouchMove={!isItemDraggable ? undefined : dragHandlers.handleDragOver}
+                    onTouchEnd={!isItemDraggable ? undefined : dragHandlers.handleDragEnd}
                     style={itemStyle}
                     onDoubleClick={() => handleDoubleClick(item)}
                 >
@@ -437,14 +444,14 @@ const DragDropList = forwardRef((props: DragDropListProps, externalRef: any) => 
                         {renderOption ? (
                             renderOption(
                                 item,
-                                `${prefix}-draggable-list__handle`,
+                                isItemDraggable ? `${prefix}-draggable-list__handle` : '',
                                 index
                             )
                         ) : (
                             <>
                                 {/** DRAG HANDLE */}
                                 {/* Fix the problem that mobile terminals cannot be touched, DO NOT USE "<svg>" */}
-                                {draggable && !handleHide ? <span className={`${prefix}-draggable-list__handle ${handlePos ?? 'left'}`} draggable={dragMode === 'handle'} dangerouslySetInnerHTML={{
+                                {isItemDraggable && !handleHide ? <span className={`${prefix}-draggable-list__handle ${handlePos ?? 'left'}`} draggable={dragMode === 'handle'} dangerouslySetInnerHTML={{
                                     __html: `${handleIcon}`
                                 }}></span> : null}
                                 {/** /DRAG HANDLE */}

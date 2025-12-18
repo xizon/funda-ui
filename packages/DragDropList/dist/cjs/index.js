@@ -895,6 +895,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             dragHandleSelector = _options$dragHandleSe === void 0 ? '.custom-draggable-list__handle' : _options$dragHandleSe,
             onDragStart = options.onDragStart,
             onDragOver = options.onDragOver,
+            onDragUpdate = options.onDragUpdate,
             onDragEnd = options.onDragEnd;
           var _useState = (0, react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
             _useState2 = _slicedToArray(_useState, 2),
@@ -903,11 +904,35 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
           var dragItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var dragOverItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var dragNode = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var draggedElement = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var boundaryElement = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
           var touchOffset = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)({
             x: 0,
             y: 0
           });
           var currentHoverItem = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var rafId = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var lastUpdateDragIndex = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+          var lastUpdateDropIndex = (0, react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+
+          /**
+           * Performance Note:
+           *
+           * Drag-over events can fire at a very high frequency, especially on touch devices
+           * or when dragging quickly. Directly performing DOM read/write operations in the
+           * event handler (e.g. `getBoundingClientRect`, `classList` changes, style updates)
+           * can easily cause layout thrashing and frame drops when there are many items.
+           *
+           * To mitigate this, we:
+           * - Collect the pointer coordinates synchronously in the event handler.
+           * - Schedule all DOM-intensive work inside `requestAnimationFrame`, so the browser
+           *   batches these operations before the next paint.
+           * - Cancel any pending frame (`cancelAnimationFrame`) before scheduling a new one,
+           *   ensuring there is at most one pending DOM update per frame.
+           *
+           * This keeps drag interactions smooth even with large lists.
+           */
+
           var handleDragStart = function handleDragStart(e, position) {
             var isTouch = ('touches' in e);
             var target = e.target;
@@ -960,68 +985,126 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
                 opacity: '0.9'
               });
               document.body.appendChild(dragNode.current);
+
+              // Keep track of the original element (acts as a placeholder inside the list)
+              draggedElement.current = listItem;
+              boundaryElement.current = boundary;
               setIsDragging(true);
               listItem.classList.add('dragging-placeholder');
             } else {
-              // ... desktop drag logic remains the same ...
+              // Desktop: use native drag image, but still record dragged element / boundary
+              draggedElement.current = listItem;
+              boundaryElement.current = boundary;
+              setIsDragging(true);
+              var dragEvent = e;
+              if (dragEvent.dataTransfer) {
+                dragEvent.dataTransfer.effectAllowed = 'move';
+                // Optional: customize drag preview if needed
+                dragEvent.dataTransfer.setData('text/plain', '');
+              }
+              listItem.classList.add('dragging-placeholder');
             }
           };
           var handleDragOver = function handleDragOver(e) {
+            // Always prevent default synchronously
             e.preventDefault();
             var isTouch = ('touches' in e);
             if (!isTouch) {
               e.dataTransfer.dropEffect = 'move';
             }
 
-            // Get the current pointer/touch position
-            var point = isTouch ? e.touches[0] : {
-              clientX: e.clientX,
-              clientY: e.clientY
-            };
-
-            // Update dragged element position for touch events
-            if (isTouch && isDragging && dragNode.current) {
-              dragNode.current.style.left = "".concat(point.clientX - touchOffset.current.x, "px");
-              dragNode.current.style.top = "".concat(point.clientY - touchOffset.current.y, "px");
-            }
-
-            // Find the element below the pointer/touch
-            var elemBelow = document.elementFromPoint(point.clientX, point.clientY);
-            if (!elemBelow) return;
-
-            // Find the closest list item
-            var listItem = elemBelow.closest(itemSelector);
-            if (!listItem || listItem === currentHoverItem.current) return;
-
-            // Check boundary
-            var boundary = listItem.closest(boundarySelector);
-            if (!boundary) return;
-
-            // Update hover states
-            if (currentHoverItem.current) {
-              currentHoverItem.current.classList.remove('drag-over', 'drag-over-top', 'drag-over-bottom');
-            }
-            currentHoverItem.current = listItem;
-            listItem.classList.add('drag-over');
-
-            // Calculate position in list
-            var position = Array.from(listItem.parentNode.children).indexOf(listItem);
-            dragOverItem.current = position;
-
-            // Determine drop position (top/bottom)
-            var rect = listItem.getBoundingClientRect();
-            var middleY = rect.top + rect.height / 2;
-            if (point.clientY < middleY) {
-              listItem.classList.add('drag-over-top');
+            // Extract primitive coordinates synchronously to avoid using pooled events in async callbacks
+            var clientX;
+            var clientY;
+            if (isTouch) {
+              var touch = e.touches[0];
+              clientX = touch.clientX;
+              clientY = touch.clientY;
             } else {
-              listItem.classList.add('drag-over-bottom');
+              clientX = e.clientX;
+              clientY = e.clientY;
             }
-            onDragOver === null || onDragOver === void 0 ? void 0 : onDragOver(dragItem.current, dragOverItem.current);
+
+            // Cancel any pending frame to avoid stacking DOM operations
+            if (rafId.current !== null) {
+              cancelAnimationFrame(rafId.current);
+            }
+            rafId.current = requestAnimationFrame(function () {
+              // Update dragged element position for touch events
+              if (isTouch && isDragging && dragNode.current) {
+                dragNode.current.style.left = "".concat(clientX - touchOffset.current.x, "px");
+                dragNode.current.style.top = "".concat(clientY - touchOffset.current.y, "px");
+              }
+
+              // Find the element below the pointer/touch
+              var elemBelow = document.elementFromPoint(clientX, clientY);
+              if (!elemBelow) return;
+
+              // Find the closest list item
+              var listItem = elemBelow.closest(itemSelector);
+              if (!listItem) return;
+
+              // Check boundary
+              var boundary = boundaryElement.current || listItem.closest(boundarySelector);
+              if (!boundary) return;
+
+              // Update hover states
+              if (currentHoverItem.current && currentHoverItem.current !== listItem) {
+                currentHoverItem.current.classList.remove('drag-over', 'drag-over-top', 'drag-over-bottom');
+              }
+              currentHoverItem.current = listItem;
+              listItem.classList.add('drag-over');
+              var dragEl = draggedElement.current;
+              if (!dragEl || !dragEl.parentNode) return;
+              var container = boundary;
+
+              // Collect current ordered items in the container
+              var children = Array.from(container.querySelectorAll(itemSelector));
+              var currentIndex = children.indexOf(dragEl);
+              var targetIndex = children.indexOf(listItem);
+              if (currentIndex === -1 || targetIndex === -1) return;
+
+              // Determine drop position (top/bottom)
+              var rect = listItem.getBoundingClientRect();
+              var middleY = rect.top + rect.height / 2;
+              listItem.classList.remove('drag-over-top', 'drag-over-bottom');
+              var insertBefore = clientY < middleY ? listItem : listItem.nextElementSibling;
+              if (clientY < middleY) {
+                listItem.classList.add('drag-over-top');
+              } else {
+                listItem.classList.add('drag-over-bottom');
+              }
+
+              // Only move in DOM when the effective position changes
+              if (insertBefore !== dragEl && container.contains(dragEl)) {
+                container.insertBefore(dragEl, insertBefore);
+              }
+
+              // Recompute index after DOM move
+              var reorderedChildren = Array.from(container.querySelectorAll(itemSelector));
+              var newIndex = reorderedChildren.indexOf(dragEl);
+              dragOverItem.current = newIndex;
+              onDragOver === null || onDragOver === void 0 ? void 0 : onDragOver(dragItem.current, dragOverItem.current);
+
+              // Only fire onDragUpdate when the (dragIndex, dropIndex) pair actually changes.
+              if (onDragUpdate && (dragItem.current !== lastUpdateDragIndex.current || dragOverItem.current !== lastUpdateDropIndex.current)) {
+                lastUpdateDragIndex.current = dragItem.current;
+                lastUpdateDropIndex.current = dragOverItem.current;
+                onDragUpdate(dragItem.current, dragOverItem.current);
+              }
+              rafId.current = null;
+            });
           };
           var handleDragEnd = function handleDragEnd(e) {
             var isTouch = ('touches' in e);
             if (isTouch && !isDragging) return;
             onDragEnd === null || onDragEnd === void 0 ? void 0 : onDragEnd(dragItem.current, dragOverItem.current);
+
+            // Cancel any pending animation frame
+            if (rafId.current !== null) {
+              cancelAnimationFrame(rafId.current);
+              rafId.current = null;
+            }
 
             // Cleanup
             if (dragNode.current) {
@@ -1036,6 +1119,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             currentHoverItem.current = null;
             dragItem.current = null;
             dragOverItem.current = null;
+            draggedElement.current = null;
+            boundaryElement.current = null;
           };
           return {
             isDragging: isDragging,
@@ -1366,6 +1451,9 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
       onDragOver: function onDragOver(dragIndex, dropIndex) {
         // Additional drag over logic if needed
       },
+      onDragUpdate: function onDragUpdate(dragIndex, dropIndex) {
+        // console.log(dragIndex, dropIndex);
+      },
       onDragEnd: function onDragEnd(dragIndex, dropIndex) {
         if (dragIndex !== null && dropIndex !== null && dragIndex !== dropIndex) {
           var _newItems$dragIndex, _newItems$dragIndex2, _newItems$dropIndex;
@@ -1398,12 +1486,12 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
           });
 
           // Calculate new insert position
+          // Directly use dropIndex as the insertion position to avoid items snapping back
+          // when dragging an item from above to directly below its neighbor.
           var insertIndex = dropIndex;
-          if (dropIndex > dragIndex) {
-            insertIndex -= itemsToMove.length;
-          }
 
-          // Insert all items
+          // Insert all items (remove first, then insert at the target index;
+          // JavaScript's splice will handle index shifting automatically).
           newItems.splice.apply(newItems, [insertIndex, 0].concat(_toConsumableArray(itemsBeingMoved)));
 
           // Rebuild tree structure
@@ -1516,6 +1604,9 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
     // If the item should be hidden, the rendering is skipped
     if (!shouldShowItem(item)) return null;
 
+    // Item level draggable control, default true when not specified
+    var isItemDraggable = draggable && item.itemDraggable !== false;
+
     // collapse
     var hasChildItems = hasChildren(item.id);
     var isCollapsed = collapsedItems.has(item.id);
@@ -1529,30 +1620,30 @@ var DragDropList = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef
       "data-listitemlabel": item.listItemLabel,
       className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.combinedCls)("".concat(prefix, "-draggable-list__item"), (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_2__.clsWrite)(dragMode, 'handle'), {
         'disabled': item.disabled,
-        'draggable': draggable,
+        'draggable': isItemDraggable,
         'editing': editingItem === item.id,
         // collapse
         'has-children': hasChildItems,
         'collapsed': isCollapsed
       }),
-      draggable: !draggable ? undefined : editingItem !== item.id && "true",
-      onDragStart: !draggable ? undefined : function (e) {
+      draggable: !isItemDraggable ? undefined : editingItem !== item.id && "true",
+      onDragStart: !isItemDraggable ? undefined : function (e) {
         return dragHandlers.handleDragStart(e, index);
       },
-      onDragOver: !draggable ? undefined : dragHandlers.handleDragOver,
-      onDragEnd: !draggable ? undefined : dragHandlers.handleDragEnd,
-      onTouchStart: !draggable ? undefined : function (e) {
+      onDragOver: !isItemDraggable ? undefined : dragHandlers.handleDragOver,
+      onDragEnd: !isItemDraggable ? undefined : dragHandlers.handleDragEnd,
+      onTouchStart: !isItemDraggable ? undefined : function (e) {
         return dragHandlers.handleDragStart(e, index);
       },
-      onTouchMove: !draggable ? undefined : dragHandlers.handleDragOver,
-      onTouchEnd: !draggable ? undefined : dragHandlers.handleDragEnd,
+      onTouchMove: !isItemDraggable ? undefined : dragHandlers.handleDragOver,
+      onTouchEnd: !isItemDraggable ? undefined : dragHandlers.handleDragEnd,
       style: itemStyle,
       onDoubleClick: function onDoubleClick() {
         return handleDoubleClick(item);
       }
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "".concat(prefix, "-draggable-list__itemcontent")
-    }, renderOption ? renderOption(item, "".concat(prefix, "-draggable-list__handle"), index) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, draggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, renderOption ? renderOption(item, isItemDraggable ? "".concat(prefix, "-draggable-list__handle") : '', index) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, isItemDraggable && !handleHide ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "".concat(prefix, "-draggable-list__handle ").concat(handlePos !== null && handlePos !== void 0 ? handlePos : 'left'),
       draggable: dragMode === 'handle',
       dangerouslySetInnerHTML: {

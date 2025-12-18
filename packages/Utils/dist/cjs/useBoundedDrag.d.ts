@@ -112,6 +112,7 @@ export interface BoundedDragOptions {
     dragHandleSelector?: string;
     onDragStart?: (index: number) => void;
     onDragOver?: (dragIndex: number | null, dropIndex: number | null) => void;
+    onDragUpdate?: (dragIndex: number | null, dropIndex: number | null) => void;
     onDragEnd?: (dragIndex: number | null, dropIndex: number | null) => void;
 }
 export declare const useBoundedDrag: (options?: BoundedDragOptions) => {

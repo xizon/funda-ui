@@ -7,7 +7,7 @@
   --syntable-row-active-bg: #f0f8ff;
   --syntable-scrollbar-color: rgba(0, 0, 0, 0.2);
   --syntable-scrollbar-track: rgba(0, 0, 0, 0);
-  --syntable-scrollbar-h: 3px;
+  --syntable-scrollbar-h: 10px;
   --syntable-scrollbar-w: 10px;
   --syntable-padding-x: 1rem;
   --syntable-padding-y: 0.5rem;
@@ -414,10 +414,13 @@
 }
 .syntable__wrapper.allow-dragdrop tbody .row-obj-clonelast {
   height: 0 !important;
+  border-color: transparent !important;
+  padding: 0 !important;
 }
 .syntable__wrapper.allow-dragdrop tbody .row-obj-clonelast td {
   border: none;
   box-shadow: none;
+  padding: 0 !important;
 }
 .syntable__wrapper.allow-dragdrop tbody td,
 .syntable__wrapper.allow-dragdrop tbody th {
@@ -428,6 +431,7 @@
 .syntable__wrapper.allow-dragdrop tbody.drag-trigger-mousedown th {
   pointer-events: auto;
 }
+.syntable__wrapper.allow-dragdrop .row-obj-lastplaceholder,
 .syntable__wrapper.allow-dragdrop .row-placeholder {
   border: 2px dotted #b5ba91;
   background-color: #e4e9c3;

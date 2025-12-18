@@ -739,7 +739,8 @@ export default () => {
             "listItemLabel": "Title 3",
             "value": "3",
             "queryString": "",
-            "typeName": "web/ui"
+            "typeName": "web/ui",
+            "itemDraggable": false
         },
         {
             "parentId": 1,
@@ -748,7 +749,8 @@ export default () => {
             "listItemLabel": "Title 4",
             "value": "4",
             "queryString": "",
-            "typeName": "web/ui"
+            "typeName": "web/ui",
+            "itemDraggable": false
         },
         {
             "parentId": 2,
@@ -757,7 +759,8 @@ export default () => {
             "listItemLabel": "Title 5",
             "value": "5",
             "queryString": "",
-            "typeName": "dev"
+            "typeName": "dev",
+            "itemDraggable": false
         },
         // level 3
         {
@@ -767,7 +770,8 @@ export default () => {
             "listItemLabel": "Title 6",
             "value": "6",
             "queryString": "",
-            "typeName": "web/ui/photoshop"
+            "typeName": "web/ui/photoshop",
+            "itemDraggable": false
         }
     ];
     const [data, setData] = useState<any[]>(demoList);
@@ -831,7 +835,8 @@ export default () => {
             "listItemLabel": "Title 3",
             "value": "3",
             "queryString": "",
-            "typeName": "web/ui"
+            "typeName": "web/ui",
+            "itemDraggable": false
         },
         {
             "parentId": 1,
@@ -840,7 +845,8 @@ export default () => {
             "listItemLabel": "Title 4",
             "value": "4",
             "queryString": "",
-            "typeName": "web/ui"
+            "typeName": "web/ui",
+            "itemDraggable": false
         },
         {
             "parentId": 2,
@@ -849,7 +855,8 @@ export default () => {
             "listItemLabel": "Title 5",
             "value": "5",
             "queryString": "",
-            "typeName": "dev"
+            "typeName": "dev",
+            "itemDraggable": false
         },
         // level 3
         {
@@ -859,7 +866,8 @@ export default () => {
             "listItemLabel": "Title 6",
             "value": "6",
             "queryString": "",
-            "typeName": "web/ui/photoshop"
+            "typeName": "web/ui/photoshop",
+            "itemDraggable": false
         }
     ];
     const [data, setData] = useState<any[]>(demoList);
@@ -1024,7 +1032,8 @@ Array Object configuration properties of the `data` (**Array**):
 | `listItemLabel` | string | - | Specify the label text for pop-up list items. <blockquote>Support html tags</blockquote> | - |
 | `value` | string | - | Specify the value for each option | ✅ |
 | `queryString` | string | - | Quick query string, such as Chinese pinyin or English initials | ✅ |
-| `disabled` | boolean | - | When present, it specifies that an option should be disabled. | - |
+| `disabled` | boolean | false | When present, it specifies that an option should be disabled. | - |
+| `itemDraggable` | boolean | true | Indicates whether the current item can be dragged. When set to `false`, the item will not be draggable. | - |
 | `appendControl` | ReactNode  | - | An extension of the same level, It can usually be used for complex content, such as \<input \> | - |
 
 
@@ -1059,7 +1068,8 @@ Array Object configuration properties of the `data` (**Array**):
         "listItemLabel": "lemon (No. 3)",
         "value": "a",
         "queryString": "lemon,lingmeng,lm",
-        "disabled": false
+        "disabled": false,
+        "itemDraggable": false
     },
     ...
 ]

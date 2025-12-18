@@ -1,3 +1,5 @@
+
+
 /* ======================================================
     <!-- Table (Synthetic) -->
 /* ====================================================== */
@@ -7,7 +9,7 @@
     --syntable-row-active-bg: #f0f8ff;
     --syntable-scrollbar-color: rgba(0, 0, 0, 0.2);
     --syntable-scrollbar-track: rgba(0, 0, 0, 0);
-    --syntable-scrollbar-h: 3px;
+    --syntable-scrollbar-h: 10px;
     --syntable-scrollbar-w: 10px;
     --syntable-padding-x: 1rem;
     --syntable-padding-y: 0.5rem;
@@ -165,11 +167,13 @@
 
             .row-obj-clonelast {
                 height: 0 !important;
-
+                border-color: transparent !important;
+                padding: 0 !important;
              
                 td {
                     border: none;
                     box-shadow: none;
+                    padding: 0 !important;
                 }
             }
 
@@ -190,10 +194,12 @@
         }
 
         /* placeholder */
+        .row-obj-lastplaceholder,
         .row-placeholder {
             border: 2px dotted #b5ba91;
             background-color: #e4e9c3;
         }
+        
         
         /* trigger */
         .drag-trigger {

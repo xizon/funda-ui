@@ -44,9 +44,15 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>((
     // selection
     // ================================================================
     const _res = convertMapToArr(selectedItems);
+    // Performance optimization: stringify itemData only once instead of N times
+    const itemDataStr = itemData ? JSON.stringify(itemData) : '';
     const filteredSelectedItems = _res.map((v: any) => Number(v)).map((rowNum: number) => {
-        if (JSON.stringify(itemData) === JSON.stringify(originData[rowNum])) {
-            return originData[rowNum];
+        const originItem = originData?.[rowNum];
+        // Fast path: reference equality
+        if (itemData === originItem) return originItem;
+        // Fallback: JSON comparison (itemDataStr is cached)
+        if (itemDataStr && itemDataStr === JSON.stringify(originItem)) {
+            return originItem;
         }
     }).filter(Boolean);
     const selectedClassName = activeClassName || 'active';
@@ -64,7 +70,7 @@ const TableRow = forwardRef<HTMLTableRowElement, TableRowProps>((
                 onDragEnd={rowDraggable ? handleDragEnd : () => void(0)} 
                 data-row-data={`${itemData && typeof itemData === 'object' ? JSON.stringify(itemData) : itemData}`}
                 
-                className={`row-obj ${className || ''} ${active ? selectedClassName : ''} ${itemData && originData ? (filteredData.every((item: any) => filterFieldsData.some((s: string) => !item[s]?.toLowerCase().includes(itemData[s]?.toLowerCase())) ) ? 'd-none' : '') : ''} ${itemData && originData ? (filteredSelectedItems.some((item: any) => JSON.stringify(itemData) === JSON.stringify(item) ) ? selectedClassName : '') : ''}`}
+                className={`row-obj ${className || ''} ${active ? selectedClassName : ''} ${itemData && originData ? (filteredData.every((item: any) => filterFieldsData.some((s: string) => !item[s]?.toLowerCase().includes(itemData[s]?.toLowerCase())) ) ? 'd-none' : '') : ''} ${itemData && originData && filteredSelectedItems.length > 0 ? selectedClassName : ''}`}
             >
                 {children}
             </tr>

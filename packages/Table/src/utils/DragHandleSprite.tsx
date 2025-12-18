@@ -15,7 +15,8 @@ const DragHandleSprite = forwardRef((props: DragHandleSpriteProps, externalRef: 
 
     const {
         rowDraggable,
-        handleTbodyEnter
+        handleTbodyEnter,
+        handleTbodyLeave
     } = useContext(TableContext);
 
     return (
@@ -23,7 +24,10 @@ const DragHandleSprite = forwardRef((props: DragHandleSpriteProps, externalRef: 
             {rowDraggable ? <span
                 ref={externalRef}
                 className={className || 'drag-trigger'}
-                onMouseEnter={handleTbodyEnter}
+                // Only when mousedown happens on this handle will we allow row dragging.
+                onMouseDown={handleTbodyEnter}
+                onMouseUp={handleTbodyLeave}
+                onMouseLeave={handleTbodyLeave}
             >
                 {icon || <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                     <g>

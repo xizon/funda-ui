@@ -9,6 +9,7 @@ export interface ListItem {
     depth?: number;
     children?: ListItem[];
     disabled?: boolean;
+    itemDraggable?: boolean;
     appendControl?: React.ReactNode;
     [key: string]: any;
 }

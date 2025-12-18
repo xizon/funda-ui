@@ -5,6 +5,7 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 import { TableProvider } from './TableContext';
 import useTableResponsive from './utils/hooks/useTableResponsive';
 import useTableDraggable from './utils/hooks/useTableDraggable';
@@ -148,10 +149,10 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
 
     // initialize drag & drop data
     const {
-        handleDragStart,
-        handleDragEnd,
-        handledragOver,
-        handleTbodyEnter
+        isDragging,
+        dragHandlers,
+        handleTbodyEnter,
+        handleTbodyLeave
     } = useTableDraggable({
         enabled: rowDraggable && rootRef.current,
         data: data,
@@ -268,9 +269,10 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
 
                 // drag & drop
                 rowDraggable,
-                handleDragStart,
-                handleDragEnd,
-                handledragOver,
+                isRowDragging: isDragging,
+                handleDragStart: dragHandlers.handleDragStart,
+                handleDragEnd: dragHandlers.handleDragEnd,
+                handledragOver: dragHandlers.handleDragOver,
                 handleTbodyEnter,
                 
 
