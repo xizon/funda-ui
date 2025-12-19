@@ -247,6 +247,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     //
     const now = useMemo(() => new Date(), []);
     const [date, setDate] = useState<Date>(now);
+    const prevDateRef = useRef<Date | null>(null);
     const [day, setDay] = useState<number>(date.getDate());
     const [month, setMonth] = useState<number>(date.getMonth());
     const [year, setYear] = useState<number>(date.getFullYear());
@@ -289,6 +290,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     // Temporary date
     const [tempDate, setTempDate] = useState<string>('');
+
+
+    // Track all pending requestAnimationFrame IDs for cleanup on unmount
+    const rafIdsRef = useRef<Set<number>>(new Set());
 
 
 
@@ -901,6 +906,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     let mouseDown: boolean = false;
     let startX: any = 0;
     let scrollLeft: any = 0;
+    const tableDragRafIdRef = useRef<number | null>(null);
 
     const handleTableDragStart = useCallback((e: any) => {
         draggedObj = e.currentTarget;
@@ -920,14 +926,29 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         mouseDown = false;
         draggedObj.classList.remove('dragging');
+
+        // Cancel any pending animation frame
+        if (tableDragRafIdRef.current !== null) {
+            cancelAnimationFrame(tableDragRafIdRef.current);
+            tableDragRafIdRef.current = null;
+        }
+
     }, []);
 
     const handleTableMove = useCallback((e: any) => {
         e.preventDefault();
         if (!mouseDown) { return; }
-        const x = e.pageX - draggedObj.offsetLeft;
-        const scroll = x - startX;
-        draggedObj.scrollLeft = scrollLeft - scroll;
+
+        
+        // Use requestAnimationFrame to throttle scroll updates for better performance
+        if (tableDragRafIdRef.current === null) {
+            tableDragRafIdRef.current = requestAnimationFrame(() => {
+                const x = e.pageX - draggedObj.offsetLeft;
+                const scroll = x - startX;
+                draggedObj.scrollLeft = scrollLeft - scroll;
+                tableDragRafIdRef.current = null;
+            });
+        }
     }, []);
 
 
@@ -1019,25 +1040,37 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     // ================================================================
     // Calendar
     // ================================================================
-    function updateTodayDate(inputDate: Date) {
+    function updateTodayDate(inputDate: Date, prevDate?: Date | null) {
+        const previous = prevDate ?? prevDateRef.current;
+        const hasMonthOrYearChanged =
+            !previous ||
+            previous.getMonth() !== inputDate.getMonth() ||
+            previous.getFullYear() !== inputDate.getFullYear();
+
+        // Always sync the active day value
         setDay(inputDate.getDate());
-        setMonth(inputDate.getMonth());
-        setYear(inputDate.getFullYear());
-        setStartDay(getStartDayOfMonth(inputDate));
 
-        // update selector
-        setSelectedMonth(inputDate.getMonth());
-        setSelectedYear(inputDate.getFullYear());
+        if (hasMonthOrYearChanged) {
+            // Only update month/year related state when it actually changes;
+            // this prevents expensive table re-inits for simple day clicks.
+            setMonth(inputDate.getMonth());
+            setYear(inputDate.getFullYear());
+            setStartDay(getStartDayOfMonth(inputDate));
 
-        
-        setTimeout(() => {
-            // initialize table grid
-            tableGridInit();
+            // update selector
+            setSelectedMonth(inputDate.getMonth());
+            setSelectedYear(inputDate.getFullYear());
 
-            // The scrollbar position is horizontal
-            bodyScrollbarInit();
-        }, 500);
+            setTimeout(() => {
+                // initialize table grid
+                tableGridInit();
 
+                // The scrollbar position is horizontal
+                bodyScrollbarInit();
+            }, 500);
+        }
+
+        prevDateRef.current = inputDate;
     }
 
 
@@ -1136,6 +1169,29 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
     }
     function handleDayChange(e: React.MouseEvent, currentDay: number) {
+        // Avoid triggering a full table re-render when the clicked cell is already
+        // the active day; this becomes expensive with large datasets.
+        if (
+            date.getDate() === currentDay &&
+            date.getMonth() === month &&
+            date.getFullYear() === year
+        ) {
+            return;
+        }
+
+        // !!! Important, performance optimization for large data renderings
+        /*
+        - Previously, every time I clicked on the date, 'setDate' would be called in 'useEffect([date])', 
+        and 'tableGridInit + bodyScrollbarInit' would be run regardless of whether it was across months/years, 
+        and these recalculations and DOM operations were very time-consuming when 1000+ pieces of data, causing lag.
+
+        - Now remember the last date with 'prevDateRef', reset the month/year related state only when the month or year 
+        changes and execute 'tableGridInit/scrollbarInit'. Only 'day' is updated when the date is changed, avoiding 
+        the relayout of the entire table and the initialization of the scrollbar.
+
+        -'handleDayChange' still updates 'date', but since the month/year has not changed, it no longer triggers heavy 
+        initialization, significantly reducing stuttering when clicking, while the month/year switch triggers a full recount as usual.
+        */
         setDate(new Date(year, month, currentDay));
     }
 
@@ -1871,25 +1927,38 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
         const tableGridEl: any = tableGridRef.current;
 
-        // initialize cell height
-        const headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
-        const contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
-        if (!headerTitleTbody || !contentTbody) return;
+        // Use requestAnimationFrame to batch DOM operations
+        const rafId = requestAnimationFrame(() => {
+           
 
-        const headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
-        const trElements = contentTbody.getElementsByTagName('tr');
+            // initialize cell height
+            const headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
+            const contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
+            if (!headerTitleTbody || !contentTbody) return;
 
-        // Reset any previously set inline heights so we measure natural heights.
-        for (let i = 0; i < headerTitleTrElements.length; i++) {
-            // set to 'auto' (or remove inline style) to allow shrink
-            headerTitleTrElements[i].style.height = 'auto';
-            if (trElements[i]) trElements[i].style.height = 'auto';
+            const headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
+            const trElements = contentTbody.getElementsByTagName('tr');
 
-            const targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
-            const tdOHeight = window.getComputedStyle(targetElement).height;
-            headerTitleTrElements[i].style.height = tdOHeight;
-            trElements[i].style.height = tdOHeight;
-        }
+            // Reset any previously set inline heights so we measure natural heights.
+            for (let i = 0; i < headerTitleTrElements.length; i++) {
+                // set to 'auto' (or remove inline style) to allow shrink
+                headerTitleTrElements[i].style.height = 'auto';
+                if (trElements[i]) trElements[i].style.height = 'auto';
+
+                const targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
+                const tdOHeight = window.getComputedStyle(targetElement).height;
+                headerTitleTrElements[i].style.height = tdOHeight;
+                trElements[i].style.height = tdOHeight;
+            }
+
+
+            // Remove from tracking set after execution
+            rafIdsRef.current.delete(rafId);
+        });
+        
+        // Track this requestAnimationFrame ID for cleanup
+        rafIdsRef.current.add(rafId);
+
 
 
     }
@@ -1909,223 +1978,234 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             _curColCount = 7;
         }
 
-        //****************
-        // STEP 1-1: 
-        //****************
-        // calculate min width (MODE: WEEK)
-        //--------------
-        if (appearanceMode === 'week') {
-            const tableMaxWidth = tableGridEl.clientWidth;
-            const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
-            const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
-            const tableBorderWidth = 4;
-            const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
+        // Use requestAnimationFrame to batch DOM operations
+        const rafId = requestAnimationFrame(() => {
+           
 
-            _curCellMinWidth = scrollMaxWidth / 7;
-            _curColCount = 7;
-
-            // header
-            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
-                node.style.width = _curCellMinWidth + 'px';
-            });
-
-
-        }
-
-
-
-        //****************
-        // STEP 1-2: 
-        //****************
-        // calculate min width (MODE: MONTH)
-        //--------------
-        const cellMinWidth = _curCellMinWidth;
-        const colCount = _curColCount;
-        const scrollableMinWidth = cellMinWidth * colCount;
-
-
-        //****************
-        // STEP 1-3: 
-        //****************
-        // initialize "header & main" cells
-        //--------------
-        const headerThContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
-        for (let i = 0; i < headerThContentContainers.length; i++) {
-            const curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
-            if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
-        }
-
-
-        const mainTdContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
-        for (let i = 0; i < mainTdContentContainers.length; i++) {
-            const curHeaderThContent = mainTdContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-content');
-            if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
-        }
-
-        const mainTdContentCols: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
-        for (let i = 0; i < mainTdContentCols.length; i++) {
-            mainTdContentCols[i].style.minWidth = _curCellMinWidth + 'px';
-        }
-
-
-        //****************
-        // STEP 2: 
-        //****************    
-        // initialize scrollable wrapper (width)
-        //--------------
-        const _scrollableWrapper: HTMLElement[] = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
-        [].slice.call(_scrollableWrapper).forEach((el: any) => {
-            const scrollType = el.dataset.scroll;
-
+            //****************
+            // STEP 1-1: 
+            //****************
+            // calculate min width (MODE: WEEK)
+            //--------------
             if (appearanceMode === 'week') {
-                el.classList.add('custom-event-tl-table__scroller-harness--hideX');
-            }
-            if (appearanceMode === 'month') {
-                el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
-            }
-
-            if (scrollType !== 'list') {
-                const _content = el.querySelector('.custom-event-tl-table__scroller');
                 const tableMaxWidth = tableGridEl.clientWidth;
                 const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
                 const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
                 const tableBorderWidth = 4;
                 const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
-                el.dataset.width = scrollMaxWidth;
-                el.style.maxWidth = el.dataset.width + 'px';
-                _content.style.minWidth = scrollableMinWidth + 'px';
+                _curCellMinWidth = scrollMaxWidth / 7;
+                _curColCount = 7;
+
+                // header
+                tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
+                    node.style.width = _curCellMinWidth + 'px';
+                });
+
 
             }
-        });
 
 
-        //****************
-        // STEP 3: 
-        //****************
-        // initialize cell width
-        //--------------
-        const tdElementMaxWidth: number = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
+
+            //****************
+            // STEP 1-2: 
+            //****************
+            // calculate min width (MODE: MONTH)
+            //--------------
+            const cellMinWidth = _curCellMinWidth;
+            const colCount = _curColCount;
+            const scrollableMinWidth = cellMinWidth * colCount;
 
 
-        if (Array.isArray(eventsValue) && eventsValue.length > 0) {
-
+            //****************
+            // STEP 1-3: 
+            //****************
+            // initialize "header & main" cells
+            //--------------
+            const headerThContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
             for (let i = 0; i < headerThContentContainers.length; i++) {
-
                 const curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
-                const curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(curHeaderThContent).width);
-                const targetElement = headerThContentContainers[i].offsetWidth > mainTdContentContainers[i].offsetWidth ? headerThContentContainers[i] : mainTdContentContainers[i];
-                let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
-
-
-                // check td max width
-                if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
-                    tdOwidth = tdElementMaxWidth;
-                }
-
-                // check header th max width
-                if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThContentMaxWidth) {
-                    tdOwidth = curHeaderThContentMaxWidth;
-                }
-
-                // Prevent the width from being +1 each time it is initialized
-                tdOwidth = tdOwidth - 1;
-
-
-                headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
-                mainTdContentCols[i].style.minWidth = tdOwidth + 'px';
-
-
-            }
-        }
-
-
-        //****************
-        // STEP 4: 
-        //****************    
-        // initialize max width of table content
-        //--------------
-        if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
-            const tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
-            const scrollBodyEl: any = scrollBodyRef.current;
-            const scrollHeaderEl: any = scrollHeaderRef.current;
-
-            scrollBodyEl.style.width = tableContentWidth;
-            scrollHeaderEl.style.width = tableContentWidth;
-            scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
-            scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
-
-            //
-            const tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
-            if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
-                tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
+                if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
             }
 
 
-        }
+            const mainTdContentContainers: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
+            for (let i = 0; i < mainTdContentContainers.length; i++) {
+                const curHeaderThContent = mainTdContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-content');
+                if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
+            }
+
+            const mainTdContentCols: any = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col')
+            for (let i = 0; i < mainTdContentCols.length; i++) {
+                mainTdContentCols[i].style.minWidth = _curCellMinWidth + 'px';
+            }
 
 
+            //****************
+            // STEP 2: 
+            //****************    
+            // initialize scrollable wrapper (width)
+            //--------------
+            const _scrollableWrapper: HTMLElement[] = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
+            [].slice.call(_scrollableWrapper).forEach((el: any) => {
+                const scrollType = el.dataset.scroll;
 
-        //****************
-        // STEP 5: 
-        //****************
-        // initialize cell height
-        //--------------
-        tableGridInitHeadertitle();
+                if (appearanceMode === 'week') {
+                    el.classList.add('custom-event-tl-table__scroller-harness--hideX');
+                }
+                if (appearanceMode === 'month') {
+                    el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
+                }
 
-        //****************
-        // STEP 6: 
-        //****************
-        //initialize scrollable wrapper (height)
-        //--------------
-        [].slice.call(_scrollableWrapper).forEach((el: any) => {
-            const scrollType = el.dataset.scroll;
-            const oldHeight = el.clientHeight;
+                if (scrollType !== 'list') {
+                    const _content = el.querySelector('.custom-event-tl-table__scroller');
+                    const tableMaxWidth = tableGridEl.clientWidth;
+                    const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+                    const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
+                    const tableBorderWidth = 4;
+                    const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
 
-            if (scrollType !== 'header') {
-                const tableWrapperMaxHeight = window.getComputedStyle(tableGridEl as HTMLElement).height;
-                if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
-                    el.style.height = tableWrapperMaxHeight;
+                    el.dataset.width = scrollMaxWidth;
+                    el.style.maxWidth = el.dataset.width + 'px';
+                    _content.style.minWidth = scrollableMinWidth + 'px';
+
+                }
+            });
+
+
+            //****************
+            // STEP 3: 
+            //****************
+            // initialize cell width
+            //--------------
+            const tdElementMaxWidth: number = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
+
+
+            if (Array.isArray(eventsValue) && eventsValue.length > 0) {
+
+                for (let i = 0; i < headerThContentContainers.length; i++) {
+
+                    const curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
+                    const curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(curHeaderThContent).width);
+                    const targetElement = headerThContentContainers[i].offsetWidth > mainTdContentContainers[i].offsetWidth ? headerThContentContainers[i] : mainTdContentContainers[i];
+                    let tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+
+
+                    // check td max width
+                    if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+                        tdOwidth = tdElementMaxWidth;
+                    }
+
+                    // check header th max width
+                    if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThContentMaxWidth) {
+                        tdOwidth = curHeaderThContentMaxWidth;
+                    }
+
+                    // Prevent the width from being +1 each time it is initialized
+                    tdOwidth = tdOwidth - 1;
+
+
+                    headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+                    mainTdContentCols[i].style.minWidth = tdOwidth + 'px';
+
+
                 }
             }
 
+
+            //****************
+            // STEP 4: 
+            //****************    
+            // initialize max width of table content
+            //--------------
+            if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
+                const tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
+                const scrollBodyEl: any = scrollBodyRef.current;
+                const scrollHeaderEl: any = scrollHeaderRef.current;
+
+                scrollBodyEl.style.width = tableContentWidth;
+                scrollHeaderEl.style.width = tableContentWidth;
+                scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
+                scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
+
+                //
+                const tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
+                if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
+                    tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
+                }
+
+
+            }
+
+
+
+            //****************
+            // STEP 5: 
+            //****************
+            // initialize cell height
+            //--------------
+            tableGridInitHeadertitle();
+
+            //****************
+            // STEP 6: 
+            //****************
+            //initialize scrollable wrapper (height)
+            //--------------
+            [].slice.call(_scrollableWrapper).forEach((el: any) => {
+                const scrollType = el.dataset.scroll;
+                const oldHeight = el.clientHeight;
+
+                if (scrollType !== 'header') {
+                    const tableWrapperMaxHeight = window.getComputedStyle(tableGridEl as HTMLElement).height;
+                    if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
+                        el.style.height = tableWrapperMaxHeight;
+                    }
+                }
+
+            });
+
+
+
+            //****************
+            // STEP 7: 
+            //****************
+            // display wrapper
+            //--------------
+            tableGridEl.classList.remove('invisible');
+
+            //****************
+            // STEP 1-1: 
+            //****************
+            // calculate min width (MODE: WEEK)
+            //--------------
+            if (appearanceMode === 'week') {
+                const tableMaxWidth = tableGridEl.clientWidth;
+                const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+                const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
+                const tableBorderWidth = 4;
+                const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
+
+                _curCellMinWidth = scrollMaxWidth / 7;
+                _curColCount = 7;
+
+                // header content
+                tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach((node: HTMLDivElement) => {
+                    node.style.width = _curCellMinWidth + 'px';
+                });
+
+                // main content
+                tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
+                    node.style.width = _curCellMinWidth + 'px';
+                });
+
+            }  
+
+            // Remove from tracking set after execution
+            rafIdsRef.current.delete(rafId);
         });
-
-
-
-        //****************
-        // STEP 7: 
-        //****************
-        // display wrapper
-        //--------------
-        tableGridEl.classList.remove('invisible');
-
-        //****************
-        // STEP 1-1: 
-        //****************
-        // calculate min width (MODE: WEEK)
-        //--------------
-        if (appearanceMode === 'week') {
-            const tableMaxWidth = tableGridEl.clientWidth;
-            const tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
-            const tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
-            const tableBorderWidth = 4;
-            const scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
-
-            _curCellMinWidth = scrollMaxWidth / 7;
-            _curColCount = 7;
-
-            // header content
-            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach((node: HTMLDivElement) => {
-                node.style.width = _curCellMinWidth + 'px';
-            });
-
-            // main content
-            tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach((node: HTMLDivElement) => {
-                node.style.width = _curCellMinWidth + 'px';
-            });
-
-        }
+        
+        // Track this requestAnimationFrame ID for cleanup
+        rafIdsRef.current.add(rafId);
 
     }
 
@@ -2172,7 +2252,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     useEffect(() => {
-        updateTodayDate(date);
+        updateTodayDate(date, prevDateRef.current);
     }, [date]);
 
 
@@ -2221,6 +2301,18 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         // !!!Please do not use dependencies
         //--------------
         return () => {
+
+            // Cancel all pending requestAnimationFrame callbacks to prevent memory leaks
+            rafIdsRef.current.forEach((rafId) => {
+                cancelAnimationFrame(rafId);
+            });
+            rafIdsRef.current.clear();
+
+            // Cancel table drag animation frame if pending
+            if (tableDragRafIdRef.current !== null) {
+                cancelAnimationFrame(tableDragRafIdRef.current);
+                tableDragRafIdRef.current = null;
+            }
 
             // reset table grid
             tableGridReset();

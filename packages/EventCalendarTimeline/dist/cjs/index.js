@@ -4058,6 +4058,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     date = _useState4[0],
     setDate = _useState4[1];
+  var prevDateRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(date.getDate()),
     _useState6 = _slicedToArray(_useState5, 2),
     day = _useState6[0],
@@ -4135,6 +4136,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     _useState28 = _slicedToArray(_useState27, 2),
     tempDate = _useState28[0],
     setTempDate = _useState28[1];
+
+  // Track all pending requestAnimationFrame IDs for cleanup on unmount
+  var rafIdsRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(new Set());
 
   // Open temporary storage for pop-ups
   var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1),
@@ -4787,6 +4791,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   var mouseDown = false;
   var startX = 0;
   var scrollLeft = 0;
+  var tableDragRafIdRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var handleTableDragStart = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     draggedObj = e.currentTarget;
     mouseDown = true;
@@ -4800,15 +4805,28 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     if (draggedObj === null) return;
     mouseDown = false;
     draggedObj.classList.remove('dragging');
+
+    // Cancel any pending animation frame
+    if (tableDragRafIdRef.current !== null) {
+      cancelAnimationFrame(tableDragRafIdRef.current);
+      tableDragRafIdRef.current = null;
+    }
   }, []);
   var handleTableMove = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function (e) {
     e.preventDefault();
     if (!mouseDown) {
       return;
     }
-    var x = e.pageX - draggedObj.offsetLeft;
-    var scroll = x - startX;
-    draggedObj.scrollLeft = scrollLeft - scroll;
+
+    // Use requestAnimationFrame to throttle scroll updates for better performance
+    if (tableDragRafIdRef.current === null) {
+      tableDragRafIdRef.current = requestAnimationFrame(function () {
+        var x = e.pageX - draggedObj.offsetLeft;
+        var scroll = x - startX;
+        draggedObj.scrollLeft = scrollLeft - scroll;
+        tableDragRafIdRef.current = null;
+      });
+    }
   }, []);
 
   // ================================================================
@@ -4879,22 +4897,31 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   // ================================================================
   // Calendar
   // ================================================================
-  function updateTodayDate(inputDate) {
+  function updateTodayDate(inputDate, prevDate) {
+    var previous = prevDate !== null && prevDate !== void 0 ? prevDate : prevDateRef.current;
+    var hasMonthOrYearChanged = !previous || previous.getMonth() !== inputDate.getMonth() || previous.getFullYear() !== inputDate.getFullYear();
+
+    // Always sync the active day value
     setDay(inputDate.getDate());
-    setMonth(inputDate.getMonth());
-    setYear(inputDate.getFullYear());
-    setStartDay(getStartDayOfMonth(inputDate));
+    if (hasMonthOrYearChanged) {
+      // Only update month/year related state when it actually changes;
+      // this prevents expensive table re-inits for simple day clicks.
+      setMonth(inputDate.getMonth());
+      setYear(inputDate.getFullYear());
+      setStartDay(getStartDayOfMonth(inputDate));
 
-    // update selector
-    setSelectedMonth(inputDate.getMonth());
-    setSelectedYear(inputDate.getFullYear());
-    setTimeout(function () {
-      // initialize table grid
-      tableGridInit();
+      // update selector
+      setSelectedMonth(inputDate.getMonth());
+      setSelectedYear(inputDate.getFullYear());
+      setTimeout(function () {
+        // initialize table grid
+        tableGridInit();
 
-      // The scrollbar position is horizontal
-      _bodyScrollbarInit();
-    }, 500);
+        // The scrollbar position is horizontal
+        _bodyScrollbarInit();
+      }, 500);
+    }
+    prevDateRef.current = inputDate;
   }
   function getStartDayOfMonth(date) {
     var startDate = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
@@ -4971,6 +4998,23 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   }
 
   function handleDayChange(e, currentDay) {
+    // Avoid triggering a full table re-render when the clicked cell is already
+    // the active day; this becomes expensive with large datasets.
+    if (date.getDate() === currentDay && date.getMonth() === month && date.getFullYear() === year) {
+      return;
+    }
+
+    // !!! Important, performance optimization for large data renderings
+    /*
+    - Previously, every time I clicked on the date, 'setDate' would be called in 'useEffect([date])', 
+    and 'tableGridInit + bodyScrollbarInit' would be run regardless of whether it was across months/years, 
+    and these recalculations and DOM operations were very time-consuming when 1000+ pieces of data, causing lag.
+     - Now remember the last date with 'prevDateRef', reset the month/year related state only when the month or year 
+    changes and execute 'tableGridInit/scrollbarInit'. Only 'day' is updated when the date is changed, avoiding 
+    the relayout of the entire table and the initialization of the scrollbar.
+     -'handleDayChange' still updates 'date', but since the month/year has not changed, it no longer triggers heavy 
+    initialization, significantly reducing stuttering when clicking, while the month/year switch triggers a full recount as usual.
+    */
     setDate(new Date(year, month, currentDay));
   }
   function handleYearChange(currentValue) {
@@ -5553,23 +5597,32 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     if (tableGridRef.current === null) return;
     var tableGridEl = tableGridRef.current;
 
-    // initialize cell height
-    var headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
-    var contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
-    if (!headerTitleTbody || !contentTbody) return;
-    var headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
-    var trElements = contentTbody.getElementsByTagName('tr');
+    // Use requestAnimationFrame to batch DOM operations
+    var rafId = requestAnimationFrame(function () {
+      // initialize cell height
+      var headerTitleTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__title tbody');
+      var contentTbody = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody');
+      if (!headerTitleTbody || !contentTbody) return;
+      var headerTitleTrElements = headerTitleTbody.getElementsByTagName('tr');
+      var trElements = contentTbody.getElementsByTagName('tr');
 
-    // Reset any previously set inline heights so we measure natural heights.
-    for (var i = 0; i < headerTitleTrElements.length; i++) {
-      // set to 'auto' (or remove inline style) to allow shrink
-      headerTitleTrElements[i].style.height = 'auto';
-      if (trElements[i]) trElements[i].style.height = 'auto';
-      var targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
-      var tdOHeight = window.getComputedStyle(targetElement).height;
-      headerTitleTrElements[i].style.height = tdOHeight;
-      trElements[i].style.height = tdOHeight;
-    }
+      // Reset any previously set inline heights so we measure natural heights.
+      for (var i = 0; i < headerTitleTrElements.length; i++) {
+        // set to 'auto' (or remove inline style) to allow shrink
+        headerTitleTrElements[i].style.height = 'auto';
+        if (trElements[i]) trElements[i].style.height = 'auto';
+        var targetElement = headerTitleTrElements[i].offsetHeight > trElements[i].offsetHeight ? headerTitleTrElements[i] : trElements[i];
+        var tdOHeight = window.getComputedStyle(targetElement).height;
+        headerTitleTrElements[i].style.height = tdOHeight;
+        trElements[i].style.height = tdOHeight;
+      }
+
+      // Remove from tracking set after execution
+      rafIdsRef.current["delete"](rafId);
+    });
+
+    // Track this requestAnimationFrame ID for cleanup
+    rafIdsRef.current.add(rafId);
   }
   function tableGridInit() {
     //
@@ -5584,187 +5637,196 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       _curColCount = 7;
     }
 
-    //****************
-    // STEP 1-1: 
-    //****************
-    // calculate min width (MODE: WEEK)
-    //--------------
-    if (appearanceMode === 'week') {
-      var tableMaxWidth = tableGridEl.clientWidth;
-      var tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
-      var tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
-      var tableBorderWidth = 4;
-      var scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
-      _curCellMinWidth = scrollMaxWidth / 7;
-      _curColCount = 7;
-
-      // header
-      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach(function (node) {
-        node.style.width = _curCellMinWidth + 'px';
-      });
-    }
-
-    //****************
-    // STEP 1-2: 
-    //****************
-    // calculate min width (MODE: MONTH)
-    //--------------
-    var cellMinWidth = _curCellMinWidth;
-    var colCount = _curColCount;
-    var scrollableMinWidth = cellMinWidth * colCount;
-
-    //****************
-    // STEP 1-3: 
-    //****************
-    // initialize "header & main" cells
-    //--------------
-    var headerThContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
-    for (var i = 0; i < headerThContentContainers.length; i++) {
-      var curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
-      if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
-    }
-    var mainTdContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
-    for (var _i2 = 0; _i2 < mainTdContentContainers.length; _i2++) {
-      var _curHeaderThContent = mainTdContentContainers[_i2].querySelector('.custom-event-tl-table__cell-cushion-content');
-      if (_curHeaderThContent !== null) _curHeaderThContent.style.width = _curCellMinWidth + 'px';
-    }
-    var mainTdContentCols = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
-    for (var _i3 = 0; _i3 < mainTdContentCols.length; _i3++) {
-      mainTdContentCols[_i3].style.minWidth = _curCellMinWidth + 'px';
-    }
-
-    //****************
-    // STEP 2: 
-    //****************    
-    // initialize scrollable wrapper (width)
-    //--------------
-    var _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
-    [].slice.call(_scrollableWrapper).forEach(function (el) {
-      var scrollType = el.dataset.scroll;
+    // Use requestAnimationFrame to batch DOM operations
+    var rafId = requestAnimationFrame(function () {
+      //****************
+      // STEP 1-1: 
+      //****************
+      // calculate min width (MODE: WEEK)
+      //--------------
       if (appearanceMode === 'week') {
-        el.classList.add('custom-event-tl-table__scroller-harness--hideX');
-      }
-      if (appearanceMode === 'month') {
-        el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
-      }
-      if (scrollType !== 'list') {
-        var _content = el.querySelector('.custom-event-tl-table__scroller');
-        var _tableMaxWidth = tableGridEl.clientWidth;
-        var _tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
-        var _tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
-        var _tableBorderWidth = 4;
-        var _scrollMaxWidth = _tableMaxWidth - _tableHeaderTitleWidth - _tableDividerWidth - _tableBorderWidth;
-        el.dataset.width = _scrollMaxWidth;
-        el.style.maxWidth = el.dataset.width + 'px';
-        _content.style.minWidth = scrollableMinWidth + 'px';
-      }
-    });
+        var tableMaxWidth = tableGridEl.clientWidth;
+        var tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+        var tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
+        var tableBorderWidth = 4;
+        var scrollMaxWidth = tableMaxWidth - tableHeaderTitleWidth - tableDividerWidth - tableBorderWidth;
+        _curCellMinWidth = scrollMaxWidth / 7;
+        _curColCount = 7;
 
-    //****************
-    // STEP 3: 
-    //****************
-    // initialize cell width
-    //--------------
-    var tdElementMaxWidth = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
-    if (Array.isArray(eventsValue) && eventsValue.length > 0) {
-      for (var _i4 = 0; _i4 < headerThContentContainers.length; _i4++) {
-        var _curHeaderThContent2 = headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
-        var curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(_curHeaderThContent2).width);
-        var targetElement = headerThContentContainers[_i4].offsetWidth > mainTdContentContainers[_i4].offsetWidth ? headerThContentContainers[_i4] : mainTdContentContainers[_i4];
-        var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+        // header
+        tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-content').forEach(function (node) {
+          node.style.width = _curCellMinWidth + 'px';
+        });
+      }
 
-        // check td max width
-        if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
-          tdOwidth = tdElementMaxWidth;
+      //****************
+      // STEP 1-2: 
+      //****************
+      // calculate min width (MODE: MONTH)
+      //--------------
+      var cellMinWidth = _curCellMinWidth;
+      var colCount = _curColCount;
+      var scrollableMinWidth = cellMinWidth * colCount;
+
+      //****************
+      // STEP 1-3: 
+      //****************
+      // initialize "header & main" cells
+      //--------------
+      var headerThContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-header__content tbody').getElementsByTagName('th');
+      for (var i = 0; i < headerThContentContainers.length; i++) {
+        var curHeaderThContent = headerThContentContainers[i].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
+        if (curHeaderThContent !== null) curHeaderThContent.style.width = _curCellMinWidth + 'px';
+      }
+      var mainTdContentContainers = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content tbody').getElementsByTagName('td');
+      for (var _i2 = 0; _i2 < mainTdContentContainers.length; _i2++) {
+        var _curHeaderThContent = mainTdContentContainers[_i2].querySelector('.custom-event-tl-table__cell-cushion-content');
+        if (_curHeaderThContent !== null) _curHeaderThContent.style.width = _curCellMinWidth + 'px';
+      }
+      var mainTdContentCols = tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content colgroup').getElementsByTagName('col');
+      for (var _i3 = 0; _i3 < mainTdContentCols.length; _i3++) {
+        mainTdContentCols[_i3].style.minWidth = _curCellMinWidth + 'px';
+      }
+
+      //****************
+      // STEP 2: 
+      //****************    
+      // initialize scrollable wrapper (width)
+      //--------------
+      var _scrollableWrapper = tableGridEl.querySelectorAll('.custom-event-tl-table__scroller-harness');
+      [].slice.call(_scrollableWrapper).forEach(function (el) {
+        var scrollType = el.dataset.scroll;
+        if (appearanceMode === 'week') {
+          el.classList.add('custom-event-tl-table__scroller-harness--hideX');
         }
-
-        // check header th max width
-        if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThContentMaxWidth) {
-          tdOwidth = curHeaderThContentMaxWidth;
+        if (appearanceMode === 'month') {
+          el.classList.remove('custom-event-tl-table__scroller-harness--hideX');
         }
-
-        // Prevent the width from being +1 each time it is initialized
-        tdOwidth = tdOwidth - 1;
-        headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
-        mainTdContentCols[_i4].style.minWidth = tdOwidth + 'px';
-      }
-    }
-
-    //****************
-    // STEP 4: 
-    //****************    
-    // initialize max width of table content
-    //--------------
-    if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
-      var tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
-      var scrollBodyEl = scrollBodyRef.current;
-      var scrollHeaderEl = scrollHeaderRef.current;
-      scrollBodyEl.style.width = tableContentWidth;
-      scrollHeaderEl.style.width = tableContentWidth;
-      scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
-      scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
-
-      //
-      var tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
-      if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
-        tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
-      }
-    }
-
-    //****************
-    // STEP 5: 
-    //****************
-    // initialize cell height
-    //--------------
-    tableGridInitHeadertitle();
-
-    //****************
-    // STEP 6: 
-    //****************
-    //initialize scrollable wrapper (height)
-    //--------------
-    [].slice.call(_scrollableWrapper).forEach(function (el) {
-      var scrollType = el.dataset.scroll;
-      var oldHeight = el.clientHeight;
-      if (scrollType !== 'header') {
-        var tableWrapperMaxHeight = window.getComputedStyle(tableGridEl).height;
-        if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
-          el.style.height = tableWrapperMaxHeight;
+        if (scrollType !== 'list') {
+          var _content = el.querySelector('.custom-event-tl-table__scroller');
+          var _tableMaxWidth = tableGridEl.clientWidth;
+          var _tableHeaderTitleWidth = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+          var _tableDividerWidth = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
+          var _tableBorderWidth = 4;
+          var _scrollMaxWidth = _tableMaxWidth - _tableHeaderTitleWidth - _tableDividerWidth - _tableBorderWidth;
+          el.dataset.width = _scrollMaxWidth;
+          el.style.maxWidth = el.dataset.width + 'px';
+          _content.style.minWidth = scrollableMinWidth + 'px';
         }
-      }
-    });
-
-    //****************
-    // STEP 7: 
-    //****************
-    // display wrapper
-    //--------------
-    tableGridEl.classList.remove('invisible');
-
-    //****************
-    // STEP 1-1: 
-    //****************
-    // calculate min width (MODE: WEEK)
-    //--------------
-    if (appearanceMode === 'week') {
-      var _tableMaxWidth2 = tableGridEl.clientWidth;
-      var _tableHeaderTitleWidth2 = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
-      var _tableDividerWidth2 = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
-      var _tableBorderWidth2 = 4;
-      var _scrollMaxWidth2 = _tableMaxWidth2 - _tableHeaderTitleWidth2 - _tableDividerWidth2 - _tableBorderWidth2;
-      _curCellMinWidth = _scrollMaxWidth2 / 7;
-      _curColCount = 7;
-
-      // header content
-      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach(function (node) {
-        node.style.width = _curCellMinWidth + 'px';
       });
 
-      // main content
-      tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach(function (node) {
-        node.style.width = _curCellMinWidth + 'px';
+      //****************
+      // STEP 3: 
+      //****************
+      // initialize cell width
+      //--------------
+      var tdElementMaxWidth = typeof mainTdContentContainers[0] === 'undefined' ? 0 : parseFloat(window.getComputedStyle(mainTdContentContainers[0].querySelector('.custom-event-tl-table__cell-cushion-content')).maxWidth);
+      if (Array.isArray(eventsValue) && eventsValue.length > 0) {
+        for (var _i4 = 0; _i4 < headerThContentContainers.length; _i4++) {
+          var _curHeaderThContent2 = headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent');
+          var curHeaderThContentMaxWidth = parseFloat(window.getComputedStyle(_curHeaderThContent2).width);
+          var targetElement = headerThContentContainers[_i4].offsetWidth > mainTdContentContainers[_i4].offsetWidth ? headerThContentContainers[_i4] : mainTdContentContainers[_i4];
+          var tdOwidth = parseFloat(window.getComputedStyle(targetElement).width);
+
+          // check td max width
+          if (tdElementMaxWidth > 0 && tdOwidth > tdElementMaxWidth) {
+            tdOwidth = tdElementMaxWidth;
+          }
+
+          // check header th max width
+          if (tdElementMaxWidth > 0 && tdElementMaxWidth < curHeaderThContentMaxWidth) {
+            tdOwidth = curHeaderThContentMaxWidth;
+          }
+
+          // Prevent the width from being +1 each time it is initialized
+          tdOwidth = tdOwidth - 1;
+          headerThContentContainers[_i4].querySelector('.custom-event-tl-table__cell-cushion-headercontent').style.width = tdOwidth + 'px';
+          mainTdContentCols[_i4].style.minWidth = tdOwidth + 'px';
+        }
+      }
+
+      //****************
+      // STEP 4: 
+      //****************    
+      // initialize max width of table content
+      //--------------
+      if (scrollBodyRef.current !== null && scrollHeaderRef.current !== null) {
+        var tableContentWidth = window.getComputedStyle(tableGridEl.querySelector('.custom-event-tl-table__datagrid-body__content')).width;
+        var scrollBodyEl = scrollBodyRef.current;
+        var scrollHeaderEl = scrollHeaderRef.current;
+        scrollBodyEl.style.width = tableContentWidth;
+        scrollHeaderEl.style.width = tableContentWidth;
+        scrollBodyEl.dataset.width = parseFloat(tableContentWidth);
+        scrollHeaderEl.dataset.width = parseFloat(tableContentWidth);
+
+        //
+        var tableWrapperMaxWidthLatest = tableGridEl.clientWidth;
+        if (tableWrapperMaxWidthLatest > parseFloat(tableContentWidth)) {
+          tableGridEl.querySelector('.custom-event-tl-table__timeline-table').style.width = tableContentWidth;
+        }
+      }
+
+      //****************
+      // STEP 5: 
+      //****************
+      // initialize cell height
+      //--------------
+      tableGridInitHeadertitle();
+
+      //****************
+      // STEP 6: 
+      //****************
+      //initialize scrollable wrapper (height)
+      //--------------
+      [].slice.call(_scrollableWrapper).forEach(function (el) {
+        var scrollType = el.dataset.scroll;
+        var oldHeight = el.clientHeight;
+        if (scrollType !== 'header') {
+          var tableWrapperMaxHeight = window.getComputedStyle(tableGridEl).height;
+          if (oldHeight > parseFloat(tableWrapperMaxHeight)) {
+            el.style.height = tableWrapperMaxHeight;
+          }
+        }
       });
-    }
+
+      //****************
+      // STEP 7: 
+      //****************
+      // display wrapper
+      //--------------
+      tableGridEl.classList.remove('invisible');
+
+      //****************
+      // STEP 1-1: 
+      //****************
+      // calculate min width (MODE: WEEK)
+      //--------------
+      if (appearanceMode === 'week') {
+        var _tableMaxWidth2 = tableGridEl.clientWidth;
+        var _tableHeaderTitleWidth2 = tableGridEl.querySelector('.custom-event-tl-table__cell-cushion-headertitle').clientWidth;
+        var _tableDividerWidth2 = tableGridEl.querySelector('.custom-event-tl-table__timeline-divider').clientWidth;
+        var _tableBorderWidth2 = 4;
+        var _scrollMaxWidth2 = _tableMaxWidth2 - _tableHeaderTitleWidth2 - _tableDividerWidth2 - _tableBorderWidth2;
+        _curCellMinWidth = _scrollMaxWidth2 / 7;
+        _curColCount = 7;
+
+        // header content
+        tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-headercontent__container, .custom-event-tl-table__cell-cushion-headercontent').forEach(function (node) {
+          node.style.width = _curCellMinWidth + 'px';
+        });
+
+        // main content
+        tableGridEl.querySelectorAll('.custom-event-tl-table__cell-cushion-content').forEach(function (node) {
+          node.style.width = _curCellMinWidth + 'px';
+        });
+      }
+
+      // Remove from tracking set after execution
+      rafIdsRef.current["delete"](rafId);
+    });
+
+    // Track this requestAnimationFrame ID for cleanup
+    rafIdsRef.current.add(rafId);
   }
   function tableGridReset() {
     if (tableGridRef.current === null) return;
@@ -5799,7 +5861,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     setYearsCollection(years);
   }, [selectedYear]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    updateTodayDate(date);
+    updateTodayDate(date, prevDateRef.current);
   }, [date]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // Guaranteed year change triggered by the front and rear buttons
@@ -5836,6 +5898,18 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     // !!!Please do not use dependencies
     //--------------
     return function () {
+      // Cancel all pending requestAnimationFrame callbacks to prevent memory leaks
+      rafIdsRef.current.forEach(function (rafId) {
+        cancelAnimationFrame(rafId);
+      });
+      rafIdsRef.current.clear();
+
+      // Cancel table drag animation frame if pending
+      if (tableDragRafIdRef.current !== null) {
+        cancelAnimationFrame(tableDragRafIdRef.current);
+        tableDragRafIdRef.current = null;
+      }
+
       // reset table grid
       tableGridReset();
 
