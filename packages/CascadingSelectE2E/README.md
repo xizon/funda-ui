@@ -699,6 +699,15 @@ export default () => {
                     // const res: string = param.map((item) => item.label).join('/');
                     // return res.split('/').at(-1) || '';
                 }}
+                 onChange={(input: any, currentData: any, index: number, depth: number, value: any, closeFunc: any) => {
+
+                    const _input = typeof input.dataset !== 'undefined' ? input : input.currentTarget;
+                    let changeValue = currentData?.name;
+                    if (typeof changeValue === 'undefined') {
+                        changeValue = _input.value;
+                    }
+                    console.log('value: ', changeValue);
+                 }}
                 ...
             />
 
