@@ -1966,6 +1966,7 @@ export default () => {
                     multipleCells
                     headerShowWeek
                     autoScroll
+                    appearance="week"
                     onCellMouseUp={(e: React.MouseEvent, selectedCellsData: any[]) => {
                         setSelectedCellsData(selectedCellsData);
                         console.log('-> onCellMouseUp: ', selectedCellsData);

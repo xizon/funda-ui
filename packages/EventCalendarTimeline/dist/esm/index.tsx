@@ -14,7 +14,6 @@ import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
 
-
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -324,6 +323,8 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         return tableCellMinWidth;
     }, [tableCellMinWidth, appearanceMode, headerShowWeek]);
 
+    
+
     const findMondayAndTruncate = (dates: string[]) => {
         const _res = dates.map((s: string) => new Date(s));
         // Find the first Monday in the sequence
@@ -389,7 +390,45 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     //================================================================
     // Weekly calendar
     //================================================================
+    const hasInitializedRef = useRef<boolean>(false);
+
+    // Helper function to calculate offset from a specific date
+    const calculateWeekOffset = (targetDate?: Date) => {
+        const _curDate = typeof targetDate === 'undefined' ? date : targetDate;
+
+        // 1. Get the current selected date (from customTodayDate or user selection)
+        const selected = new Date(_curDate.getFullYear(), _curDate.getMonth(), _curDate.getDate());
+        
+        // 2. Get the reference Monday of the "actual current week" (offset 0)
+        const currentWeekDates = getWeekDatesFromMon(0);
+        const currentMonday = new Date(currentWeekDates[0]);
+        currentMonday.setHours(0, 0, 0, 0);
+
+        // 3. Calculate the difference in days
+        const diffTime = selected.getTime() - currentMonday.getTime();
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+        // 4. Update the week offset automatically
+        const offset = Math.floor(diffDays / 7);
+        setWeekOffset(offset);
+    }
+    // Initialize weekOffset based on customTodayDate instead of default 0
     const [weekOffset, setWeekOffset] = useState<number>(0);
+
+    // Sync weekOffset whenever date changes or mode switches to 'week'
+    useEffect(() => {
+        if (!hasInitializedRef.current) {
+            const customDateValid = isValidDate(customTodayDate as never);
+            if (customDateValid) {
+                calculateWeekOffset(new Date(customTodayDate as string));
+                setDate(new Date(customTodayDate as string));
+                hasInitializedRef.current = true;
+            }
+        } 
+    }, [date, appearanceMode, customTodayDate]);
+
+
+
     const handleNextWeek = () => {
         setWeekOffset(weekOffset + 1);
         return weekOffset + 1;
@@ -1169,7 +1208,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     }
-    function handleDayChange(e: React.MouseEvent, currentDay: number) {
+    function handleDayChange(e: React.MouseEvent | null, currentDay: number) {
         // Avoid triggering a full table re-render when the clicked cell is already
         // the active day; this becomes expensive with large datasets.
         if (
@@ -1260,11 +1299,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     function handleAppearanceChange(e: React.MouseEvent) {
         const _mode = (e.target as any).dataset.mode;
         setAppearanceMode(_mode);
-
-        //
+        
+        // The useEffect above will handle the weekOffset calculation 
+        // as soon as appearanceMode becomes 'week'
         onChangeAppearanceMode?.(_mode);
     }
-
 
 
 
@@ -1356,7 +1395,9 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                             data-date={_dateShow}
                             data-day={_dateDayShow}
                             data-week={weekDay}
-                            style={{ minWidth: CELL_MIN_W + 'px' }}
+
+                            // FIX: In 'week' mode, we don't want a hardcoded minWidth 
+                            style={appearanceMode === 'week' ? undefined : { minWidth: CELL_MIN_W + 'px' }}  
                             onMouseEnter={(e: React.MouseEvent) => {
                                 onCellMouseEnter?.(e);
                             }}
@@ -2241,6 +2282,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     }
+
 
     // Dual RAF survival test
     /*

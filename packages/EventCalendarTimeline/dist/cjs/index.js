@@ -4238,10 +4238,45 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   //================================================================
   // Weekly calendar
   //================================================================
+  var hasInitializedRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(false);
+
+  // Helper function to calculate offset from a specific date
+  var calculateWeekOffset = function calculateWeekOffset(targetDate) {
+    var _curDate = typeof targetDate === 'undefined' ? date : targetDate;
+
+    // 1. Get the current selected date (from customTodayDate or user selection)
+    var selected = new Date(_curDate.getFullYear(), _curDate.getMonth(), _curDate.getDate());
+
+    // 2. Get the reference Monday of the "actual current week" (offset 0)
+    var currentWeekDates = (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.getWeekDatesFromMon)(0);
+    var currentMonday = new Date(currentWeekDates[0]);
+    currentMonday.setHours(0, 0, 0, 0);
+
+    // 3. Calculate the difference in days
+    var diffTime = selected.getTime() - currentMonday.getTime();
+    var diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    // 4. Update the week offset automatically
+    var offset = Math.floor(diffDays / 7);
+    setWeekOffset(offset);
+  };
+  // Initialize weekOffset based on customTodayDate instead of default 0
   var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
     _useState40 = _slicedToArray(_useState39, 2),
     weekOffset = _useState40[0],
     setWeekOffset = _useState40[1];
+
+  // Sync weekOffset whenever date changes or mode switches to 'week'
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (!hasInitializedRef.current) {
+      var customDateValid = (0,funda_utils_dist_cjs_date__WEBPACK_IMPORTED_MODULE_6__.isValidDate)(customTodayDate);
+      if (customDateValid) {
+        calculateWeekOffset(new Date(customTodayDate));
+        setDate(new Date(customTodayDate));
+        hasInitializedRef.current = true;
+      }
+    }
+  }, [date, appearanceMode, customTodayDate]);
   var handleNextWeek = function handleNextWeek() {
     setWeekOffset(weekOffset + 1);
     return weekOffset + 1;
@@ -5071,7 +5106,8 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     var _mode = e.target.dataset.mode;
     setAppearanceMode(_mode);
 
-    //
+    // The useEffect above will handle the weekOffset calculation 
+    // as soon as appearanceMode becomes 'week'
     onChangeAppearanceMode === null || onChangeAppearanceMode === void 0 ? void 0 : onChangeAppearanceMode(_mode);
   }
   function handleShowWinYear() {
@@ -5161,8 +5197,11 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
               colSpan: 1,
               "data-date": _dateShow,
               "data-day": _dateDayShow,
-              "data-week": weekDay,
-              style: {
+              "data-week": weekDay
+
+              // FIX: In 'week' mode, we don't want a hardcoded minWidth 
+              ,
+              style: appearanceMode === 'week' ? undefined : {
                 minWidth: CELL_MIN_W + 'px'
               },
               onMouseEnter: function onMouseEnter(e) {
