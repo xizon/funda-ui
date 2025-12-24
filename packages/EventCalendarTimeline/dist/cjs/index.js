@@ -5794,10 +5794,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       //****************
       // display wrapper
       //--------------
-      tableGridEl.classList.remove('invisible');
+      setGridReady(true);
 
       //****************
-      // STEP 1-1: 
+      // STEP 7-1: 
       //****************
       // calculate min width (MODE: WEEK)
       //--------------
@@ -5851,6 +5851,49 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       trElements[i].removeAttribute('style');
     }
   }
+
+  // Dual RAF survival test
+  /*
+      A single RAF only guarantees "moving to the next frame." 
+      Only dual RAFs can guarantee "DOM is mounted + layout is stable."
+  */
+  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState52 = _slicedToArray(_useState51, 2),
+    gridReady = _useState52[0],
+    setGridReady = _useState52[1];
+  var rafRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
+  function safeShowGrid() {
+    // 
+    setGridReady(false);
+    rafRef.current.r1 = requestAnimationFrame(function () {
+      rafRef.current.r2 = requestAnimationFrame(function () {
+        var el = tableGridRef.current;
+        if (!el) return;
+
+        // 
+        tableGridInit();
+
+        // Do only one thing: notify React that it’s ready to be displayed.
+        setGridReady(true);
+      });
+    });
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    safeShowGrid();
+    return function () {
+      if (rafRef.current.r1) {
+        cancelAnimationFrame(rafRef.current.r1);
+      }
+      if (rafRef.current.r2) {
+        cancelAnimationFrame(rafRef.current.r2);
+      }
+    };
+  }, [appearanceMode]);
+
+  // Make sure the left side is highly synchronized with the right side.
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    tableGridInitHeadertitle();
+  }, [orginalData, appearanceMode]);
 
   // if user change the selectedYear, then udate the years array that is displayed on year tab view
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
@@ -6104,7 +6147,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     onClick: handleAppearanceChange
   }, langAppearanceLabelWeek || 'Week')) : null)), orginalData.length === 0 ? null : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     ref: tableGridRef,
-    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--".concat(appearanceMode, " invisible"), tableWrapperClassName),
+    className: (0,funda_utils_dist_cjs_cls__WEBPACK_IMPORTED_MODULE_7__.combinedCls)("custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--".concat(appearanceMode), tableWrapperClassName, {
+      'invisible': !gridReady
+    }),
     onKeyDown: function onKeyDown(e) {
       onKeyPressed === null || onKeyPressed === void 0 ? void 0 : onKeyPressed(e, selectedCells);
 

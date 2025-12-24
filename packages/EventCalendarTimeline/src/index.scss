@@ -297,6 +297,9 @@
     position: relative;
     z-index: 2;
 
+    &.invisible {
+        visibility: hidden;
+    }
 
     /* Required when using onKeyDown */
     &[tabindex]:focus-visible {

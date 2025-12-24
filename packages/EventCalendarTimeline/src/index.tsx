@@ -252,6 +252,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     const [month, setMonth] = useState<number>(date.getMonth());
     const [year, setYear] = useState<number>(date.getFullYear());
     const [startDay, setStartDay] = useState<number>(getStartDayOfMonth(date));
+    
 
 
     // selection tab
@@ -1922,6 +1923,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     function tableGridInitHeadertitle() {
+
         //
         if (tableGridRef.current === null) return;
 
@@ -2171,10 +2173,10 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
             //****************
             // display wrapper
             //--------------
-            tableGridEl.classList.remove('invisible');
+            setGridReady(true);
 
             //****************
-            // STEP 1-1: 
+            // STEP 7-1: 
             //****************
             // calculate min width (MODE: WEEK)
             //--------------
@@ -2239,6 +2241,52 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
 
     }
+
+    // Dual RAF survival test
+    /*
+        A single RAF only guarantees "moving to the next frame." 
+        Only dual RAFs can guarantee "DOM is mounted + layout is stable."
+    */
+    const [gridReady, setGridReady] = useState<boolean>(false);
+    const rafRef = useRef<{ r1?: number; r2?: number }>({});
+
+    function safeShowGrid() {
+        // 
+        setGridReady(false);
+
+        rafRef.current.r1 = requestAnimationFrame(() => {
+            rafRef.current.r2 = requestAnimationFrame(() => {
+                const el = tableGridRef.current;
+                if (!el) return;
+
+                // 
+                tableGridInit();
+
+                // Do only one thing: notify React that it’s ready to be displayed.
+                setGridReady(true);
+            });
+        });
+    }
+
+    useEffect(() => {
+        safeShowGrid();
+
+        return () => {
+            if (rafRef.current.r1) {
+                cancelAnimationFrame(rafRef.current.r1);
+            }
+            if (rafRef.current.r2) {
+                cancelAnimationFrame(rafRef.current.r2);
+            }
+        };
+    }, [appearanceMode]);
+
+
+    // Make sure the left side is highly synchronized with the right side.
+    useEffect(() => {
+        tableGridInitHeadertitle();
+    }, [orginalData, appearanceMode]);
+
 
     // if user change the selectedYear, then udate the years array that is displayed on year tab view
     useEffect(() => {
@@ -2567,8 +2615,11 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
                 <div
                     ref={tableGridRef}
                     className={combinedCls(
-                        `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode} invisible`,
-                        tableWrapperClassName
+                        `custom-event-tl-table__timeline-table__wrapper custom-event-tl-table__timeline-table__wrapper--${appearanceMode}`,
+                        tableWrapperClassName,
+                        { 
+                            'invisible': !gridReady 
+                        }
                     )}
                     onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
                         onKeyPressed?.(e, selectedCells);

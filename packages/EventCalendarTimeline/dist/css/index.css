@@ -243,6 +243,9 @@
   /* cell */
   /* scroller */
 }
+.custom-event-tl-table__timeline-table__wrapper.invisible {
+  visibility: hidden;
+}
 .custom-event-tl-table__timeline-table__wrapper[tabindex]:focus-visible {
   outline: none;
 }
