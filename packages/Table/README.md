@@ -2509,6 +2509,48 @@ export default () => {
                 </TableBody>
             </Table>   
 
+            <p>
+                <a href="#" onClick={(e) => {
+                    e.preventDefault();
+
+                    setSelectedRowData([]);
+                    
+                    // trigger target checkbox
+                    if (tableCheckRef.current !== null) {
+                        for (let [key, value] of tableCheckRef.current as any) {
+                            value.set(false);
+                        }
+                    }
+
+                    if (tableSelectAllRef.current) {
+                        tableSelectAllRef.current.indeterminate(false);
+                        tableSelectAllRef.current.setSelectAll(false);
+                    }
+            
+
+                }}>Deselecting all</a>
+                &nbsp;|&nbsp;
+                <a href="#" onClick={(e) => {
+                    e.preventDefault();
+
+                    setSelectedRowData(tableData);
+
+                    // trigger target checkbox
+                    if (tableCheckRef.current !== null) {
+                        for (let [key, value] of tableCheckRef.current as any) {
+                            value.set(true);
+                        }
+                    }
+
+                    if (tableSelectAllRef.current) {
+                        tableSelectAllRef.current.indeterminate(false);
+                        tableSelectAllRef.current.setSelectAll(true);
+                    }
+            
+
+                }}>Selecting all</a>
+            </p> 
+
             <small>Selected: {selectedRowData && selectedRowData.map((v: any) => v.name).join(',')}</small>
 
 
