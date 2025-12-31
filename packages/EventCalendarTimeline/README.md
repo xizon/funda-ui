@@ -379,16 +379,16 @@ export default () => {
                     langWeek={['<small class="ps-1">MON</small>', '<small class="ps-1">TUE</small>', '<small class="ps-1">WED</small>', '<small class="ps-1">THU</small>', '<small class="ps-1">FRI</small>', '<small class="ps-1">SAT</small>', '<small class="ps-1">SUN</small>']}
                     onChangeDate={(e: any, currentData: any) => {
                         console.log(e.currentTarget.dataset.date, e.currentTarget.dataset.week); // 2023-11-22, 2
-                        console.log(currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
+                        console.log('-> onChangeDate: ', currentData); // {id: 0, date: '2023-11-22'}  or {id: 1, date: '2023-11-20', time: '', data: 'event 1'}
                     }}
                     onChangeMonth={(currentData: any) => {
-                        console.log(currentData); // {day: '14', month: '03', year: '2024'}
+                        console.log('-> onChangeMonth: ', currentData); // {day: '14', month: '03', year: '2024'}
                     }}
                     onChangeYear={(currentData: any) => {
-                        console.log(currentData); // {day: '14', month: '03', year: '2030'}
+                        console.log('-> onChangeYear: ', currentData); // {day: '14', month: '03', year: '2030'}
                     }}
                     onChangeToday={(currentData: any) => {
-                        console.log(currentData); // {day: '26', month: '03', year: '2024'}
+                        console.log('-> onChangeToday: ', currentData); // {day: '26', month: '03', year: '2024'}
                     }}
                     draggable
                     headerShowWeek

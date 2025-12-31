@@ -1,4 +1,20 @@
 /**
+ * Get the Sunday of the week of the specific date, and return to the
+ * end of January next year if it is New Year's Eve
+ * @param {Date | String} v
+ * @returns {String}  yyyy-MM-dd
+ *
+ * @example
+ * getSpecialDateEnd('2025-12-29'); // 2026-01-31
+ * getSpecialDateEnd('2025-12-17'); // 2025-12-31
+ */
+/**
+ * Calculates a special end date based on the week and month logic.
+ * @param v - The input date (Date object, string, or timestamp)
+ * @returns A formatted date string (YYYY-MM-DD)
+ */
+declare function getSpecialDateEnd(v: Date | string | number): string;
+/**
  * The check string contains only hours, minutes, and seconds
  * @returns {Boolean}
  */
@@ -213,15 +229,27 @@ declare function timestampToDate(v: number, padZeroEnabled?: boolean): string;
  */
 declare function getMonthDates(year: number, month: number): string[];
 /**
- * Get the date of the specified week (From Sunday)
- * @param {Number} weekOffset
- * @returns {Array<Date>}
+ * Get all 7 dates for a specific week starting from Sunday.
+ * * @param {Number} weekOffset - The offset of weeks from the current week.
+ * 0: Current week
+ * -1: Previous week
+ * 1: Next week
+ * @returns {Array<Date>} - An array containing 7 Date objects from Sunday to Saturday.
  */
 declare function getWeekDatesFromSun(weekOffset: number): Date[];
 /**
- * Get the date of the specified week (From Monday)
- * @param {Number} weekOffset
- * @returns {Array<Date>}
+ * Get all 7 dates for a specific week starting from Monday.
+ * * @param {Number} weekOffset - The offset of weeks from the current week.
+ * 0: Current week
+ * -1: Previous week
+ * 1: Next week
+ * @returns {Array<Date>} - An array containing 7 Date objects from Monday to Sunday.
  */
 declare function getWeekDatesFromMon(weekOffset: number): Date[];
-export { isTimeString, getNow, padZero, dateFormat, getDateDetails, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, getDaysInLastMonths, setDateHours, setDateMinutes, setDateDays, timestampToDate, getMonthDates, getWeekDatesFromSun, getWeekDatesFromMon };
+/**
+ * Get the date list of the week for the specified date (starting from Monday)
+ * @param {Date | String} v - The specified date
+ * @returns {Array<Date>} - An array containing 7 Date objects
+ */
+declare function getWeekDatesByDate(v: Date | string | number): Date[];
+export { getSpecialDateEnd, isTimeString, getNow, padZero, dateFormat, getDateDetails, isValidDate, isValidHours, isValidMinutesAndSeconds, isValidYear, isValidMonth, isValidDay, getLastDayInMonth, getFirstAndLastMonthDay, getCalendarDate, getFullTime, getTodayDate, getCurrentMonth, getCurrentYear, getCurrentDay, getCurrentDate, getTomorrowDate, getYesterdayDate, getNextMonthDate, getPrevMonthDate, getNextYearDate, getPrevYearDate, getSpecifiedDate, getDaysInLastMonths, setDateHours, setDateMinutes, setDateDays, timestampToDate, getMonthDates, getWeekDatesFromSun, getWeekDatesFromMon, getWeekDatesByDate };

@@ -1,3 +1,47 @@
+
+/**
+ * Get the Sunday of the week of the specific date, and return to the 
+ * end of January next year if it is New Year's Eve
+ * @param {Date | String} v 
+ * @returns {String}  yyyy-MM-dd
+ *
+ * @example
+ * getSpecialDateEnd('2025-12-29'); // 2026-01-31
+ * getSpecialDateEnd('2025-12-17'); // 2025-12-31
+ */
+/**
+ * Calculates a special end date based on the week and month logic.
+ * @param v - The input date (Date object, string, or timestamp)
+ * @returns A formatted date string (YYYY-MM-DD)
+ */
+function getSpecialDateEnd(v: Date | string | number): string {
+    // Assuming dateFormat returns a Date object based on your logic
+    const date: Date = new Date(v); 
+    
+    // getWeekDatesByDate should return Date[]
+    const weekDates: Date[] = getWeekDatesByDate(v); 
+    const sunday: Date = weekDates[6]; // Sunday of that week
+    
+    // If Sunday of this week rolls into the next year
+    if (sunday.getFullYear() > date.getFullYear()) {
+        const year = sunday.getFullYear();
+        
+        // Get the last day of January of that new year
+        // Note: month 1 in 'new Date' is February, day 0 gives the last day of Jan
+        const lastDay = new Date(year, 1, 0).getDate();
+        
+        // Using template literals for the return string
+        return `${year}-01-${lastDay.toString().padStart(2, '0')}`;
+    }
+    
+    // Default: Return the last day of the current month
+    // We create a date for the "0th" day of the next month to get the end of current month
+    const endOfCurrentMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    
+    return getCalendarDate(endOfCurrentMonth);
+}
+
+
 /**
  * The check string contains only hours, minutes, and seconds
  * @returns {Boolean}  
@@ -497,20 +541,95 @@ function getMonthDates(year: number, month: number) {
     return dates;
 }
 
+
 /**
- * Get the date of the specified week (From Sunday)
- * @param {Number} weekOffset 
- * @returns {Array<Date>} 
+ * Get all 7 dates for a specific week starting from Sunday.
+ * * @param {Number} weekOffset - The offset of weeks from the current week.
+ * 0: Current week
+ * -1: Previous week
+ * 1: Next week
+ * @returns {Array<Date>} - An array containing 7 Date objects from Sunday to Saturday.
  */
-function getWeekDatesFromSun(weekOffset: number) {
-    const dates: Array<Date> = [];
-    const currentDate = new Date();
+/*
+// Demo 1: Get dates for the current week (Sunday Start)
+const currentWeekSun = getWeekDatesFromSun(0);
+console.log('Sunday (Start):', currentWeekSun[0].toLocaleDateString());
+console.log('Saturday (End):', currentWeekSun[6].toLocaleDateString());
 
-    // Calculate the date of Sunday
-    const dayOfWeek = currentDate.getDay(); // 0 is Sunday
-    currentDate.setDate(currentDate.getDate() - dayOfWeek + weekOffset * 7);
+// Demo 2: Get the date range for the previous week
+const lastWeek = getWeekDatesFromSun(-1);
+const rangeStart = lastWeek[0].toISOString().split('T')[0];
+const rangeEnd = lastWeek[6].toISOString().split('T')[0];
+console.log(`Previous Week Range: ${rangeStart} to ${rangeEnd}`);
 
-    // Get the date of the week
+// Demo 3: Checking for Month/Year transitions
+const transitionWeek = getWeekDatesFromSun(0).map(d => d.toDateString());
+console.log('Transition Week Dates:', transitionWeek);
+
+*/
+function getWeekDatesFromSun(weekOffset: number): Date[] {
+    const dates: Date[] = [];
+    // Start with a clean date (midnight) to avoid timezone/DST shifts during calculation
+    const currentDate: Date = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    const dayOfWeek: number = currentDate.getDay(); 
+    
+    // Move to the Sunday of the current week, then apply the week offset
+    // Formula: Current Date - Current Day Index + (Offset * 7)
+    currentDate.setDate(currentDate.getDate() - dayOfWeek + (weekOffset * 7));
+
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(currentDate);
+        date.setDate(currentDate.getDate() + i);
+        dates.push(date);
+    }
+
+    return dates;
+}
+
+
+/**
+ * Get all 7 dates for a specific week starting from Monday.
+ * * @param {Number} weekOffset - The offset of weeks from the current week. 
+ * 0: Current week
+ * -1: Previous week
+ * 1: Next week
+ * @returns {Array<Date>} - An array containing 7 Date objects from Monday to Sunday.
+ */
+/*
+// Demo 1: Get dates for the current week
+const currentWeek = getWeekDatesFromMon(0);
+console.log('Monday of this week:', currentWeek[0].toLocaleDateString());
+console.log('Sunday of this week:', currentWeek[6].toLocaleDateString());
+
+// Demo 2: Get dates for the next week
+const nextWeek = getWeekDatesFromMon(1);
+console.log('Monday of next week:', nextWeek[0].toLocaleDateString());
+
+// Demo 3: Format the output as YYYY-MM-DD
+const formattedWeek = getWeekDatesFromMon(0).map(date => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+});
+console.log('Formatted Week Array:', formattedWeek);
+// Result: ["2025-12-29", "2025-12-30", ..., "2026-01-04"]
+*/
+function getWeekDatesFromMon(weekOffset: number): Date[] {
+    const dates: Date[] = [];
+    const currentDate: Date = new Date();
+
+    // Calculate the difference to get to Monday of the current week
+    // If today is Sunday (0), we go back 6 days. Otherwise, go to (1 - currentDay).
+    const dayOfWeek = currentDate.getDay();
+    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    
+    // Apply the Monday offset and the week offset (7 days per week)
+    currentDate.setDate(currentDate.getDate() + diffToMonday + (weekOffset * 7));
+
+    // Generate the 7 days of the week
     for (let i = 0; i < 7; i++) {
         const date = new Date(currentDate);
         date.setDate(currentDate.getDate() + i);
@@ -521,30 +640,41 @@ function getWeekDatesFromSun(weekOffset: number) {
 }
 
 /**
- * Get the date of the specified week (From Monday)
- * @param {Number} weekOffset 
- * @returns {Array<Date>} 
+ * Get the date list of the week for the specified date (starting from Monday)
+ * @param {Date | String} v - The specified date
+ * @returns {Array<Date>} - An array containing 7 Date objects
  */
-function getWeekDatesFromMon(weekOffset: number) {
-    const dates: Array<Date> = [];
-    const currentDate = new Date();
+function getWeekDatesByDate(v: Date | string | number): Date[] {
+    const dates: Date[] = [];
+    
+    // Ensure we are working with a Date object. 
+    // If 'dateFormat' was a custom utility in your JS, replace 'new Date(v)' with that utility.
+    const currentDate = new Date(v);
 
-    // Set the date to Monday
-    const dayOfWeek = currentDate.getDay();
+    // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+    const dayOfWeek = currentDate.getDay(); 
+    
+    // Calculate difference to Monday: if Sunday (0) subtract 6 days, otherwise subtract (day - 1)
     const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    currentDate.setDate(currentDate.getDate() + diffToMonday + weekOffset * 7);
+    
+    // Create the Monday starting point
+    const monday = new Date(currentDate);
+    monday.setDate(currentDate.getDate() + diffToMonday);
 
-    // Get the date of the week
+    // Generate the 7 days of the week
     for (let i = 0; i < 7; i++) {
-        const date = new Date(currentDate);
-        date.setDate(currentDate.getDate() + i);
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
         dates.push(date);
     }
-
+    
     return dates;
 }
 
 export {
+    getSpecialDateEnd,
+
+    //
     isTimeString,
     getNow,
     padZero,
@@ -594,5 +724,6 @@ export {
     // get dates list
     getMonthDates,
     getWeekDatesFromSun,
-    getWeekDatesFromMon
+    getWeekDatesFromMon,
+    getWeekDatesByDate
 }

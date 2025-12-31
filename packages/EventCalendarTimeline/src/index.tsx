@@ -13,7 +13,6 @@ import { getTodayDate, getCalendarDate, isValidDate, padZero, getDateDetails, ge
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
-
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -2346,15 +2345,30 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     }, [date]);
 
 
+    // Guaranteed year change triggered by the next/prev buttons
+    const isFirstRenderRef = useRef<boolean>(true);
+    const prevYearRef = useRef<number>(year); // Record the year of the last occurrence.
     useEffect(() => {
-        // Guaranteed year change triggered by the front and rear buttons
-        onChangeYear?.({
-            day: padZero(day),
-            month: padZero(month + 1),
-            year: year.toString()
-        });
-    }, [year]);
+        // 1. Intercept the first render (Mount)
+        if (isFirstRenderRef.current) {
+            isFirstRenderRef.current = false;
+            return;
+        }
 
+        // 2. It only triggers when the year actually changes
+        if (year !== prevYearRef.current) {
+            onChangeYear?.({
+                day: padZero(day),
+                month: padZero(month + 1),
+                year: year.toString()
+            });
+
+            // Update the old year ref for next comparison
+            prevYearRef.current = year;
+        }
+    }, [year, month, day, onChangeYear]);
+
+   
 
     useEffect(() => {
 
