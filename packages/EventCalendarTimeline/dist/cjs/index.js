@@ -4417,22 +4417,26 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     _useState42 = _slicedToArray(_useState41, 2),
     displayWeekForHeader = _useState42[0],
     setDisplayWeekForHeader = _useState42[1];
+  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState44 = _slicedToArray(_useState43, 2),
+    displayWeekForHeaderOrginal = _useState44[0],
+    setDisplayWeekForHeaderOrginal = _useState44[1];
 
   //================================================================
   // Drag to activate the selection area
   //================================================================    
-  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState44 = _slicedToArray(_useState43, 2),
-    isSelecting = _useState44[0],
-    setIsSelecting = _useState44[1];
-  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState46 = _slicedToArray(_useState45, 2),
-    selectedCells = _useState46[0],
-    setSelectedCells = _useState46[1];
-  var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    isSelecting = _useState46[0],
+    setIsSelecting = _useState46[1];
+  var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState48 = _slicedToArray(_useState47, 2),
-    startCell = _useState48[0],
-    setStartCell = _useState48[1];
+    selectedCells = _useState48[0],
+    setSelectedCells = _useState48[1];
+  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState50 = _slicedToArray(_useState49, 2),
+    startCell = _useState50[0],
+    setStartCell = _useState50[1];
 
   // Determine whether it is a selected cell
   var isCellSelected = function isCellSelected(row, col) {
@@ -4552,10 +4556,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
   //================================================================
   // Copy & Paste
   //================================================================    
-  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
-    _useState50 = _slicedToArray(_useState49, 2),
-    copiedCells = _useState50[0],
-    setCopiedCells = _useState50[1];
+  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    _useState52 = _slicedToArray(_useState51, 2),
+    copiedCells = _useState52[0],
+    setCopiedCells = _useState52[1];
   var handleWrapperKeyDown = function handleWrapperKeyDown(e) {
     var isMac = funda_utils_dist_cjs_os__WEBPACK_IMPORTED_MODULE_8___default()().isOSX;
 
@@ -6023,10 +6027,10 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
       A single RAF only guarantees "moving to the next frame." 
       Only dual RAFs can guarantee "DOM is mounted + layout is stable."
   */
-  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState52 = _slicedToArray(_useState51, 2),
-    gridReady = _useState52[0],
-    setGridReady = _useState52[1];
+  var _useState53 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState54 = _slicedToArray(_useState53, 2),
+    gridReady = _useState54[0],
+    setGridReady = _useState54[1];
   var rafRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)({});
   function safeShowGrid() {
     // 
@@ -6104,6 +6108,7 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     } else {
       setDisplayWeekForHeader([formatToEnglishMonthDay(cellsList.at(0).dateInfo[0].date), formatToEnglishMonthDay(cellsList.at(-1).dateInfo[0].date)]);
     }
+    setDisplayWeekForHeaderOrginal([cellsList.at(0).dateInfo[0].date, cellsList.at(-1).dateInfo[0].date]);
   }, [weekOffset]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     // update events value
@@ -6237,7 +6242,9 @@ var EventCalendarTimeline = function EventCalendarTimeline(props) {
     d: "M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z",
     fill: "#000"
   }))), appearanceMode === 'week' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "custom-event-tl__header__info"
+    className: "custom-event-tl__header__info",
+    "data-start": displayWeekForHeaderOrginal[0],
+    "data-end": displayWeekForHeaderOrginal[1]
   }, typeof appearanceWeekTmpl === 'function' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1])) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, displayWeekForHeader[0], " - ", displayWeekForHeader[1]))) : null, appearanceMode === 'month' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "custom-event-tl__header__btns"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {

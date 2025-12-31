@@ -13,6 +13,7 @@ import { getTodayDate, getCalendarDate, isValidDate, padZero, getDateDetails, ge
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 import getOs from 'funda-utils//dist/cjs/os';
 
+
 export interface EventsValueConfig {
     id: string | number;
     date: string,
@@ -438,9 +439,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
     };
     const weekDates = getWeekDatesFromMon(weekOffset);
     const [displayWeekForHeader, setDisplayWeekForHeader] = useState<string[]>([]);
-
-
-
+    const [displayWeekForHeaderOrginal, setDisplayWeekForHeaderOrginal] = useState<string[]>([]);
 
 
     //================================================================
@@ -2378,6 +2377,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
         } else {
             setDisplayWeekForHeader([formatToEnglishMonthDay(cellsList.at(0).dateInfo[0].date), formatToEnglishMonthDay(cellsList.at(-1).dateInfo[0].date)]);
         }
+        setDisplayWeekForHeaderOrginal([cellsList.at(0).dateInfo[0].date, cellsList.at(-1).dateInfo[0].date]);
 
     }, [weekOffset]);
 
@@ -2545,7 +2545,7 @@ const EventCalendarTimeline = (props: EventCalendarTimelineProps) => {
 
                     {/* //########## MODE: WEEK ############# */}
                     {appearanceMode === 'week' ? <>
-                        <div className="custom-event-tl__header__info">
+                        <div className="custom-event-tl__header__info" data-start={displayWeekForHeaderOrginal[0]} data-end={displayWeekForHeaderOrginal[1]}>
                             {typeof appearanceWeekTmpl === 'function' ? <>{appearanceWeekTmpl(displayWeekForHeader[0], displayWeekForHeader[1]) as never}</> : <>{displayWeekForHeader[0]} - {displayWeekForHeader[1]}</>}
                         </div>
                     </> : null}
