@@ -332,7 +332,7 @@ var external_root_React_commonjs2_react_commonjs_react_amd_react_default = /*#__
 // EXTERNAL MODULE: ../Utils/dist/cjs/cls.js
 var cls = __webpack_require__(188);
 ;// CONCATENATED MODULE: ./src/AccordionItem.tsx
-var _excluded = ["heightObserver", "index", "animSpeed", "easing", "arrowOnly", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "activeItem", "title", "onToggleEv", "onTransitionEnd", "onItemCollapse", "isExpanded", "children"];
+var _excluded = ["heightObserver", "index", "animSpeed", "easing", "arrowOnly", "itemClassName", "itemContentWrapperClassName", "itemContentClassName", "itemTriggerClassName", "itemHeaderClassName", "itemTriggerIcon", "itemStyle", "activeItem", "title", "onToggleEv", "onTransitionEnd", "onItemCollapse", "isExpanded", "forceExpanded", "children"];
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -363,6 +363,7 @@ var AccordionItem = function AccordionItem(props) {
     onTransitionEnd = props.onTransitionEnd,
     onItemCollapse = props.onItemCollapse,
     controlledExpanded = props.isExpanded,
+    forceExpanded = props.forceExpanded,
     children = props.children,
     attributes = _objectWithoutProperties(props, _excluded);
   var _useState = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -371,9 +372,12 @@ var AccordionItem = function AccordionItem(props) {
     setInternalExpanded = _useState2[1];
   var isFirstRender = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(true);
   var initialHeightSet = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
+  var hasUserInteracted = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(false);
 
-  // Use controlled or uncontrolled expanded state
-  var isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+  // Use forceExpanded if provided and user hasn't interacted, otherwise use controlled or uncontrolled expanded state
+  // forceExpanded takes priority over isExpanded from parent, but only before user interaction
+  var actualExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+  var isExpanded = forceExpanded !== undefined && !hasUserInteracted.current ? forceExpanded : actualExpanded;
   var observer = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var contentWrapperRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
   var contentRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(null);
@@ -382,6 +386,9 @@ var AccordionItem = function AccordionItem(props) {
   var handleToggle = function handleToggle(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    // Mark that user has interacted, so forceExpanded will be ignored
+    hasUserInteracted.current = true;
     if (controlledExpanded === undefined) {
       setInternalExpanded(function (prev) {
         return !prev;
@@ -399,6 +406,13 @@ var AccordionItem = function AccordionItem(props) {
       overflow: 'hidden'
     };
   };
+
+  // Reset user interaction flag when forceExpanded changes externally
+  (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
+    if (forceExpanded !== undefined) {
+      hasUserInteracted.current = false;
+    }
+  }, [forceExpanded]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
     if (triggerRef.current && typeof onItemCollapse === 'function') {
       if (isFirstRender.current) {

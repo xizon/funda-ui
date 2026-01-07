@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
-
 export type AccordionItemProps = {
     heightObserver?: number[];
     index?: number;
@@ -29,6 +28,8 @@ export type AccordionItemProps = {
     onItemCollapse?: (trigger: HTMLElement,  icon: HTMLElement, isExpanded: boolean) => void;
 	/** Control expanded state from parent */
 	isExpanded?: boolean;
+	/** Force expanded state, takes priority over isExpanded from parent */
+	forceExpanded?: boolean;
 	/** -- */
 	children: React.ReactNode;
 };
@@ -56,6 +57,7 @@ const AccordionItem = (props: AccordionItemProps) => {
         onTransitionEnd,
         onItemCollapse,
         isExpanded: controlledExpanded,
+        forceExpanded,
         children,
         ...attributes
     } = props;
@@ -63,9 +65,12 @@ const AccordionItem = (props: AccordionItemProps) => {
     const [internalExpanded, setInternalExpanded] = useState<boolean>(false);
     const isFirstRender = useRef<boolean>(true);
     const initialHeightSet = useRef<boolean>(false);
+    const hasUserInteracted = useRef<boolean>(false);
 
-    // Use controlled or uncontrolled expanded state
-    const isExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+    // Use forceExpanded if provided and user hasn't interacted, otherwise use controlled or uncontrolled expanded state
+    // forceExpanded takes priority over isExpanded from parent, but only before user interaction
+    const actualExpanded = controlledExpanded !== undefined ? controlledExpanded : internalExpanded;
+    const isExpanded = (forceExpanded !== undefined && !hasUserInteracted.current) ? forceExpanded : actualExpanded;
 
     const observer = useRef<ResizeObserver | null>(null);
     const contentWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -76,6 +81,9 @@ const AccordionItem = (props: AccordionItemProps) => {
     const handleToggle = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         e.stopPropagation();
+
+        // Mark that user has interacted, so forceExpanded will be ignored
+        hasUserInteracted.current = true;
 
         if (controlledExpanded === undefined) {
             setInternalExpanded(prev => !prev);
@@ -95,6 +103,13 @@ const AccordionItem = (props: AccordionItemProps) => {
         };
     };
 
+
+    // Reset user interaction flag when forceExpanded changes externally
+    useEffect(() => {
+        if (forceExpanded !== undefined) {
+            hasUserInteracted.current = false;
+        }
+    }, [forceExpanded]);
 
     useEffect(() => {
         if (triggerRef.current && typeof onItemCollapse === 'function') {

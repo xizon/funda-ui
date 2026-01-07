@@ -207,6 +207,7 @@ import { AccordionItem } from 'funda-ui/Accordion';
 ```
 | Property | Type | Default | Description | Required |
 | --- | --- | --- | --- | --- |
+| `forceExpanded` | boolean | - | Force expanded state, takes priority over isExpanded from parent. | - |
 | `title` | string | - | Set a title for each item | - |
 | `itemClassName` | string | `accordion-item` | The class name of item container. | - |
 | `itemContentWrapperClassName` | string | `accordion-collapse` | The class name of the content container. | - |
@@ -216,6 +217,7 @@ import { AccordionItem } from 'funda-ui/Accordion';
 | `itemStyle` | CSSProperties | - | The styles of item. such as `{color: "red", fontSize: "1rem"}` | - |
 | `itemTriggerIcon` | ReactNode | - | The icon of trigger. | - |
 | `onItemCollapse` | function | - | Callback when trigger state changes. Returns two parameters: <br /> <ol><li>The trigger element (**HTMLElement**)</li><li>The icon element (**HTMLElement**)</li><li>The expanded state (**Boolean**)</li></ol> | - |
+
 
 `AccordionItem` accepts all props which this control support. Such as `style`, `data-*`, `tabIndex`, `id`, and so on.
 
