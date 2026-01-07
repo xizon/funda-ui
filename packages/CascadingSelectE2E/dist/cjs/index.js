@@ -3166,7 +3166,7 @@ var CascadingSelectE2E = /*#__PURE__*/(0,external_root_React_commonjs2_react_com
     if (typeof onChange === 'function') {
       var curValString = valueType === 'value' ? inputVal[0] : inputVal[1];
       var curValCallback = typeof formatInputResult === 'function' ? formatInputResult(VALUE_BY_BRACES ? (0,extract.extractContentsOfMixedCharactersWithBraces)(curValString) : (0,extract.extractContentsOfMixedCharactersWithComma)(curValString)) : curValString;
-      onChange(inputRef.current, resValue, index, level, curValCallback, cancel);
+      onChange(inputRef.current, resValue, index, level, curValCallback, cancel, selectedData.current, curValString);
     }
 
     // update data
@@ -3935,7 +3935,7 @@ var CascadingSelectE2E = /*#__PURE__*/(0,external_root_React_commonjs2_react_com
         // depth
         e.target.value,
         // value
-        cancel);
+        cancel, selectedData.current, changedVal);
       }
     } : undefined
   }, attributes)), destroyParentIdMatch ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, !inputable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {

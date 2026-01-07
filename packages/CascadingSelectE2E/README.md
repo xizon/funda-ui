@@ -286,7 +286,7 @@ export default () => {
                 onFetch={(res, children) => {
                     console.log('onFetch: ', res, children);
                 }}
-                onChange={(input, currentData, index, depth, value, closeFunc) => {
+                onChange={(input, currentData, index, depth, value, closeFunc, allData, result) => {
                     console.log('currentData: ', currentData, value);
                     // currentData ==> {id: '1', queryId: 1, name: 'Title 1', type: 'web', itemDepth: 0} 
                     // value       ==> {0: '{1[1]}', 1: '{Title 1[1]}'}
@@ -605,7 +605,7 @@ export default (props: any) => {
                         }
                     }
                 ]}
-                onChange={(input, currentData, index, depth, value, closeFunc) => {
+                onChange={(input, currentData, index, depth, value, closeFunc, allData, result) => {
                     console.log('currentData: ', currentData);
 
                 }}
@@ -699,7 +699,7 @@ export default () => {
                     // const res: string = param.map((item) => item.label).join('/');
                     // return res.split('/').at(-1) || '';
                 }}
-                 onChange={(input: any, currentData: any, index: number, depth: number, value: any, closeFunc: any) => {
+                 onChange={(input: any, currentData: any, index: number, depth: number, value: any, closeFunc: any, allData: any, result: string) => {
 
                     const _input = typeof input.dataset !== 'undefined' ? input : input.currentTarget;
                     let changeValue = currentData?.name;
@@ -766,7 +766,7 @@ import CascadingSelectE2E from 'funda-ui/CascadingSelectE2E';
 | `requiredLabel` | string \| ReactNode | `<span className="position-absolute end-0 top-0 my-2 mx-2 pe-3"><span className="text-danger">*</span></span>` | It is used to specify a label for an element required. | - |
 | `onFetch` | function  | - | Call a function when  data is successfully fetched. It returns one callback value which is the fetched data (**Array**) | - |
 | `fetchArray` | array  | - | Set multiple requests, it should be an array | - |
-| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns six callback values. <br /> <ol><li>The one is the input control (**HTML Element**)</li><li>The second parameter is the current option data (**JSON Object**)</li><li>The third parameter is the index of the current column group (**Number**)</li><li>The fourth parameter indicates the current column depth (**Number**)</li><li>The fifth is value of the input box (**String**).</li><li>The last is the function of close (**Function**)</li></ol> | - |
+| `onChange` | function  | - | Call a function when the value of an HTML element is changed. It returns eight callback values. <br /> <ol><li>The one is the input control (**HTML Element**)</li><li>The second parameter is the current option data (**JSON Object**)</li><li>The third parameter is the index of the current column group (**Number**)</li><li>The fourth parameter indicates the current column depth (**Number**)</li><li>The fifth is value of the input box (**String**).</li><li>The sixth is the function of close (**Function**)</li><li>The seventh parameter is all data (**JSON Object**)</li><li>The last parameter is result of control (**String**)</li></ol> | - |
 | `onBlur` | function  | - | Call a function when a user leaves a form field. It returns only one callback value which is the Control Event (**Event**)| - |
 | `onFocus` | function  | - | Call a function when an form field gets focus. It returns only one callback value which is the Control Event (**Event**)| - |
 

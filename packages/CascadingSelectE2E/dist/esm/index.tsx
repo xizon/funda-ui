@@ -33,7 +33,7 @@ import Group from './Group';
 
 
 
-export type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any) => void;
+export type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any, allData: any, result: string) => void;
 
 
 export interface fetchArrayConfig {
@@ -715,7 +715,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
                     : extractContentsOfMixedCharactersWithComma(curValString)
             ) : curValString;
 
-            onChange(inputRef.current, resValue, index, level, curValCallback, cancel);
+            onChange(inputRef.current, resValue, index, level, curValCallback, cancel, selectedData.current, curValString);
         }
 
 
@@ -1538,6 +1538,7 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
 
                         {propExist(iconLeft) ? <><span className={clsWrite(controlGroupTextClassName, 'input-group-text')}>{iconLeft}</span></> : null}
 
+
                         <div className="input-group-control-container flex-fill position-relative">
                             <input
                                 ref={(node) => {
@@ -1582,7 +1583,6 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
                                     // STEP 2
                                     //============
                                     if (typeof formatInputResult === 'function') {
-                               
                                         return formatInputResult(
                                             VALUE_BY_BRACES
                                                 ? extractContentsOfMixedCharactersWithBraces(curValCallback)
@@ -1616,7 +1616,9 @@ const CascadingSelectE2E = forwardRef((props: CascadingSelectE2EProps, externalR
                                             null, // index
                                             null, // depth
                                             e.target.value, // value
-                                            cancel
+                                            cancel,
+                                            selectedData.current,
+                                            changedVal
                                         );
                                     }
                                 } : undefined}

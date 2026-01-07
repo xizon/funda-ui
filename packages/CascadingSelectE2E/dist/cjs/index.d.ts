@@ -1,5 +1,5 @@
 import React from 'react';
-export declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any) => void;
+export declare type CascadingSelectE2EOptionChangeFnType = (input: any, currentData: any, index: any, depth: any, value: string, closeFunc: any, allData: any, result: string) => void;
 export interface fetchArrayConfig {
     fetchFuncAsync?: any | undefined;
     fetchFuncMethod?: string | undefined;
