@@ -36,43 +36,72 @@ export default () => {
         */
     };
  
+
+    const opt = [
+        {"label": "Option 1", "value": "value-1", "queryString": "option1"},
+        {"label": "<del style='color:red'>deprecate</del> Option 2", "value": "value-2", "queryString": "option2"},
+        {"label": "Option 3", "value": "value-3", "queryString": "option3"},
+        {"label": "Option 4", "value": "value-4", "queryString": "option4", "disabled": true},
+        {"label": "Option 5", "value": "value-5", "queryString": "option5"},
+        {"label": "<span style='color:blue'>New</span> Option 6", "value": "value-6", "queryString": "option6"},
+        {"label": "Option 7", "value": "value-7", "queryString": "option7"},
+        {"label": "Option 8", "value": "value-8", "queryString": "option8", "disabled": true},
+        {"label": "Option 9", "value": "value-9", "queryString": "option9"},
+        {"label": "Option 10", "value": "value-10", "queryString": "option10"},
+        {"label": "Option 11", "value": "value-11", "queryString": "option11"},
+        {"label": "<del>Legacy</del> Option 12", "value": "value-12", "queryString": "option12"},
+        {"label": "Option 13", "value": "value-13", "queryString": "option13"},
+        {"label": "Option 14", "value": "value-14", "queryString": "option14"},
+        {"label": "Option 15", "value": "value-15", "queryString": "option15", "disabled": true},
+        {"label": "Option 16", "value": "value-16", "queryString": "option16"},
+        {"label": "Option 17", "value": "value-17", "queryString": "option17"},
+        {"label": "Option 18", "value": "value-18", "queryString": "option18"},
+        {"label": "Option 19", "value": "value-19", "queryString": "option19"},
+        {"label": "Option 20", "value": "value-20", "queryString": "option20"},
+        {"label": "<b style='color:green'>Popular</b> Option 21", "value": "value-21", "queryString": "option21"},
+        {"label": "Option 22", "value": "value-22", "queryString": "option22"},
+        {"label": "Option 23", "value": "value-23", "queryString": "option23", "disabled": true},
+        {"label": "Option 24", "value": "value-24", "queryString": "option24"},
+        {"label": "Option 25", "value": "value-25", "queryString": "option25"},
+        {"label": "Option 26", "value": "value-26", "queryString": "option26"},
+        {"label": "Option 27", "value": "value-27", "queryString": "option27"},
+        {"label": "Option 28", "value": "value-28", "queryString": "option28"},
+        {"label": "Option 29", "value": "value-29", "queryString": "option29"},
+        {"label": "Option 30", "value": "value-30", "queryString": "option30", "disabled": true},
+        {"label": "Option 31", "value": "value-31", "queryString": "option31"},
+        {"label": "Option 32", "value": "value-32", "queryString": "option32"},
+        {"label": "<i style='color:gray'>Draft</i> Option 33", "value": "value-33", "queryString": "option33"},
+        {"label": "Option 34", "value": "value-34", "queryString": "option34"},
+        {"label": "Option 35", "value": "value-35", "queryString": "option35"}
+    ];
+    
+
+ 
     return (
         <>
+
             <div style={{width: '250px'}}>
                 <Select
                     clearIcon={false}  // Hide the clear icon
                     placeholder="Select"
                     name="name"
-                    winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                    options={`
-                    [
-                        {"label": "Option 1","value": "value-1","queryString": "option1"},
-                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
-                    ]  
-                    `}
+                    options={opt}
                     onChange={handleChange}
                 />
             </div>
 
             <div style={{width: '250px'}}>
                 <Select
+                    value={{label: "Option 17", value: "value-17", queryString: ""}}
                     clearTrigger={{valid: true, clearValueLabel: 'Clear'}}
                     placeholder="Select"
                     name="name"
                     winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                    options={`
-                    [
-                        {"label": "Option 1","value": "value-1","queryString": "option1"},
-                        {"label": "<del style=color:red>deprecate</del>Option 2","value": "value-2","queryString": "option2"},
-                        {"label": "Option 3","value": "value-3","queryString": "option3"},
-                        {"label": "Option 4","value": "value-4","queryString": "option4", "disabled":true}
-                    ]  
-                    `}
+                    options={opt}
                     onChange={handleChange}
                 />
             </div>
+
 
             <Select
                 value="value-2"

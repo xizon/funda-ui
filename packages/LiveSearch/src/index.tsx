@@ -17,7 +17,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface OptionConfig {
     disabled?: boolean;
     label: any;
@@ -740,35 +739,45 @@ const LiveSearch = forwardRef((props: LiveSearchProps, externalRef: any) => {
             if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
 
 
-            let options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
+            let options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)')) as HTMLElement[];
             // Avoid selecting options that are disabled
-            options = options.filter((options: HTMLElement) => !options.classList.contains('disabled'));
+            options = options.filter((option: HTMLElement) => !option.classList.contains('disabled'));
 
-            const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+            if (!options.length) return;
+
+            const activeNode = listRef.current.querySelector('.list-group-item.active') as HTMLElement | null;
+            const currentIndex = options.findIndex((e: HTMLElement) => e === activeNode);
 
 
             // get the next element in the list, "%" will loop around to 0
-            let nextIndex;
+            let nextIndex = -1;
             if (type === 'increase') {
-                nextIndex = currentIndex + 1 % options.length;
+                // ArrowDown
+                nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % options.length;
             } else {
-                nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+                // ArrowUp
+                nextIndex = currentIndex === -1 ? options.length - 1 : (currentIndex - 1 + options.length) % options.length;
             }
-
 
 
             //only one
             if (options.length === 1) nextIndex = 0;
 
 
-            if (!isNaN(nextIndex)) {
-                options.forEach((node: any, index: number) => {
+            if (nextIndex >= 0 && nextIndex < options.length) {
+                options.forEach((node: any) => {
                     node?.classList.remove('active');
                 });
 
                 const targetOption = options[nextIndex] as HTMLElement;
                 if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
                     targetOption.classList.add('active');
+
+                    // Ensure the focused option is visible in the scroll area
+                    if (typeof (targetOption as any).scrollIntoView === 'function') {
+                        (targetOption as any).scrollIntoView({ block: 'nearest' });
+                    }
+
                     resolve(targetOption);
                 }
 

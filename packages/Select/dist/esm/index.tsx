@@ -47,6 +47,7 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
+
 export interface MultiSelectValue {
     items: { label: string; value: string }[];
     labels: string[];
@@ -2012,26 +2013,35 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
 
 
             // Avoid selecting options that are disabled
-            const options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clear)'));
-            const currentIndex = options.findIndex((e) => e === listRef.current.querySelector('.list-group-item.active'));
+            const options = [].slice.call(
+                listRef.current.querySelectorAll(
+                    '.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clear)'
+                )
+            );
+
+            if (!options.length) return;
+
+            const activeNode = listRef.current.querySelector('.list-group-item.active');
+            const currentIndex = options.findIndex((e: HTMLElement) => e === activeNode);
 
 
             // get the next element in the list, "%" will loop around to 0
-            let nextIndex;
+            let nextIndex = -1;
             if (type === 'increase') {
-                nextIndex = currentIndex + 1 % options.length;
+                // ArrowDown
+                nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % options.length;
             } else {
-                nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+                // ArrowUp
+                nextIndex = currentIndex === -1 ? options.length - 1 : (currentIndex - 1 + options.length) % options.length;
             }
-
 
 
             //only one
             if (options.length === 1) nextIndex = 0;
 
 
-            if (!isNaN(nextIndex)) {
-                options.forEach((node: any, index: number) => {
+            if (nextIndex >= 0 && nextIndex < options.length) {
+                options.forEach((node: any) => {
                     node?.classList.remove('active');
                 });
 
@@ -2040,6 +2050,12 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
                     targetOption.classList.add('active');
 
                     keyboardSelectedItem.current = targetOption;
+
+                    // Ensure the focused option is visible in the scroll area
+                    if (typeof targetOption.scrollIntoView === 'function') {
+                        targetOption.scrollIntoView({ block: 'nearest' });
+                    }
+
                     resolve(targetOption);
                 }
 

@@ -5721,28 +5721,39 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
 
       // Avoid selecting options that are disabled
       var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide):not(.custom-select-multi__control-option-item--select-all):not(.custom-select-multi__control-option-item--clear)'));
+      if (!options.length) return;
+      var activeNode = listRef.current.querySelector('.list-group-item.active');
       var currentIndex = options.findIndex(function (e) {
-        return e === listRef.current.querySelector('.list-group-item.active');
+        return e === activeNode;
       });
 
       // get the next element in the list, "%" will loop around to 0
-      var nextIndex;
+      var nextIndex = -1;
       if (type === 'increase') {
-        nextIndex = currentIndex + 1 % options.length;
+        // ArrowDown
+        nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % options.length;
       } else {
-        nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+        // ArrowUp
+        nextIndex = currentIndex === -1 ? options.length - 1 : (currentIndex - 1 + options.length) % options.length;
       }
 
       //only one
       if (options.length === 1) nextIndex = 0;
-      if (!isNaN(nextIndex)) {
-        options.forEach(function (node, index) {
+      if (nextIndex >= 0 && nextIndex < options.length) {
+        options.forEach(function (node) {
           node === null || node === void 0 ? void 0 : node.classList.remove('active');
         });
         var targetOption = options[nextIndex];
         if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
           targetOption.classList.add('active');
           keyboardSelectedItem.current = targetOption;
+
+          // Ensure the focused option is visible in the scroll area
+          if (typeof targetOption.scrollIntoView === 'function') {
+            targetOption.scrollIntoView({
+              block: 'nearest'
+            });
+          }
           resolve(targetOption);
         }
       }

@@ -3853,30 +3853,41 @@ var LiveSearch = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
       if (listRef.current === null || !rootRef.current.classList.contains('active')) return;
       var options = [].slice.call(listRef.current.querySelectorAll('.list-group-item:not(.hide)'));
       // Avoid selecting options that are disabled
-      options = options.filter(function (options) {
-        return !options.classList.contains('disabled');
+      options = options.filter(function (option) {
+        return !option.classList.contains('disabled');
       });
+      if (!options.length) return;
+      var activeNode = listRef.current.querySelector('.list-group-item.active');
       var currentIndex = options.findIndex(function (e) {
-        return e === listRef.current.querySelector('.list-group-item.active');
+        return e === activeNode;
       });
 
       // get the next element in the list, "%" will loop around to 0
-      var nextIndex;
+      var nextIndex = -1;
       if (type === 'increase') {
-        nextIndex = currentIndex + 1 % options.length;
+        // ArrowDown
+        nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % options.length;
       } else {
-        nextIndex = (currentIndex < 0 ? options.length : currentIndex) - 1 % options.length;
+        // ArrowUp
+        nextIndex = currentIndex === -1 ? options.length - 1 : (currentIndex - 1 + options.length) % options.length;
       }
 
       //only one
       if (options.length === 1) nextIndex = 0;
-      if (!isNaN(nextIndex)) {
-        options.forEach(function (node, index) {
+      if (nextIndex >= 0 && nextIndex < options.length) {
+        options.forEach(function (node) {
           node === null || node === void 0 ? void 0 : node.classList.remove('active');
         });
         var targetOption = options[nextIndex];
         if (typeof targetOption !== 'undefined' && !targetOption.classList.contains('no-match')) {
           targetOption.classList.add('active');
+
+          // Ensure the focused option is visible in the scroll area
+          if (typeof targetOption.scrollIntoView === 'function') {
+            targetOption.scrollIntoView({
+              block: 'nearest'
+            });
+          }
           resolve(targetOption);
         }
       }
