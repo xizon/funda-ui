@@ -183,7 +183,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Accordion
 ```js

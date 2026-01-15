@@ -106,7 +106,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Color Picker
 ```js

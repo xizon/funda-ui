@@ -174,7 +174,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Stepper
 ```js

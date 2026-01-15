@@ -1522,7 +1522,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Tree
 ```js

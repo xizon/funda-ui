@@ -269,7 +269,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 
 * [`<Tabs />`](#tabs)

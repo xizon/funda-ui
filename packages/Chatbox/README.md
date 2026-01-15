@@ -698,7 +698,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Chatbox
 ```js

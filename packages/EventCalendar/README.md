@@ -535,7 +535,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Event Calendar
 ```js

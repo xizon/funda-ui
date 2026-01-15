@@ -174,78 +174,6 @@ export default () => {
 ```
 
 
-## FAQ
-
-State changes in the page, causing other `<MultipleCheckboxes />` components to re-render and value to reset.
-
-### Solution:
-
-> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useState, useMemo } from "react";
-import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
-
-
-// DO NOT move `useMemo` to component
-function MemoMultipleCheckboxes(props: any) {
-    const {val, callback} = props;
-    return useMemo(() => {
-        return <MultipleCheckboxes
-                wrapperClassName=""
-                value={val}
-                options={[
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
-                ]}
-                onChange={(
-                    e: React.ChangeEvent<HTMLInputElement> | null,
-                    value: string[] | null,
-                    valueStr: string,
-                    label: string[] | null,
-                    labelStr: string,
-                    currentData: OptionConfig | null,
-                    dataCollection: OptionConfig[]
-                ) => {
-                    callback(valueStr);
-                }}
-            />
-    }, []);
-}
-
-export default () => {
-
-    const [myCheckboxes, setMyCheckboxes] = useState('[Option 2][Option 4]');  // default value is label value
-
-    return (
-        <>
-          
-            <MemoMultipleCheckboxes 
-                val={myCheckboxes}
-                name="name"
-                callback={setMyCheckboxes} 
-            />
-            <p>{myCheckboxes}</p>
-            
-            
-
-    
-        </>
-    );
-}
-```
-
 
 
 ## The Option Group element
@@ -1113,7 +1041,82 @@ export default () => {
 }
 ```
 
-## API
+
+
+## ❤️ FAQ
+
+State changes in the page, causing other `<MultipleCheckboxes />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useState, useMemo } from "react";
+import MultipleCheckboxes, { OptionConfig } from 'funda-ui/MultipleCheckboxes';
+
+
+// DO NOT move `useMemo` to component
+function MemoMultipleCheckboxes(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <MultipleCheckboxes
+                wrapperClassName=""
+                value={val}
+                options={[
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","disabled":true}
+                ]}
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null,
+                    value: string[] | null,
+                    valueStr: string,
+                    label: string[] | null,
+                    labelStr: string,
+                    currentData: OptionConfig | null,
+                    dataCollection: OptionConfig[]
+                ) => {
+                    callback(valueStr);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+    const [myCheckboxes, setMyCheckboxes] = useState('[Option 2][Option 4]');  // default value is label value
+
+    return (
+        <>
+          
+            <MemoMultipleCheckboxes 
+                val={myCheckboxes}
+                name="name"
+                callback={setMyCheckboxes} 
+            />
+            <p>{myCheckboxes}</p>
+            
+            
+
+    
+        </>
+    );
+}
+```
+
+
+## ❤️ API
 
 ### Multiple Checkboxes
 ```js

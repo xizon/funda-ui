@@ -47,7 +47,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Splitter Panel
 ```js

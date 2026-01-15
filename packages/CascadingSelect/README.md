@@ -566,7 +566,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Cascading Select
 ```js

@@ -554,77 +554,6 @@ export default () => {
 
 
 
-## FAQ
-
-State changes in the page, causing other `<Radio />` components to re-render and value to reset.
-
-### Solution:
-
-> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useState, useMemo } from "react";
-import Radio from 'funda-ui/Radio';
-
-
-// DO NOT move `useMemo` to component
-function MemoRadio(props: any) {
-    const {val, callback} = props;
-
-    // !!! Please do not set "options" as dependent
-    return useMemo(() => {
-        return <Radio
-                inline={true}
-                value={val}
-                options={[
-                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
-                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
-                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
-                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
-                ]}
-                onChange={(
-                    e: React.ChangeEvent<HTMLInputElement> | null, 
-                    val: string, 
-                    currentData: OptionConfig | null, 
-                    currentIndex: string | number | null, 
-                    element: HTMLElement  
-                ) => {
-                    callback(val);
-                }}
-            />
-    }, []);
-}
-
-export default () => {
-
-    const [myRadio, setMyRadio] = useState('value-3');
-
-    return (
-        <>
-          
-            <MemoRadio 
-                val={myRadio} 
-                name="name"
-                callback={setMyRadio} 
-            />
-            
-            
-        </>
-    );
-}
-```
-
-
-
 ## Custom option list
 
 Use `onCallbackListItem` to return the desired style of the list.
@@ -1036,7 +965,80 @@ export default () => {
 ```
 
 
-## API
+
+## ❤️ FAQ
+
+State changes in the page, causing other `<Radio />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useState, useMemo } from "react";
+import Radio from 'funda-ui/Radio';
+
+
+// DO NOT move `useMemo` to component
+function MemoRadio(props: any) {
+    const {val, callback} = props;
+
+    // !!! Please do not set "options" as dependent
+    return useMemo(() => {
+        return <Radio
+                inline={true}
+                value={val}
+                options={[
+                    { "label": "Option 1", "listItemLabel": "Option 1 (No: 001)", "value": "value-1" },
+                    { "label": "<del style=color:red>deprecate</del>Option 2", "listItemLabel": "<del style=color:red>deprecate</del>Option 2 (No: 002)", "value": "value-2" },
+                    { "label": "Option 3", "listItemLabel": "Option 3 (No: 003)", "value": "value-3" },
+                    { "label": "Option 4", "listItemLabel": "Option 4 (No: 004)", "value": "value-4", "disabled": true, "customAttr1": "attr1","customAttr2": "attr2" }
+                ]}
+                onChange={(
+                    e: React.ChangeEvent<HTMLInputElement> | null, 
+                    val: string, 
+                    currentData: OptionConfig | null, 
+                    currentIndex: string | number | null, 
+                    element: HTMLElement  
+                ) => {
+                    callback(val);
+                }}
+            />
+    }, []);
+}
+
+export default () => {
+
+    const [myRadio, setMyRadio] = useState('value-3');
+
+    return (
+        <>
+          
+            <MemoRadio 
+                val={myRadio} 
+                name="name"
+                callback={setMyRadio} 
+            />
+            
+            
+        </>
+    );
+}
+```
+
+
+
+
+## ❤️ API
 
 ### Radio
 ```js

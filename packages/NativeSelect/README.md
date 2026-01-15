@@ -627,7 +627,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Native Select
 ```js

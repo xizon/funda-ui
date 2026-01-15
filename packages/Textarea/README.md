@@ -526,7 +526,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Textarea
 ```js

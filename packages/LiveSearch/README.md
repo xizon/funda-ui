@@ -474,7 +474,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Live Search
 

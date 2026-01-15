@@ -921,7 +921,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### File
 ```js

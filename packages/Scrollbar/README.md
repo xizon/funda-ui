@@ -822,7 +822,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Custom Scrollbar
 ```js

@@ -125,7 +125,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Scroll Reveal
 ```js

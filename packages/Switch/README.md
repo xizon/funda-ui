@@ -122,7 +122,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Switch
 ```js

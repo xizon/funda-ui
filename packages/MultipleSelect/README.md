@@ -761,82 +761,6 @@ export default () => {
 ```
 
 
-## FAQ
-
-State changes in the page, causing other `<MultipleSelect />` components to re-render and value to reset.
-
-### Solution:
-
-> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useState, useMemo } from "react";
-import MultipleSelect from 'funda-ui/MultipleSelect';
-
-// component styles
-import 'funda-ui/MultipleSelect/index.css';
-
-
-// DO NOT move `useMemo` to component
-function MemoMultipleSelect(props: any) {
-    const {val, callback} = props;
-    return useMemo(() => {
-        return <MultipleSelect 
-                name="name"
-                draggable
-                handleHide
-                dragMode="block"
-                availableHeaderTitle="Select One Item"
-                selectedHeaderTitle="Selected Items (Support drag sorting)"
-                selectedHeaderNote="{items_num} items selected"
-                value={val}
-                options={
-                    [
-                        {"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                        {"id": 2, "label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                        {"id": 4, "label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4","disabled":true}
-                    ]  
-                }
-                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
-                    callback(dataStr);
-                }}
-            />
-
-    }, []);
-}
-
-export default () => {
-
-    const [myMultipleSelect, setMyMultipleSelect] = useState('Option 3');  // default value is label value
-
-    return (
-        <>
-        <div className="mb-3" style={{height: '300px'}}>
-            <MemoMultipleSelect 
-                val={myMultipleSelect}
-                name="name"
-                callback={setMyMultipleSelect} 
-            />
-            
-        </div>
-          
-            
-        </>
-    );
-}
-```
-
-
 ## Implement the option to save other data
 
 Use the `extendedContent` field to extend the options.
@@ -1200,7 +1124,84 @@ export default () => {
 
 
 
-## API
+## ❤️ FAQ
+
+State changes in the page, causing other `<MultipleSelect />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useState, useMemo } from "react";
+import MultipleSelect from 'funda-ui/MultipleSelect';
+
+// component styles
+import 'funda-ui/MultipleSelect/index.css';
+
+
+// DO NOT move `useMemo` to component
+function MemoMultipleSelect(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <MultipleSelect 
+                name="name"
+                draggable
+                handleHide
+                dragMode="block"
+                availableHeaderTitle="Select One Item"
+                selectedHeaderTitle="Selected Items (Support drag sorting)"
+                selectedHeaderNote="{items_num} items selected"
+                value={val}
+                options={
+                    [
+                        {"id": 1, "label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                        {"id": 2, "label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                        {"id": 3, "label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                        {"id": 4, "label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4","disabled":true}
+                    ]  
+                }
+                onChange={(e: HTMLElement | null, data: any[], dataStr: string, currentData: any, type: string, res: any[]) => {
+                    callback(dataStr);
+                }}
+            />
+
+    }, []);
+}
+
+export default () => {
+
+    const [myMultipleSelect, setMyMultipleSelect] = useState('Option 3');  // default value is label value
+
+    return (
+        <>
+        <div className="mb-3" style={{height: '300px'}}>
+            <MemoMultipleSelect 
+                val={myMultipleSelect}
+                name="name"
+                callback={setMyMultipleSelect} 
+            />
+            
+        </div>
+          
+            
+        </>
+    );
+}
+```
+
+
+
+## ❤️ API
 
 ### Multiple Select
 ```js

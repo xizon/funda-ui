@@ -180,7 +180,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Range Slider
 ```js

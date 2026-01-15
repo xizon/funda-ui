@@ -173,7 +173,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Dropdown Menu
 ```js

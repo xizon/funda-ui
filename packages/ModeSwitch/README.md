@@ -32,7 +32,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Mode Switch
 ```js

@@ -943,7 +943,7 @@ export default (props: any) => {
 
 
 
-## API
+## ❤️ API
 
 ### Pagination
 ```js

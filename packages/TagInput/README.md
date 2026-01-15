@@ -202,7 +202,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Tag Input
 ```js

@@ -614,62 +614,6 @@ export default () => {
 
 
 
-## FAQ
-
-State changes in the page, causing other `<Input />` components to re-render and value to reset.
-
-### Solution:
-
-> The `value` property of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useState, useMemo } from "react";
-import Input from 'funda-ui/Input';
-
-// DO NOT move `useMemo` to component
-function MemoInput(props: any) {
-    const {val, callback} = props;
-    return useMemo(() => {
-        return <Input 
-                name="name"
-                value={val}
-                onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
-                    callback(value);
-                }}
-            />
-
-    }, []);
-}
-
-export default () => {
-
-    const [myInput, setMyInput] = useState('test');
-
-    return (
-        <>
-          
-            <MemoInput 
-                val={myInput} 
-                name="name"
-                callback={setMyInput} 
-            />
-            <p>{myInput}</p>
-            
-        </>
-    );
-}
-```
-
-
 
 
 ## AI Predict
@@ -833,8 +777,64 @@ export default () => {
 
 
 
+## ❤️ FAQ
 
-## API
+State changes in the page, causing other `<Input />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` property of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useState, useMemo } from "react";
+import Input from 'funda-ui/Input';
+
+// DO NOT move `useMemo` to component
+function MemoInput(props: any) {
+    const {val, callback} = props;
+    return useMemo(() => {
+        return <Input 
+                name="name"
+                value={val}
+                onChange={(e: React.ChangeEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement> | null, isComposition: boolean, el: HTMLInputElement, value: string) => {
+                    callback(value);
+                }}
+            />
+
+    }, []);
+}
+
+export default () => {
+
+    const [myInput, setMyInput] = useState('test');
+
+    return (
+        <>
+          
+            <MemoInput 
+                val={myInput} 
+                name="name"
+                callback={setMyInput} 
+            />
+            <p>{myInput}</p>
+            
+        </>
+    );
+}
+```
+
+
+
+## ❤️ API
 
 ### Input
 ```js

@@ -208,7 +208,7 @@ toast.updateConfig({
 
 
 
-## API
+## ❤️ API
 
 
 ### Toast Provider (Globally)

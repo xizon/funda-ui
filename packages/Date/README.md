@@ -608,7 +608,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Date
 ```js

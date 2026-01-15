@@ -118,317 +118,6 @@ export default () => {
 
 
 
-## FAQ
-
-State changes in the page, causing other `<Select />` components to re-render and value to reset.
-
-### Solution:
-
-> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-When you change the value of the second controlled component, observe the default value of the first controlled component.
-
-
-**❌ Bad**
-```js
-import React, { useState } from "react";
-import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
-
-// component styles
-import 'funda-ui/Select/index.css';
-
-export default () => {
-
-    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
- 
-    return (
-        <>
-            
-
-            <Select
-                value={Array.from({ length: 20 }).fill(0).map((v, i) => {
-                        return { label: `${i}`, value: `${i}`, queryString: "" }
-                    })}
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all"
-                }}
-                placeholder="Select"
-                name="name2"
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { label: `${i}`, value: `${i}`, queryString: "" }
-                })}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(el, el2, val);
-                }}
-            />
-
-
-            <Select
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    setOneSelectChanged((val as OptionConfig).label);
-                }}
-            />
-
-
-
-        </>
-    );
-}
-```
-
-**👍 Good**
-
-Use `useMemo()` and `useState()` to control `options` and `value` respectively.
-
-```js
-import React, { useState, useEffect, useMemo } from "react";
-import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
-
-// component styles
-import 'funda-ui/Select/index.css';
-
-export default () => {
-
-    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
- 
-    // Create stable references
-    const [selectValue, setSelectValue] = useState<any[]>([]);
-    const selectOptions = useMemo(() => {
-        return Array.from({ length: 100 }).fill(0).map((v, i) => ({
-            label: `${i}`,
-            value: `${i}`,
-            queryString: ""
-        }));
-    }, []);
-
-
-    useEffect(() => {
-        setSelectValue(Array.from({ length: 20 }).fill(0).map((v, i) => {
-            return { label: `${i}`, value: `${i}`, queryString: "" }
-        }));
-    }, []);
-
-    return (
-        <>
-            
-
-            <Select
-                value={selectValue}
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all"
-                }}
-                placeholder="Select"
-                name="name2"
-                options={selectOptions}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(el, el2, val);
-                }}
-            />
-
-            <Select
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    setOneSelectChanged((val as OptionConfig).label);
-                }}
-            />
-
-
-
-        </>
-    );
-}
-```
-
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useState, useMemo } from "react";
-import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
-
-// component styles
-import 'funda-ui/Select/index.css';
-
-// DO NOT move `useMemo` to component
-function SelectOneMemo(props) {
-    const { callback, selectValue, options, name } = props;
-    return useMemo(() => {
-        return <>
-            <Select
-                value={selectValue}
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all"
-                }}
-                placeholder="Select"
-                name={name}
-                options={options}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    callback(val);
-                }}
-            />
-
-        </>
-
-
-    }, []);
-}
-
-
-export default () => {
- 
-    const [oneSelectChanged, setOneSelectChanged] = useState('');
- 
-    return (
-        <>
-            
-
-            <SelectOneMemo
-                selectValue={Array.from({ length: 20 }).fill(0).map((v, i) => {
-                    return { label: `${i}`, value: `${i}`, queryString: "" }
-                })}
-                callback={(val: any) => {
-                    console.log(val);
-                }}
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => ({
-                    label: `${i}`,
-                    value: `${i}`,
-                    queryString: ""
-                }))}
-                name="name2"
-            />
-
-            <Select
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    setOneSelectChanged((val as OptionConfig).label);
-                }}
-            />
-
-        </>
-    );
-  
-}
-```
-
-
-
-**👍 Good**
-
-Use `defaultValue` property.
-
-
-```js
-import React, { useState } from "react";
-import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
-
-// component styles
-import 'funda-ui/Select/index.css';
-
-export default () => {
-
-    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
- 
-
-    return (
-        <>
-            
-
-            <Select
-                // using "defaultValue"
-                defaultValue={Array.from({ length: 20 }).fill(0).map((v, i) => {
-                    return { label: `${i}`, value: `${i}`, queryString: "" }
-                })}
-                multiSelect={{
-                    valid: true,
-                    selectAll: true,
-                    selectAllLabel: "Select all",
-                    deselectAllLabel: "Deselect all"
-                }}
-                placeholder="Select"
-                name="name2"
-                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
-                    return { label: `${i}`, value: `${i}`, queryString: "" }
-                })}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    console.log(el, el2, val);
-                }}
-            />
-
-            <Select
-                value="value-2"
-                placeholder="Select"
-                name="name"
-                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
-                options={`
-                [
-                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
-                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
-                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
-                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
-                ]  
-                `}
-                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
-                    setOneSelectChanged((val as OptionConfig).label);
-                }}
-            />
-
-
-
-        </>
-    );
-}
-```
-
 ## Automatically trigger request
 
 You need to use the series property `fetch<METHOD_NAME>` to format the data of the API callback, which will match the data structure of the component.
@@ -2205,7 +1894,318 @@ window['funda-ui__Select-disable-livesearch'] = 1;
 
 
 
-## API
+## ❤️ FAQ
+
+State changes in the page, causing other `<Select />` components to re-render and value to reset.
+
+### Solution:
+
+> The `value` and `options` properties of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+When you change the value of the second controlled component, observe the default value of the first controlled component.
+
+
+**❌ Bad**
+```js
+import React, { useState } from "react";
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
+ 
+    return (
+        <>
+            
+
+            <Select
+                value={Array.from({ length: 20 }).fill(0).map((v, i) => {
+                        return { label: `${i}`, value: `${i}`, queryString: "" }
+                    })}
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all"
+                }}
+                placeholder="Select"
+                name="name2"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { label: `${i}`, value: `${i}`, queryString: "" }
+                })}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
+                }}
+            />
+
+
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
+                }}
+            />
+
+
+
+        </>
+    );
+}
+```
+
+**👍 Good**
+
+Use `useMemo()` and `useState()` to control `options` and `value` respectively.
+
+```js
+import React, { useState, useEffect, useMemo } from "react";
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
+ 
+    // Create stable references
+    const [selectValue, setSelectValue] = useState<any[]>([]);
+    const selectOptions = useMemo(() => {
+        return Array.from({ length: 100 }).fill(0).map((v, i) => ({
+            label: `${i}`,
+            value: `${i}`,
+            queryString: ""
+        }));
+    }, []);
+
+
+    useEffect(() => {
+        setSelectValue(Array.from({ length: 20 }).fill(0).map((v, i) => {
+            return { label: `${i}`, value: `${i}`, queryString: "" }
+        }));
+    }, []);
+
+    return (
+        <>
+            
+
+            <Select
+                value={selectValue}
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all"
+                }}
+                placeholder="Select"
+                name="name2"
+                options={selectOptions}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
+                }}
+            />
+
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
+                }}
+            />
+
+
+
+        </>
+    );
+}
+```
+
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useState, useMemo } from "react";
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+// DO NOT move `useMemo` to component
+function SelectOneMemo(props) {
+    const { callback, selectValue, options, name } = props;
+    return useMemo(() => {
+        return <>
+            <Select
+                value={selectValue}
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all"
+                }}
+                placeholder="Select"
+                name={name}
+                options={options}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    callback(val);
+                }}
+            />
+
+        </>
+
+
+    }, []);
+}
+
+
+export default () => {
+ 
+    const [oneSelectChanged, setOneSelectChanged] = useState('');
+ 
+    return (
+        <>
+            
+
+            <SelectOneMemo
+                selectValue={Array.from({ length: 20 }).fill(0).map((v, i) => {
+                    return { label: `${i}`, value: `${i}`, queryString: "" }
+                })}
+                callback={(val: any) => {
+                    console.log(val);
+                }}
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => ({
+                    label: `${i}`,
+                    value: `${i}`,
+                    queryString: ""
+                }))}
+                name="name2"
+            />
+
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
+                }}
+            />
+
+        </>
+    );
+  
+}
+```
+
+
+
+**👍 Good**
+
+Use `defaultValue` property.
+
+
+```js
+import React, { useState } from "react";
+import Select, { OptionConfig, MultiSelectValue } from 'funda-ui/Select';
+
+// component styles
+import 'funda-ui/Select/index.css';
+
+export default () => {
+
+    const [oneSelectChanged, setOneSelectChanged] = useState<string>('');
+ 
+
+    return (
+        <>
+            
+
+            <Select
+                // using "defaultValue"
+                defaultValue={Array.from({ length: 20 }).fill(0).map((v, i) => {
+                    return { label: `${i}`, value: `${i}`, queryString: "" }
+                })}
+                multiSelect={{
+                    valid: true,
+                    selectAll: true,
+                    selectAllLabel: "Select all",
+                    deselectAllLabel: "Deselect all"
+                }}
+                placeholder="Select"
+                name="name2"
+                options={Array.from({ length: 100 }).fill(0).map((v, i) => {
+                    return { label: `${i}`, value: `${i}`, queryString: "" }
+                })}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    console.log(el, el2, val);
+                }}
+            />
+
+            <Select
+                value="value-2"
+                placeholder="Select"
+                name="name"
+                winWidth={typeof window === 'undefined' ? undefined : () => window.innerWidth/2 + 'px'}
+                options={`
+                [
+                    {"label": "Option 1","listItemLabel":"Option 1 (No: 001)","value": "value-1","queryString": "option1"},
+                    {"label": "Option 2","listItemLabel":"<del style=color:red>deprecate</del>Option 2 (No: 002)","value": "value-2","queryString": "option2"},
+                    {"label": "Option 3","listItemLabel":"Option 3 (No: 003)","value": "value-3","queryString": "option3"},
+                    {"label": "Option 4","listItemLabel":"Option 4 (No: 004)","value": "value-4","queryString": "option4", "disabled":true}
+                ]  
+                `}
+                onChange={(el: HTMLElement, el2: HTMLElement, val: OptionConfig | MultiSelectValue): void => {
+                    setOneSelectChanged((val as OptionConfig).label);
+                }}
+            />
+
+
+
+        </>
+    );
+}
+```
+
+## ❤️ API
 
 ### Select
 ```js
@@ -2315,7 +2315,7 @@ Among them, `label`, `listItemLabel`, `value`, `optgroup`, `queryString`, `disab
 ```
 
 
-## Types
+## ❤️ Types
 
 ```typescript
 interface OptionConfig {

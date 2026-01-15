@@ -601,7 +601,7 @@ export default () => {
 
 
 
-## API
+## ❤️ API
 
 ### Modal Dialog
 ```js

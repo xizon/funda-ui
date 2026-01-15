@@ -48,7 +48,7 @@ export default () => {
 ```
 
 
-## API
+## ❤️ API
 
 ### Horizontal Scroll Content
 ```js

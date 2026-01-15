@@ -1344,6 +1344,201 @@ export default () => {
 ```
 
 
+
+### d) Matching and filtering checkboxes based on the fields of a column
+
+For example, based on an `ID` column, if the IDs match, select all rows with the same ID. Note that you should not use `onChangeRowSelect` to set STATE for this.
+
+```js
+import React, { useRef, useState, useEffect } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+
+    // utils
+    ToggleSelection,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+export default () => {
+
+    const [tableData, setTableData] = useState<any[]>([]);
+    const tableSelectAllRef = useRef<any>(null);
+    const tablePrRowSelectAllRef = useRef<any[]>([]);
+    const [selectIds, setSelectIds] = useState<number[]>([]);
+    const tableCheckRef = useRef<Map<string, any>>(new Map());
+
+    const getItem = (item: any) => {
+        return tableData.find((v: any) => v.name === item.name);
+    };
+
+    const getNewSelectedIds = (currentSelectedIds: number[], isChecked: boolean, targetItem: any) => {
+        const targetSettleId = getItem(targetItem)?.id;
+        
+        // If there is no "id", return the original list directly (or add or remove items based on isChecked).
+        if (!targetSettleId) return currentSelectedIds;
+
+        // Find all names that belong to the same "id".
+        const relatedIds = tableData
+            .filter(listItem => getItem(listItem)?.id === targetSettleId)
+            .map(listItem => listItem.name);
+
+        if (isChecked) {
+            // Merge and remove duplicates
+            return Array.from(new Set([...currentSelectedIds, ...relatedIds]));
+        } else {
+            // Exclude all associated IDs
+            return currentSelectedIds.filter(id => !relatedIds.includes(id));
+        }
+    };
+
+    useEffect(() => {
+        
+        // test async
+        setTableData([
+            { name: 'David', id: 6655737, no: 1, condition: 'GOOD' },
+            { name: 'Lucy', id: 6655737, no: 2, condition: 'GOOD' },
+            { name: 'Chuckie', id: 145635, no: 3, condition: 'BAD' },
+            { name: 'Smith', id: 6655737, no: 4, condition: 'GOOD' },
+            { name: 'Frank', id: 2335623, no: 5, condition: 'PERFECT' },
+            { name: 'Leo', id: 145635, no: 6, condition: 'NOTHING' },
+        ]);
+
+    }, []);
+
+
+    
+
+    return (
+        <>
+
+        
+            <Table
+                rowSelectable
+                tableClassName="table"
+                data={tableData}
+            >
+                <TableHead>
+                    <TableRow>
+                        <TableCell scope="col"  style={{width: '25px'}}>
+                            {/** Checkbox */}
+                            <div className="checkbox-indeterminate">
+                                <ToggleSelection 
+                                    row={-1} 
+                                    contentRef={tableSelectAllRef} 
+                                    onChange={(e: React.MouseEvent, val: boolean) => {
+                                        if (val) {
+                                            // Select All: Retrieves all names in the current list.
+                                            const allIds = tableData.map((item: any) => item.name);
+                                            setSelectIds(allIds);
+
+                                            // Synchronize UI: Manually select all checkboxes in the list.
+                                            tableData.forEach((item: any) => {
+                                                const checkRef = tableCheckRef.current.get(item.no.toString());
+                                                if (checkRef) {
+                                                    checkRef.set(true);
+                                                }
+                                            });
+                                        } else {
+                                            // Unselect all
+                                            setSelectIds([]);
+
+                                            // Synchronize UI: Manually uncheck all checkboxes in the list.
+                                            tableData.forEach((item: any) => {
+                                                const checkRef = tableCheckRef.current.get(item.no.toString());
+                                                if (checkRef) {
+                                                    checkRef.set(false);
+                                                }
+                                            });
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </TableCell>
+                        <TableCell scope="col" >#</TableCell>
+                        <TableCell scope="col" nowrap>ID</TableCell>
+                        <TableCell scope="col" nowrap>Name</TableCell>
+                        <TableCell scope="col" nowrap>No</TableCell>
+                        <TableCell scope="col" nowrap>Condition</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {tableData.map((item: any, index: number) => {
+                        return <TableRow 
+                            key={`row-${index}`} 
+                            data-key={`row-${index}`}
+                            itemData={item}
+                        >
+                            <TableCell scope="row">
+                                {/** Checkbox */}
+                                <ToggleSelection
+                                    row={index}
+                                    contentRef={(node: any) => {
+                                        if (node) {
+                                            tableCheckRef.current.set(item.no.toString(), node);
+                                        }
+
+                                    }}
+                                    onChange={(e: React.MouseEvent, val: boolean, fetchData: any[]) => {
+                                        // 1. Compute a new selected ID array
+                                        setSelectIds((prev) => {
+                                            const nextIds = getNewSelectedIds(prev, val, item);
+
+                                            // 2. Manual UI synchronization: Because it involves external control and linkage, it is necessary to manually set the state of checkboxes with the same "id" to be consistent.
+                                            const targetId = getItem(item)?.id;
+                                            if (targetId) {
+                                                tableData.forEach((listItem: any) => {
+                                                    if (getItem(listItem)?.id === targetId) {
+                                                        const checkRef = tableCheckRef.current.get(listItem.no.toString());
+                                                        if (checkRef) {
+                                                            checkRef.set(val);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                                
+
+                                            // 3. Initialize indeterminate status of all checkboxes 
+                                            if (tableSelectAllRef.current) {
+                                                if (nextIds.length > 0 || nextIds.length < tableData.length) tableSelectAllRef.current.indeterminate(true);
+                                                if (nextIds.length === 0 || nextIds.length === tableData.length) tableSelectAllRef.current.indeterminate(false);
+                                                if (nextIds.length === 0) tableSelectAllRef.current.setSelectAll(false);
+                                                if (nextIds.length === tableData.length) tableSelectAllRef.current.setSelectAll(true);
+                                            }
+
+                                            return nextIds;
+                                        });
+
+
+                                    }}
+                                />
+                                </div>
+                            </TableCell>
+                            <TableCell scope="row">{index}</TableCell>
+                            <TableCell>{item.id}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.no}</TableCell>
+                            <TableCell>{item.condition}</TableCell>
+                        </TableRow>
+
+                    })}
+                </TableBody>
+            </Table>   
+            <p><small>{selectIds.join(',')}</small></p>
+
+        </>
+    );
+}
+```
+
+
+
 ## Drag and Drop Sort Rows
 
 > To interact with data is required using the `data` property of `<Table />` and `itemData` property of `<TableRow />`.
@@ -1571,141 +1766,6 @@ export default () => {
     );
 }
 ```
-
-
-## FAQ
-
-State changes in the page, causing other `<Table />` components to re-render and value to reset.
-
-### Solution:
-
-> The `data` property of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
-
-
-### Example:
-
-
-**👍 Good**
-
-Use `useMemo()` to return the entire component
-
-
-```js
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-
-    // utils
-    ToggleSelection,
-} from 'funda-ui/Table';
-
-// component styles
-import 'funda-ui/Table/index.css';
-
-
-
-// DO NOT move `useMemo` to component
-function MemoTable(props: any) {
-    const {data} = props;
-    const tableSelectAllRef = useRef<any>(null);
-
-    return useMemo(() => {
-        return <Table
-                rowSelectable
-                tableClassName="table"
-                data={data}
-                // dataSelected={[1,3]}
-                onChangeRowSelect={(fetchData: any[]) => {
-                    console.log(fetchData);
-                }}
-            >
-                <TableHead>
-                    <TableRow>
-                        <TableCell scope="col" nowrap style={{width: '25px'}}>
-                            {/** Checkbox */}
-                            <div className="checkbox-indeterminate">
-                                <ToggleSelection row={-1} contentRef={tableSelectAllRef} />
-                            </div>
-                        </TableCell>
-                        <TableCell scope="col" nowrap>#</TableCell>
-                        <TableCell scope="col" nowrap>Name</TableCell>
-                        <TableCell scope="col" nowrap>Friend</TableCell>
-                        <TableCell scope="col" nowrap>Condition</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {data.map((item: any, index: number) => {
-                        return <TableRow 
-                            key={`row-${index}`} 
-                            data-key={`row-${index}`}
-                            itemData={item}
-                        >
-                            <TableCell scope="row">
-                                {/** Checkbox */}
-                                <div className="checkbox-indeterminate">
-                                    <ToggleSelection 
-                                        row={index} 
-                                        onChange={(e: React.MouseEvent, val: boolean, fetchData: any[]) => {
-                                            //  Initialize indeterminate status of all checkboxes 
-                                            if (tableSelectAllRef.current) {
-                                                if (fetchData.length > 0 || fetchData.length < data.length) tableSelectAllRef.current.indeterminate(true);
-                                                if (fetchData.length === 0 || fetchData.length === data.length) tableSelectAllRef.current.indeterminate(false);
-                                                if (fetchData.length === 0) tableSelectAllRef.current.setSelectAll(false);
-                                                if (fetchData.length === data.length) tableSelectAllRef.current.setSelectAll(true);
-                                            }
-                                        }}
-                                    />
-                                </div>
-                            </TableCell>
-                            <TableCell scope="row">{index}</TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.friend}</TableCell>
-                            <TableCell>{item.condition}</TableCell>
-                        </TableRow>
-
-                    })}
-                </TableBody>
-            </Table>;
-
-    }, [data]);
-}
-
-
-
-export default () => {
-
-    const [tableData, setTableData] = useState<any[]>([]);
-
-    useEffect(() => {
-        
-        // test async
-        setTableData([
-            { name: 'David', friend: 'Jone', condition: 'GOOD' },
-            { name: 'Chuckie', friend: 'Jone', condition: 'BAD' },
-            { name: 'Smith Jone', friend: 'Lomi', condition: 'GOOD' },
-            { name: 'Frank', friend: 'Alice', condition: 'PERFECT' },
-        ]);
-
-    }, []);
-
-
-    return (
-        <>
-        
-            <MemoTable 
-                data={tableData} 
-            />
-
-        </>
-    );
-}
-```
-
-
 
 
 ## Table Cell Editable
@@ -2561,7 +2621,144 @@ export default () => {
 
 
 
-## API
+
+## ❤️ FAQ
+
+State changes in the page, causing other `<Table />` components to re-render and value to reset.
+
+### Solution:
+
+> The `data` property of the controlled component must be **stable references** so that the initial values ​​are not reset due to re-rendering caused by changes in the state (using `useState()`) of the page.
+
+
+### Example:
+
+
+**👍 Good**
+
+Use `useMemo()` to return the entire component
+
+
+```js
+import React, { useRef, useState, useEffect, useMemo } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+
+    // utils
+    ToggleSelection,
+} from 'funda-ui/Table';
+
+// component styles
+import 'funda-ui/Table/index.css';
+
+
+
+// DO NOT move `useMemo` to component
+function MemoTable(props: any) {
+    const {data} = props;
+    const tableSelectAllRef = useRef<any>(null);
+
+    return useMemo(() => {
+        return <Table
+                rowSelectable
+                tableClassName="table"
+                data={data}
+                // dataSelected={[1,3]}
+                onChangeRowSelect={(fetchData: any[]) => {
+                    console.log(fetchData);
+                }}
+            >
+                <TableHead>
+                    <TableRow>
+                        <TableCell scope="col" nowrap style={{width: '25px'}}>
+                            {/** Checkbox */}
+                            <div className="checkbox-indeterminate">
+                                <ToggleSelection row={-1} contentRef={tableSelectAllRef} />
+                            </div>
+                        </TableCell>
+                        <TableCell scope="col" nowrap>#</TableCell>
+                        <TableCell scope="col" nowrap>Name</TableCell>
+                        <TableCell scope="col" nowrap>Friend</TableCell>
+                        <TableCell scope="col" nowrap>Condition</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {data.map((item: any, index: number) => {
+                        return <TableRow 
+                            key={`row-${index}`} 
+                            data-key={`row-${index}`}
+                            itemData={item}
+                        >
+                            <TableCell scope="row">
+                                {/** Checkbox */}
+                                <div className="checkbox-indeterminate">
+                                    <ToggleSelection 
+                                        row={index} 
+                                        onChange={(e: React.MouseEvent, val: boolean, fetchData: any[]) => {
+                                            //  Initialize indeterminate status of all checkboxes 
+                                            if (tableSelectAllRef.current) {
+                                                if (fetchData.length > 0 || fetchData.length < data.length) tableSelectAllRef.current.indeterminate(true);
+                                                if (fetchData.length === 0 || fetchData.length === data.length) tableSelectAllRef.current.indeterminate(false);
+                                                if (fetchData.length === 0) tableSelectAllRef.current.setSelectAll(false);
+                                                if (fetchData.length === data.length) tableSelectAllRef.current.setSelectAll(true);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </TableCell>
+                            <TableCell scope="row">{index}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.friend}</TableCell>
+                            <TableCell>{item.condition}</TableCell>
+                        </TableRow>
+
+                    })}
+                </TableBody>
+            </Table>;
+
+    }, [data]);
+}
+
+
+
+export default () => {
+
+    const [tableData, setTableData] = useState<any[]>([]);
+
+    useEffect(() => {
+        
+        // test async
+        setTableData([
+            { name: 'David', friend: 'Jone', condition: 'GOOD' },
+            { name: 'Chuckie', friend: 'Jone', condition: 'BAD' },
+            { name: 'Smith Jone', friend: 'Lomi', condition: 'GOOD' },
+            { name: 'Frank', friend: 'Alice', condition: 'PERFECT' },
+        ]);
+
+    }, []);
+
+
+    return (
+        <>
+        
+            <MemoTable 
+                data={tableData} 
+            />
+
+        </>
+    );
+}
+```
+
+
+
+
+
+## ❤️ API
 
 > ❤️ You could specify all remaining properties defined and all synthetic events from React on all components listed below. such as `tabIndex`, `style`, `id`, `data-xxx`, `onClick`, `onMouseEnter`, `onMouseLeave`, and so on.
 
