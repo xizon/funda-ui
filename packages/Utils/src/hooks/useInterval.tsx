@@ -39,7 +39,7 @@ const useInterval = (fn: () => void, delay: number | null, enabled: boolean = tr
 } => {
     const ref = useRef<any>(null);
   
-    const intervalIdRef = useRef<any>(null);
+    const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
     const startTimer = useCallback(() => {
         intervalIdRef.current = setInterval(() => {
             ref.current && ref.current();
@@ -47,7 +47,7 @@ const useInterval = (fn: () => void, delay: number | null, enabled: boolean = tr
     }, [ref]);
 
     const stopTimer = useCallback(() => {
-        clearInterval(intervalIdRef.current);
+        if (intervalIdRef.current) clearInterval(intervalIdRef.current);
         intervalIdRef.current = null;
     }, []);
 

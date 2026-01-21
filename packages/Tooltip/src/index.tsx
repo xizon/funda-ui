@@ -157,7 +157,7 @@ const Tooltip = forwardRef<any, TooltipProps>((props, ref) => {
 
 
     //timer hover
-    const timeoutHoverIdRef = useRef<any>(null);
+    const timeoutHoverIdRef = useRef<NodeJS.Timeout | null>(null);
     const startTimerHover = () => {
         timeoutHoverIdRef.current = setTimeout(() => {
 
@@ -172,13 +172,13 @@ const Tooltip = forwardRef<any, TooltipProps>((props, ref) => {
     };
 
     const stopTimerHover = () => {
-        clearTimeout(timeoutHoverIdRef.current);
+        if (timeoutHoverIdRef.current) clearTimeout(timeoutHoverIdRef.current);
         timeoutHoverIdRef.current = null;
     };
 
 
     //timer mouseout
-    const timeoutMouseoutIdRef = useRef<any>(null);
+    const timeoutMouseoutIdRef = useRef<NodeJS.Timeout | null>(null);
     const startTimerMouseout = () => {
         timeoutMouseoutIdRef.current = setTimeout(() => {
             hideTip();
@@ -186,7 +186,7 @@ const Tooltip = forwardRef<any, TooltipProps>((props, ref) => {
     };
 
     const stopTimerMouseout = () => {
-        clearTimeout(timeoutMouseoutIdRef.current);
+        if (timeoutMouseoutIdRef.current) clearTimeout(timeoutMouseoutIdRef.current);
         timeoutMouseoutIdRef.current = null;
     };
 
@@ -296,7 +296,7 @@ const Tooltip = forwardRef<any, TooltipProps>((props, ref) => {
 
 
     // Timer for delayed close
-    const delayedCloseTimerRef = useRef<any>(null);
+    const delayedCloseTimerRef = useRef<NodeJS.Timeout | null>(null);
     const DELAYED_CLOSE_TIMEOUT = typeof delayedCloseTimeout === 'number' ? delayedCloseTimeout : 1500;
 
     // Handler for mouse leave on trigger (when delayedClose is enabled)

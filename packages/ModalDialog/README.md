@@ -304,7 +304,7 @@ class DataService {
 
 export default () => {
 
-    const timer = useRef<any>(null); // we can save timer in useRef and pass it to child
+    const timer = useRef<NodeJS.Timeout | null>(null); // we can save timer in useRef and pass it to child
     const [show, setShow] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
     const [fetchOk, setFetchOk] = useState<boolean>(false);
@@ -373,7 +373,7 @@ export default () => {
                 }}
                 onClose={(e) => {
 
-                    clearTimeout(timer.current);
+                    if (timer.current) clearTimeout(timer.current);
 
                     // Remove all Event Listeners
                     const btns = document.querySelectorAll('#app-mydata-list > a');

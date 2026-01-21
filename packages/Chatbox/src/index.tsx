@@ -207,7 +207,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
     //
-    const timer = useRef<any>(null);
+    const timer = useRef<NodeJS.Timeout | null>(null);
 
 
     //================================================================
@@ -931,7 +931,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
         // Stop the timer
-        clearInterval(timer.current);
+        if (timer.current) clearInterval(timer.current);
         timer.current = null;
 
         // loading
