@@ -46,6 +46,17 @@ const errorJson002 = "[{'model':'qwen-plus','base_url':'https://dashscope.aliyun
 // ❌ Invalid JSON with missing quotes
 const errorJson003 = "{'model':'qwen-plus','base_url':'https://dashscope.aliyuncs.com/compatible-mode/v1/','api_key':'sk-0989fb9baab8450682af4d000f5b7cba','message':'{message}','stream':'true','chatId': {chatId}', 'token': '{token}'}";
 
+// ❌ Invalid JSON with extra commas
+const errorJson004 = `{
+    "common": { "app_id": "de805836" },
+    "business": {
+        "language": "zh_cn",
+        "domain": "iat",
+        "accent": "mandarin",
+        "dwa": "wpgs",
+    },
+    "data": { "status": 0 }
+}`;
 
 
 console.log('okJson =>', fixAndParseJSON(okJson));   // Can parse normally  success = true
@@ -57,8 +68,14 @@ console.log('badJson =>', fixAndParseJSON(badJson4)); // Can parse after fixing 
 console.log('errorJson =>', fixAndParseJSON(errorJson001)); // {success: false, error: 'Invalid JSON format', details: 'Invalid object: mismatched braces'}
 console.log('errorJson =>', fixAndParseJSON(errorJson002)); // {success: false, error: 'Invalid JSON format', details: "Expected property name or '}' in JSON at position 2 (line 1 column 3)"}
 console.log('errorJson =>', fixAndParseJSON(errorJson003)); // {success: false, error: 'Invalid JSON format', details: 'Invalid object: mismatched braces'}
+console.log('errorJson =>', fixAndParseJSON(errorJson004)); // {success: false, error: 'Invalid JSON format', details: 'Trailing comma detected in object'}
 
 */
+/**
+ * Fix And Parse JSON (Support for handling complex escape JSON strings)
+ * @desc recursively fix top-level key/value (recursively handles when encountering top-level values that are objects/arrays)
+ * @private
+ */
 
 // Type definitions
 interface ParseResult {
@@ -151,17 +168,18 @@ function processTopObject(str: string, depth: number, MAX_DEPTH: number): string
     const pairs = splitTopLevel(inner);
 
     const repairedPairs = pairs.map(pair => {
-        if (!pair || pair.trim() === '') return '';
-        const idx = findTopLevelColon(pair);
-        if (idx === -1) {
-            return pair; // Non key:value fragment, keep as is (rare case)
-        }
-        const rawKey = pair.slice(0, idx).trim();
-        const rawVal = pair.slice(idx + 1);
+        const p = pair.trim();
+        // If the split fragment is empty, there are extra commas (e.g. {"a":1, })
+        if (p === '') throw new Error('Trailing comma detected in object');
+
+        const idx = findTopLevelColon(p);
+        if (idx === -1) throw new Error('Invalid key-value pair');
+
+        const rawKey = p.slice(0, idx).trim();
+        const rawVal = p.slice(idx + 1);
 
         const keyContent = extractKeyContent(rawKey);
         const keyJson = JSON.stringify(keyContent);
-
         const repairedValue = repairPossiblyQuotedValue(rawVal, depth + 1, MAX_DEPTH);
 
         return keyJson + ':' + repairedValue;
@@ -183,7 +201,9 @@ function processTopArray(str: string, depth: number, MAX_DEPTH: number): string 
 
     const processed = elements.map(el => {
         const t = el.trim();
-        if (t === '') return '';
+        // If the split fragment is empty, there are extra commas (e.g. [1, 2, ])
+        if (t === '') throw new Error('Trailing comma detected in array');
+        
         if (t.startsWith('{')) return processTopObject(t, depth + 1, MAX_DEPTH);
         if (t.startsWith('[')) return processTopArray(t, depth + 1, MAX_DEPTH);
         return repairPossiblyQuotedValue(t, depth + 1, MAX_DEPTH);
@@ -192,9 +212,6 @@ function processTopArray(str: string, depth: number, MAX_DEPTH: number): string 
     return '[' + processed.join(',') + ']';
 }
 
-// If it's a string wrapped in quotes, extract the inner content and JSON.stringify (safe escaping)
-// If it's an object/array literal (not wrapped in quotes), recursively process (treat as new outermost layer)
-// Otherwise return the original fragment directly (numbers/true/false/null or JS expressions)
 function repairPossiblyQuotedValue(rawVal: string, depth: number, MAX_DEPTH: number): string {
     const v = rawVal.trim();
     if (v === '') return v;
@@ -212,7 +229,7 @@ function repairPossiblyQuotedValue(rawVal: string, depth: number, MAX_DEPTH: num
             }
         }
         const inner = lastPos > 0 ? v.slice(1, lastPos) : v.slice(1);
-        return JSON.stringify(inner); // Use JSON.stringify to generate valid JSON string (automatically escape internal quotes, etc.)
+        return JSON.stringify(inner); 
     }
 
     // If it's an object or array literal (not wrapped in quotes) -> recursively treat as new outermost layer
@@ -229,58 +246,50 @@ function repairPossiblyQuotedValue(rawVal: string, depth: number, MAX_DEPTH: num
 
 /* --------- Utilities: Split by top-level commas, find top-level colon, extract key --------- */
 
-// Split by top-level commas (ignore strings, sub-objects, sub-arrays, commas inside parentheses)
 function splitTopLevel(str: string): string[] {
     const parts: string[] = [];
     let buf = '';
     let depthCurly = 0, depthSquare = 0, depthParen = 0;
     let inSingle = false, inDouble = false, esc = false;
+    
+    let lastCharWasComma = false;
 
     for (let i = 0; i < str.length; i++) {
         const ch = str[i];
-
-        if (esc) {
-            buf += ch;
-            esc = false;
-            continue;
-        }
-        if (ch === '\\') {
-            buf += ch;
-            esc = true;
-            continue;
-        }
-
+        if (esc) { buf += ch; esc = false; continue; }
+        if (ch === '\\') { buf += ch; esc = true; continue; }
         if (ch === "'" && !inDouble) { inSingle = !inSingle; buf += ch; continue; }
         if (ch === '"' && !inSingle) { inDouble = !inDouble; buf += ch; continue; }
 
         if (!inSingle && !inDouble) {
-            if (ch === '{') { depthCurly++; buf += ch; continue; }
-            if (ch === '}') { depthCurly--; buf += ch; continue; }
-            if (ch === '[') { depthSquare++; buf += ch; continue; }
-            if (ch === ']') { depthSquare--; buf += ch; continue; }
-            if (ch === '(') { depthParen++; buf += ch; continue; }
-            if (ch === ')') { depthParen--; buf += ch; continue; }
+            if (ch === '{') depthCurly++;
+            else if (ch === '}') depthCurly--;
+            else if (ch === '[') depthSquare++;
+            else if (ch === ']') depthSquare--;
+            else if (ch === '(') depthParen++;
+            else if (ch === ')') depthParen--;
 
             if (ch === ',' && depthCurly === 0 && depthSquare === 0 && depthParen === 0) {
                 parts.push(buf);
                 buf = '';
+                lastCharWasComma = true;
                 continue;
             }
         }
-
+        if (!/\s/.test(ch)) lastCharWasComma = false;
         buf += ch;
     }
     
-    // Check for unclosed brackets or quotes
-    if (depthCurly !== 0 || depthSquare !== 0 || depthParen !== 0 || inSingle || inDouble) {
-        throw new Error('Invalid JSON: unclosed brackets or quotes');
+    if (lastCharWasComma || (parts.length > 0 && buf.trim() === '')) {
+        parts.push(""); 
+    } else if (buf.trim() !== '' || parts.length === 0) {
+        parts.push(buf);
     }
-    
-    if (buf.trim() !== '') parts.push(buf);
+
+    if (depthCurly !== 0 || depthSquare !== 0 || depthParen !== 0) throw new Error('Mismatched structure');
     return parts;
 }
 
-// Find the first "top-level" colon index (ignore inside strings & sub-levels)
 function findTopLevelColon(str: string): number {
     let inSingle = false, inDouble = false, esc = false;
     let depthCurly = 0, depthSquare = 0, depthParen = 0;
@@ -307,122 +316,69 @@ function findTopLevelColon(str: string): number {
     return -1;
 }
 
-// Extract key content (supports "key", 'key', key), returns pure key string
 function extractKeyContent(rawKey: string): string {
     const r = rawKey.trim();
     if ((r.startsWith('"') && r.endsWith('"')) || (r.startsWith("'") && r.endsWith("'"))) {
-        const inner = r.slice(1, -1).replace(/\\"/g, '"').replace(/\\'/g, "'");
-        return inner;
+        return r.slice(1, -1).replace(/\\"/g, '"').replace(/\\'/g, "'");
     }
     return r;
 }
 
+/* ---------- Exported Validation Functions ---------- */
 
-/**
- * Determine whether it is in JSON format
- * @private
- */
 function isJSON(input: any): boolean {
-    if (typeof (input) === 'string' && input.length > 0) {
+    if (typeof input === 'string' && input.length > 0) {
         return fixAndParseJSON(input).success;
     } else {
-        if (
-            typeof (input) === 'object' &&
+        return (
+            typeof input === 'object' &&
+            input !== null &&
             Object.prototype.toString.call(input) === '[object Object]' &&
-            !(input as any).length
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+            !Array.isArray(input)
+        );
     }
 }
 
-
-
-/**
- * Check if a string is a valid number
- * @param str - The string to check
- * @returns boolean indicating if the string is a valid number
- */
 function isValidNumeric(str: unknown): boolean {
-    if (typeof str !== "string") return false; // we only process strings!
-    if (
-        !isNaN(Number(str)) && // use type coercion to parse the _entirety_ of the string
-        !isNaN(parseFloat(str)) // ensure strings of whitespace fail
-    ) {
-        return true;
-    }
-    return false;
+    if (typeof str !== "string") return false;
+    return !isNaN(Number(str)) && !isNaN(parseFloat(str));
 }
 
-
-/**
- * Check if input is empty
- * @param input - The input to check (string or array of strings)
- * @returns boolean indicating if the input is empty
- */
 function isEmpty(input: string | string[]): boolean {
     if (Array.isArray(input)) {
-        return input.some((str) => !str.replace(/\s/g, '').length === true);
+        return input.some((str) => !str.replace(/\s/g, '').length);
     }
-    return !input.replace(/\s/g, '').length === true;
+    return !input.replace(/\s/g, '').length;
 }
 
-/**
- * Check if input is a valid number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid number
- */
 function isNumber(input: string): boolean {
     const reg = /^[\d|\.|,]+$/;
     return reg.test(input);
 }
 
-/**
- * Check if input is a valid integer
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid integer
- */
 function isInt(input: string): boolean {
-    if (input === "") {
-        return false;
-    }
+    if (input === "") return false;
     const reg = /\D+/;
     return !reg.test(input);
 }
 
-/**
- * Check if input is a valid email address
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid email
- */
 function isEmail(input: string): boolean {
     const reg = /^\s*([A-Za-z0-9_-]+(\.\w+)*@(\w+\.)+\w{2,3})\s*$/;
     return reg.test(input);
 }
 
-/**
- * Check if input is a valid telephone number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid telephone number
- */
 function isTel(input: string): boolean {
     const reg = /^[0-9- ]{7,20}$/;
     return reg.test(input);
 }
 
-/**
- * Check if input is a valid mobile number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid mobile number
- */
 function isMobile(input: string): boolean {
     const reg = /^1[0-9]{10}$/;
     return reg.test(input);
 }
 
 export {
+    fixAndParseJSON,
     isValidNumeric,
     isJSON,
     isEmpty,

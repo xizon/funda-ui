@@ -12,12 +12,15 @@ import useClickOutside from 'funda-utils/dist/cjs/useClickOutside';
 import useStreamController from 'funda-utils/dist/cjs/useStreamController';
 import { htmlEncode } from 'funda-utils/dist/cjs/sanitize';
 import { isJSON } from 'funda-utils/dist/cjs/validate';
-
+import guid from 'funda-utils/dist/cjs/guid';
+import { uint8arrayToBase64Str } from 'funda-utils/dist/cjs/buffer';
 
 
 // loader
 import PureLoader from './PureLoader';
-import TypingEffect from "./TypingEffect";
+import TypingEffect from './TypingEffect';
+import { getValueByPath } from './helpers';
+
 
 import {
     formatLatestDisplayContent,
@@ -94,6 +97,42 @@ export type CustomRequestFunction = (
     conversationHistory: MessageDetail[],
 ) => Promise<CustomRequestResponse>;
 
+// iFlytek voice configuration
+export type VoiceConfig = {
+    enableVoiceInput: boolean;
+    holdToTalk?: boolean;
+    voiceInputAppId?: string;
+    voiceInputApiKey?: string;
+    voiceInputApiSecret?: string;
+    voiceInputSampleRate?: number;
+    voiceInputFormat?: string;
+    voiceInputEncoding?: string;
+    voiceInputHost?: string;
+    voiceInputPath?: string;
+    voiceInputProtocol?: string;
+    voiceInputHmacAlgorithm?: string;
+    voiceInputHashAlgorithm?: string;
+    voiceInputUrlTemplate?: string;
+    voiceInputRequestBodyTemplate?: string;
+    voiceInputAudioBodyTemplate?: string;
+    voiceInputUuid?: string;
+    voiceInputLang?: string;
+    voiceInputUtc?: string;
+    voiceResponseExtractor?: string;
+    voiceInputIdleTimeoutSeconds?: number;
+    voiceInputEndTimeoutSeconds?: number;
+    generateVoiceSignature?: (params: {
+        host: string;
+        path: string;
+        date: string;
+        apiKey: string;
+        apiSecret: string;
+    }) => string | Promise<string> ;
+    onVoiceInputStart?: () => void;
+    onVoiceInputEnd?: (text: string) => void;
+    onVoiceInputError?: (error: Error) => void;
+    onVoiceInputInterrupt?: () => void;
+};
 
 export type ChatboxProps = {
     debug?: boolean;
@@ -143,6 +182,7 @@ export type ChatboxProps = {
     onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
     onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
+    voiceConfig?: VoiceConfig; // Voice configuration
 };
 
 
@@ -204,10 +244,8 @@ const Chatbox = (props: ChatboxProps) => {
     // Keep track of whether the default values have been initialized
     const [initializedDefaults, setInitializedDefaults] = useState<Record<string, boolean>>({});
 
-
-
     //
-    const timer = useRef<any>(null);
+    const timer = useRef<NodeJS.Timeout | null>(null);
 
 
     //================================================================
@@ -398,9 +436,6 @@ const Chatbox = (props: ChatboxProps) => {
         const _answerName: string = formatName(answerName, true, currentProps);
         const _questionName: string = formatName(questionName, false, currentProps);
 
-        // Responder deconstruction
-        const responseExtractPath = responseExtractor.split('.');
-  
         return {
             debug,
             defaultRows,
@@ -450,7 +485,7 @@ const Chatbox = (props: ChatboxProps) => {
             headerConfigRes,
             requestApiUrl,
             requestBodyTmpl: _requestBodyTmpl,
-            responseExtractPath,
+            responseExtractor,
             withReasoning,
         }
 
@@ -729,10 +764,6 @@ const Chatbox = (props: ChatboxProps) => {
 
         try {
 
-
-            // Extract response using the path
-            const extractPath = args().responseExtractPath?.slice(1);
-
             // Streaming data is JSON split by rows
             const lines = chunk.split("\n").filter(line => line.trim() !== "");
 
@@ -764,13 +795,13 @@ const Chatbox = (props: ChatboxProps) => {
                     // STEP 2: 
                     // ------
                     // Response body
-                    let result = JSON.parse(_content);
+                    const rootObj = JSON.parse(_content);
 
                     //*******
                     // for Ollama API (STREAM END)
                     //*******
-                    if (typeof result.done !== 'undefined') {
-                        if (result.done === true) {
+                    if (typeof rootObj.done !== 'undefined') {
+                        if (rootObj.done === true) {
                             console.log('--> [DONE]');
 
                             //reset SSE
@@ -780,15 +811,11 @@ const Chatbox = (props: ChatboxProps) => {
                     }
 
                     //*******
-                    // for OpenAI API
+                    // for OpenAI API / other JSON structures, parse uniformly via responseExtractor
                     //*******
-                    if (extractPath) {
-                        for (const path of extractPath) {
-                            result = result[path];
-                        }
-                    }
-
-                    let content = result;
+                    const rawPath = args().responseExtractor || "data.choices.0.delta.content";
+                    const path = rawPath.startsWith('data.') ? rawPath.substring('data.'.length) : rawPath;
+                    let content = getValueByPath(rootObj, path);
 
                     // STEP 3: 
                     // ------
@@ -931,7 +958,7 @@ const Chatbox = (props: ChatboxProps) => {
 
 
         // Stop the timer
-        clearInterval(timer.current);
+        if (timer.current) clearInterval(timer.current);
         timer.current = null;
 
         // loading
@@ -1024,7 +1051,7 @@ const Chatbox = (props: ChatboxProps) => {
 
                 //
                 args().onChunk?.(inputContentRef.current, replyRes, conversationHistory.current);
-                args().onComplete?.(inputContentRef.current, replyRes, conversationHistory.current); 
+                args().onComplete?.(inputContentRef.current, replyRes, conversationHistory.current);
 
                 //reset SSE
                 closeSSE();
@@ -1199,9 +1226,6 @@ const Chatbox = (props: ChatboxProps) => {
                 {/* ======================== NORMAL  ====================== */}
                 {/* ======================================================== */}
 
-                // Extract response using the path
-                const extractPath = args().responseExtractPath?.slice(1);
-
                 const response = await fetch((args().requestApiUrl || ''), {
                     method: "POST",
                     headers: args().headerConfigRes,
@@ -1227,15 +1251,10 @@ const Chatbox = (props: ChatboxProps) => {
                 // hide loader
                 setLoaderDisplay(false);
 
-                
-                let result: any = jsonResponse;
-                if (extractPath) {
-                    for (const path of extractPath) {
-                        result = result[path];
-                    }
-                }
-
-                let content = result;
+                // Use responseExtractor to parse the returned content uniformly
+                const rawPath = args().responseExtractor || "data.choices.0.delta.content";
+                const path = rawPath.startsWith('data.') ? rawPath.substring('data.'.length) : rawPath;
+                let content = getValueByPath(jsonResponse, path);
 
                 // Replace with a valid label
                 content = fixHtmlTags(content, args().withReasoning, args().reasoningSwitchLabel);
@@ -1354,6 +1373,395 @@ const Chatbox = (props: ChatboxProps) => {
             })
         }
     }, [chatId, args().toolkitButtons]); // It is only executed when the component is first rendered and when toolkitButtons changes
+
+
+
+    //================================================================
+    // Voice Input
+    //================================================================
+    const DEFAULT_VOICE_REQUEST_BODY_TEMPLATE = `{
+        "common": {
+            "app_id": "{appId}"
+        },
+        "business": {
+            "language": "{lang}",
+            "domain": "iat",
+            "accent": "mandarin",
+            "dwa": "wpgs"
+        },
+        "data": {
+            "status": 0,
+            "format": "{format}",
+            "encoding": "{encoding}"
+        }
+    }`;
+
+    const DEFAULT_AUDIO_BODY_TEMPLATE = `{
+        "data": {
+            "status": 1,
+            "format": "{format}",
+            "encoding": "{encoding}",
+            "audio": "{audioData}"
+        }
+    }`;
+
+    const [isVoiceInputActive, setIsVoiceInputActive] = useState<boolean>(false); // Whether recording is in progress
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioStreamRef = useRef<MediaStream | null>(null);
+    const voiceInputWsRef = useRef<WebSocket | null>(null);
+
+    const audioContextRef = useRef<AudioContext | null>(null);
+    const processorRef = useRef<ScriptProcessorNode | null>(null);
+    const finalVoiceTextRef = useRef<string>("");
+    const voiceIdleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const voiceResultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isVoiceInputActiveRef = useRef<boolean>(false);
+
+
+    // Get voice configuration
+    const getVoiceConfig = (): VoiceConfig => {
+        return propsRef.current.voiceConfig || {};
+    };
+
+/**
+     * Shared Helper: Get all available placeholders for voice templates
+     */
+    const getVoicePlaceholders = async () => {
+        const config = getVoiceConfig();
+        const dateGMT = new Date().toUTCString();
+        const host = config.voiceInputHost || "custom-host.com";
+        const path = config.voiceInputPath || "/custom/path";
+        const apiKey = config.voiceInputApiKey || '';
+
+        // Generate signature if needed
+        let signature = '';
+        if (typeof config.generateVoiceSignature === 'function') {
+            signature = await config.generateVoiceSignature({
+                host,
+                path,
+                date: dateGMT,
+                apiKey: apiKey,
+                apiSecret: config.voiceInputApiSecret || ''
+            });
+        }
+
+        // Map all potential variables
+        return {
+            protocol: config.voiceInputProtocol || "wss://",
+            host: host,
+            path: path,
+            date: dateGMT, // Standard GMT
+            signature: signature,
+            appId: config.voiceInputAppId || '',
+            accessKeyId: apiKey,
+            uuid: config.voiceInputUuid || guid(),
+            utc: config.voiceInputUtc || generateUtc(),
+            lang: config.voiceInputLang || 'en_us',
+            format: config.voiceInputFormat || "audio/L16;rate=16000",
+            samplerate: (config.voiceInputSampleRate || 16000).toString(),
+            encoding: config.voiceInputEncoding || "raw"
+        };
+    };
+
+    /**
+     * Shared Helper: Replace {key} in a template string based on a data object
+     */
+    const replacePlaceholders = (template: string, data: Record<string, any>): string => {
+
+        const { protocol, host, path, date, signature, appId, accessKeyId, uuid, utc, encoding, format, lang, samplerate, audioData } = data;
+
+
+        // Replace placeholders: first replace predefined placeholders
+        let result = template
+            .replace(/\{protocol\}/g, protocol)
+            .replace(/\{host\}/g, host)
+            .replace(/\{date\}/g, encodeURIComponent(date))
+            .replace(/\{path\}/g, path)
+            .replace(/\{appId\}/g, appId)
+            .replace(/\{accessKeyId\}/g, accessKeyId)
+            .replace(/\{uuid\}/g, uuid)
+            .replace(/\{utc\}/g, encodeURIComponent(utc))
+            .replace(/\{encoding\}/g, encoding)
+            .replace(/\{format\}/g, format)
+            .replace(/\{lang\}/g, lang)
+            .replace(/\{samplerate\}/g, samplerate.toString())
+            .replace(/\{signature\}/g, encodeURIComponent(signature))
+
+            // special placeholder for audio data
+            .replace(/\{audioData\}/g, audioData);
+
+        return result;
+    };
+
+
+    // Generate UTC time (ISO 8601 format with timezone, e.g. 2025-09-04T15:38:07+0800)
+    const generateUtc = (): string => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        
+        // Calculate timezone offset (in minutes)
+        const timezoneOffset = -now.getTimezoneOffset();
+        const sign = timezoneOffset >= 0 ? '+' : '-';
+        const offsetHours = Math.floor(Math.abs(timezoneOffset) / 60).toString().padStart(2, '0');
+        const offsetMinutes = (Math.abs(timezoneOffset) % 60).toString().padStart(2, '0');
+        const timezone = `${sign}${offsetHours}${offsetMinutes}`;
+        
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${timezone}`;
+    };
+
+
+    // Generate WebSocket URL (voice input)
+    const createVoiceInputWebSocketUrl = async (): Promise<string> => {
+        const config = getVoiceConfig();
+        const placeholders = await getVoicePlaceholders();
+
+        // Use custom URL template or default template
+        const urlTemplate = config.voiceInputUrlTemplate || "{protocol}{host}{path}?authorization={signature}&date={date}&host={host}";
+
+        // Replace placeholders
+        return replacePlaceholders(urlTemplate, placeholders);
+    };
+
+    const clearVoiceTimers = () => {
+        if (voiceIdleTimeoutRef.current) {
+            clearTimeout(voiceIdleTimeoutRef.current);
+            voiceIdleTimeoutRef.current = null;
+        }
+        if (voiceResultTimeoutRef.current) {
+            clearTimeout(voiceResultTimeoutRef.current);
+            voiceResultTimeoutRef.current = null;
+        }
+    };
+
+    useEffect(() => {
+        isVoiceInputActiveRef.current = isVoiceInputActive;
+    }, [isVoiceInputActive]);
+
+    const startVoiceInput = async () => {
+        const config = getVoiceConfig();
+        if (!config.enableVoiceInput) return;
+
+        try {
+            // 1. Get microphone stream
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioStreamRef.current = stream;
+
+            // 2. Initialize WebSocket
+            const wsUrl = await createVoiceInputWebSocketUrl();
+            const ws = new WebSocket(wsUrl);
+            voiceInputWsRef.current = ws;
+
+            // Maintain recognition text state (refer to test.js)
+            let resultText = "";      // Confirmed text
+            let resultTextTemp = "";  // Temporary corrected text
+
+            ws.onopen = async () => {
+
+                const placeholders = await getVoicePlaceholders();
+                const requestBodyTmpl =
+                    config.voiceInputRequestBodyTemplate ||
+                    DEFAULT_VOICE_REQUEST_BODY_TEMPLATE;
+
+                // 
+                // Replace placeholders
+                const finalRequestBody = replacePlaceholders(requestBodyTmpl, placeholders);
+
+                // 
+                if (isJSON(finalRequestBody)) {
+                    ws.send(finalRequestBody);
+                } else {
+                    console.error("--> [ERROR] The property [voiceInputRequestBodyTemplate] is not a valid JSON");
+                    interruptVoiceInput();
+                }
+            };
+
+            ws.onmessage = (e) => {
+                const jsonData = JSON.parse(e.data);
+                if (jsonData.data && jsonData.data.result) {
+                    const data = jsonData.data.result;
+
+                    const path = config.voiceResponseExtractor || "ws[].cw[0].w";
+                    const extractedStr = getValueByPath(data, path);
+                    
+                    // Only update the temporary variable when content is extracted to prevent it from being overwritten by empty responses
+                    if (extractedStr) {
+                        if (data.pgs === "apd") {
+                            resultText += resultTextTemp;
+                        }
+                        resultTextTemp = extractedStr;
+                    }
+
+                    const currentFullText = resultText + resultTextTemp;
+
+                    // Store to Ref for use by stopVoiceInput
+                    finalVoiceTextRef.current = currentFullText;
+
+                    // After recognition result is available, start/refresh the "post-result timeout" timer
+                    if (currentFullText) {
+                        const endTimeoutSeconds = typeof config.voiceInputEndTimeoutSeconds === 'number'
+                            ? config.voiceInputEndTimeoutSeconds
+                            : 5;
+                        if (voiceResultTimeoutRef.current) {
+                            clearTimeout(voiceResultTimeoutRef.current);
+                        }
+                        voiceResultTimeoutRef.current = setTimeout(() => {
+                            if (isVoiceInputActiveRef.current) {
+                                stopVoiceInput();
+                            }
+                        }, endTimeoutSeconds * 1000);
+                    }
+
+                    // Fill the input box in real time
+                    if (inputContentRef.current) {
+                        inputContentRef.current.set(currentFullText);
+                    }
+                }
+                if (jsonData.code === 0 && jsonData.data.status === 2) {
+                    ws.close();
+                }
+            };
+
+            // 3. Capture raw PCM audio (16k)
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+            const source = audioContext.createMediaStreamSource(stream);
+            const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            audioContextRef.current = audioContext;
+            processorRef.current = processor;
+
+            processor.onaudioprocess = (e) => {
+                if (ws.readyState !== WebSocket.OPEN) return;
+                
+                const inputData = e.inputBuffer.getChannelData(0);
+                // Convert Float32 to Int16 PCM
+                const outData = new Int16Array(inputData.length);
+                for (let i = 0; i < inputData.length; i++) {
+                    const s = Math.max(-1, Math.min(1, inputData[i]));
+                    outData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                }
+
+                // Send intermediate frame (status: 1)
+                const base64Audio = uint8arrayToBase64Str(outData.buffer as never);
+
+                // Prepare placeholder data (including existing placeholders and the latest audioData)
+                
+                getVoicePlaceholders().then(placeholders => {
+                    const audioDataMap = {
+                        ...placeholders,
+                        audioData: base64Audio
+                    };
+
+                    const audioTemplate = config.voiceInputAudioBodyTemplate || DEFAULT_AUDIO_BODY_TEMPLATE;
+                    const finalAudioBody = replacePlaceholders(audioTemplate, audioDataMap);
+
+                    //
+                    if (isJSON(finalAudioBody)) {
+                        ws.send(finalAudioBody);
+                    } else {
+                        console.error("--> [ERROR] The property [voiceInputAudioBodyTemplate] is not a valid JSON");
+                        interruptVoiceInput();
+                    }
+                });
+
+            };
+
+            setIsVoiceInputActive(true);
+            console.log('--> The voice start');
+            config.onVoiceInputStart?.();
+
+            // Start the "no recognition after start" timeout timer
+            const idleTimeoutSeconds = typeof config.voiceInputIdleTimeoutSeconds === 'number'
+                ? config.voiceInputIdleTimeoutSeconds
+                : 10;
+            if (voiceIdleTimeoutRef.current) {
+                clearTimeout(voiceIdleTimeoutRef.current);
+            }
+            voiceIdleTimeoutRef.current = setTimeout(() => {
+                if (isVoiceInputActiveRef.current && !finalVoiceTextRef.current) {
+                    stopVoiceInput();
+                }
+            }, idleTimeoutSeconds * 1000);
+
+        } catch (error) {
+            console.error('--> The voice input failed to start:', error);
+            config.onVoiceInputError?.(error as Error);
+        }
+    };
+
+    const stopVoiceInput = async () => {
+        const config = getVoiceConfig();
+
+        // If voice input is already inactive, return directly to avoid duplicate cleanup
+        if (!isVoiceInputActiveRef.current) {
+            return;
+        }
+
+        clearVoiceTimers();
+
+        // 1. Send WebSocket end frame
+        if (voiceInputWsRef.current && voiceInputWsRef.current.readyState === WebSocket.OPEN) {
+            voiceInputWsRef.current.send(JSON.stringify({
+                data: { status: 2, format: "audio/L16;rate=16000", encoding: "raw", audio: "" },
+            }));
+        }
+
+        // 2. Stop audio capture
+        if (processorRef.current) {
+            processorRef.current.disconnect();
+            processorRef.current = null;
+        }
+        if (audioContextRef.current) {
+            audioContextRef.current.close();
+            audioContextRef.current = null;
+        }
+
+        // 3. Stop microphone stream
+        if (audioStreamRef.current) {
+            audioStreamRef.current.getTracks().forEach(track => track.stop());
+            audioStreamRef.current = null;
+        }
+
+        setIsVoiceInputActive(false);
+        // No need to call setVal here because onmessage already updates it in real time
+        console.log('--> The voice end');
+        config.onVoiceInputEnd?.(finalVoiceTextRef.current); 
+    };
+
+
+    // Interrupt voice input
+    const interruptVoiceInput = () => {
+        const config = getVoiceConfig();
+        clearVoiceTimers();
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop();
+        }
+        if (audioStreamRef.current) {
+            audioStreamRef.current.getTracks().forEach(track => track.stop());
+            audioStreamRef.current = null;
+        }
+        if (voiceInputWsRef.current) {
+            voiceInputWsRef.current.close();
+            voiceInputWsRef.current = null;
+        }
+        setIsVoiceInputActive(false);
+        console.error('--> The voice input was interrupted.');
+        config.onVoiceInputInterrupt?.();
+    };
+
+    // Cleanup voice resources
+    useEffect(() => {
+        return () => {
+            interruptVoiceInput();
+        };
+    }, []);
 
 
     return (
@@ -1612,6 +2020,92 @@ const Chatbox = (props: ChatboxProps) => {
                             dangerouslySetInnerHTML={{ __html: `${args().stopLabel || '<svg width="15px" height="15px" viewBox="0 0 24 24" fill="none"><path d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z" fill="#1C274C"/></svg>'}` }}
                         ></button>
                     </> : <>
+                        {/* Voice input button (microphone icon) */}
+                        {(() => {
+                            const voiceConfig = getVoiceConfig();
+                            const enableVoiceInput = voiceConfig?.enableVoiceInput || false;
+                            const holdToTalk = typeof voiceConfig?.holdToTalk === 'undefined' ? true : voiceConfig.holdToTalk;
+
+                            if (enableVoiceInput) {
+
+                                // Helper to stop recording safely
+                                const handleActionStop = (e: React.SyntheticEvent) => {
+                                    // Prevent firing both Mouse and Touch events on some devices
+                                    if (e.cancelable) e.preventDefault(); 
+                                    
+                                    if (isVoiceInputActive) {
+                                        stopVoiceInput();
+                                    }
+                                };
+
+                                const handleActionStart = (e: React.SyntheticEvent) => {
+                                    if (loading) return;
+                                    if (e.cancelable) e.preventDefault();
+
+                                    if (!isVoiceInputActive) {
+                                        startVoiceInput();
+                                    }
+                                };
+
+                                return (
+                                    <div className={`${args().prefix || 'custom-'}chatbox-voice-input-btn-wrapper ${isVoiceInputActive ? 'active' : ''}`}>
+                                        {isVoiceInputActive ? <span></span> : null}
+                                        <button
+                                            // CSS touch-action is crucial here
+                                            style={{ touchAction: 'none', userSelect: 'none' }}
+
+                                            // Mobile
+                                            onTouchStart={handleActionStart}
+                                            onTouchEnd={handleActionStop}
+                                            onTouchCancel={handleActionStop} // Handle system interruptions
+
+                                            // Desktop
+                                            onMouseDown={handleActionStart}
+                                            onMouseUp={handleActionStop}
+                                            onMouseLeave={handleActionStop} // Handle mouse dragging out of button
+                                            onClick={(e: React.MouseEvent) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+
+                                                // Only use the old click logic if hold-to-talk is not enabled
+                                                if (!holdToTalk) {
+                                                    if (isVoiceInputActive) {
+                                                        stopVoiceInput();
+                                                    } else {
+                                                        startVoiceInput();
+                                                    }
+                                                }
+                                            }}
+                                            className={`${args().prefix || 'custom-'}chatbox-voice-input-btn`}
+                                            disabled={loading}
+                                        >
+                                            <svg fill="currentColor" width="20px" height="20px" viewBox="0 0 472.61 472.61">
+                                                <g>
+                                                    <g>
+                                                        <path d="M388.685,131.399v79.298c0,45.078-18.644,88.106-51.144,118.048c-31.231,28.769-71.673,42.808-113.827,39.231
+    c-78.384-6.432-139.788-73.144-139.788-151.866v-84.711H64.233v84.711c0,88.895,69.345,164.222,157.865,171.5
+    c1.46,0.12,2.907,0.096,4.365,0.178v65.129h-89.644v19.692H335.8v-19.692h-89.644v-65.173
+    c38.858-2.221,75.401-17.504,104.731-44.519c36.539-33.654,57.491-81.961,57.491-132.529v-79.298H388.685z"/>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <g>
+                                                        <path d="M236.31,0c-56.257,0-101.862,45.603-101.862,101.86v5.395h55.458v19.692h-55.458v27.259h55.458v19.692h-55.458v42.211
+    c0,56.26,45.605,101.863,101.862,101.863c56.256,0,101.861-45.603,101.861-101.863V101.86C338.171,45.603,292.566,0,236.31,0z"/>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </button>
+                                    </div>
+
+                                );
+
+                            }
+                            return null;
+                        })()}
+                        
+                        
+                        {/* Original send button */}
                         <button
                             onClick={(e: React.MouseEvent) => {
                                 e.preventDefault();

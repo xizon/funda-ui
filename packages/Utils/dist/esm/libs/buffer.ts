@@ -23,7 +23,7 @@ ArrayBuffer(522240)
     [[ArrayBufferByteLength]]: 522240
     [[ArrayBufferData]]: 673
 */
-function base64ToArrayBuffer(data: string): ArrayBuffer {
+function base64ToArrayBuffer(data: string): ArrayBufferLike {
     let res: string = data;
     if (data.indexOf('base64,') >= 0) {
         res = data.split('base64,')[1];
@@ -143,7 +143,7 @@ function toBinary(data: number): string {
  * @returns {Blob}
  */
 function arrayToBlob(uint8ArrayData: Uint8Array): Blob {
-    return new Blob([uint8ArrayData], {
+    return new Blob([uint8ArrayData as never], {
         type: "text/plain"
     });
 }

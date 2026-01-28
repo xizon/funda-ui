@@ -1570,7 +1570,7 @@ var Tooltip = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
     }, HOVER_DELAY);
   };
   var stopTimerHover = function stopTimerHover() {
-    clearTimeout(timeoutHoverIdRef.current);
+    if (timeoutHoverIdRef.current) clearTimeout(timeoutHoverIdRef.current);
     timeoutHoverIdRef.current = null;
   };
 
@@ -1582,7 +1582,7 @@ var Tooltip = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(fun
     }, MOUSE_OUT_DELAY);
   };
   var stopTimerMouseout = function stopTimerMouseout() {
-    clearTimeout(timeoutMouseoutIdRef.current);
+    if (timeoutMouseoutIdRef.current) clearTimeout(timeoutMouseoutIdRef.current);
     timeoutMouseoutIdRef.current = null;
   };
   var exceededOffsetInit = function exceededOffsetInit() {

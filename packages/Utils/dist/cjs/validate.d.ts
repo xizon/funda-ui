@@ -4,50 +4,23 @@
  * @private
  */
 /**
- * Determine whether it is in JSON format
+ * Fix And Parse JSON (Support for handling complex escape JSON strings)
+ * @desc recursively fix top-level key/value (recursively handles when encountering top-level values that are objects/arrays)
  * @private
  */
+interface ParseResult {
+    success: boolean;
+    data?: any;
+    error?: string;
+    details?: string;
+}
+declare function fixAndParseJSON(input: string): ParseResult;
 declare function isJSON(input: any): boolean;
-/**
- * Check if a string is a valid number
- * @param str - The string to check
- * @returns boolean indicating if the string is a valid number
- */
 declare function isValidNumeric(str: unknown): boolean;
-/**
- * Check if input is empty
- * @param input - The input to check (string or array of strings)
- * @returns boolean indicating if the input is empty
- */
 declare function isEmpty(input: string | string[]): boolean;
-/**
- * Check if input is a valid number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid number
- */
 declare function isNumber(input: string): boolean;
-/**
- * Check if input is a valid integer
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid integer
- */
 declare function isInt(input: string): boolean;
-/**
- * Check if input is a valid email address
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid email
- */
 declare function isEmail(input: string): boolean;
-/**
- * Check if input is a valid telephone number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid telephone number
- */
 declare function isTel(input: string): boolean;
-/**
- * Check if input is a valid mobile number
- * @param input - The input to check
- * @returns boolean indicating if the input is a valid mobile number
- */
 declare function isMobile(input: string): boolean;
-export { isValidNumeric, isJSON, isEmpty, isNumber, isInt, isEmail, isTel, isMobile };
+export { fixAndParseJSON, isValidNumeric, isJSON, isEmpty, isNumber, isInt, isEmail, isTel, isMobile };

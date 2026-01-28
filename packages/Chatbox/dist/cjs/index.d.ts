@@ -48,6 +48,41 @@ export declare type CustomRequestResponse = {
     isStream: boolean;
 };
 export declare type CustomRequestFunction = (message: string, config: CustomRequestConfig, customMethods: CustomMethod[], conversationHistory: MessageDetail[]) => Promise<CustomRequestResponse>;
+export declare type VoiceConfig = {
+    enableVoiceInput: boolean;
+    holdToTalk?: boolean;
+    voiceInputAppId?: string;
+    voiceInputApiKey?: string;
+    voiceInputApiSecret?: string;
+    voiceInputSampleRate?: number;
+    voiceInputFormat?: string;
+    voiceInputEncoding?: string;
+    voiceInputHost?: string;
+    voiceInputPath?: string;
+    voiceInputProtocol?: string;
+    voiceInputHmacAlgorithm?: string;
+    voiceInputHashAlgorithm?: string;
+    voiceInputUrlTemplate?: string;
+    voiceInputRequestBodyTemplate?: string;
+    voiceInputAudioBodyTemplate?: string;
+    voiceInputUuid?: string;
+    voiceInputLang?: string;
+    voiceInputUtc?: string;
+    voiceResponseExtractor?: string;
+    voiceInputIdleTimeoutSeconds?: number;
+    voiceInputEndTimeoutSeconds?: number;
+    generateVoiceSignature?: (params: {
+        host: string;
+        path: string;
+        date: string;
+        apiKey: string;
+        apiSecret: string;
+    }) => string | Promise<string>;
+    onVoiceInputStart?: () => void;
+    onVoiceInputEnd?: (text: string) => void;
+    onVoiceInputError?: (error: Error) => void;
+    onVoiceInputInterrupt?: () => void;
+};
 export declare type ChatboxProps = {
     debug?: boolean;
     defaultRows?: number;
@@ -96,6 +131,7 @@ export declare type ChatboxProps = {
     onInputCallback?: (input: string) => Promise<string>;
     onChunk?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
     onComplete?: (controlRef: React.RefObject<any>, lastContent: string, conversationHistory: MessageDetail[]) => any;
+    voiceConfig?: VoiceConfig;
 };
 declare const Chatbox: (props: ChatboxProps) => JSX.Element;
 export default Chatbox;

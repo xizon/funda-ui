@@ -166,6 +166,8 @@
     --custom-chatbox-questions-hover-bg: #e9e9e9;
     --custom-chatbox-content-html-elem-border-color: #ddd;
     --custom-chatbox-content-html-elem-bg: rgba(0,0,0,.05);
+    --custom-chatbox-voice-input-color: #ff4444;
+
     --custom-balloon-border-radius: 0.35rem;
     --custom-balloon-color: rgba(16, 16, 16, 0.95);
     --custom-balloon-text-color: #fff;
@@ -173,7 +175,6 @@
     --custom-balloon-move: 4px; 
     --custom-toolkit-select-options-container-min-w: 135px; 
     --custom-toolkit-select-options-container-max-h: 300px; 
-
     
     
     min-width: var(--custom-chatbox-w);
@@ -550,6 +551,89 @@
             }
             
         }
+
+        // Voice
+        [class*="chatbox-voice-input-btn"] {
+            border: none;
+            right: 3.2rem;
+            background: none;
+            width: 40px;
+            height: 40px;
+            z-index: 4;
+
+            svg path {
+                fill: var(--custom-chatbox-primary-text);
+            }
+
+            
+
+        }
+
+        [class*="chatbox-voice-input-btn-wrapper"] {
+            
+            &.active {
+         
+                > span {
+                    border-radius: 50%;
+                    margin-left: .5rem;
+                    z-index: 3;
+                    right: calc(40px + .4rem + .3rem);
+                    bottom: .3rem;
+                    position: absolute;
+                    background-color: var(--custom-chatbox-primary-color);
+                    width: 40px;
+                    height: 40px;
+                    display: block;
+                    pointer-events: none;
+                    background-color: var(--custom-chatbox-voice-input-color);
+                    border-color: var(--custom-chatbox-voice-input-color);
+                    animation: pulse 1.5s ease-in-out infinite;
+
+                    &::after {
+                            content: "";
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            border-radius: 50%;
+                            border: 3px solid var(--custom-chatbox-voice-input-color);
+                            animation: ripple 1.5s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+                        }
+                }
+
+                > button {
+                    svg path {
+                        fill: var(--custom-chatbox-msg-bg);
+                    }
+                }
+
+            }
+        }
+
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
 
     }
 

@@ -3,7 +3,7 @@
  * @param {String} data
  * @returns {ArrayBuffer}
  */
-declare function base64ToArrayBuffer(data: string): ArrayBuffer;
+declare function base64ToArrayBuffer(data: string): ArrayBufferLike;
 /**
  * ArrayBuffer to Uint8Array
  * @param {ArrayBuffer} data

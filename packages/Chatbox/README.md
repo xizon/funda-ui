@@ -45,6 +45,16 @@ Chat and conversational UI, which can be used to interface models similarly to t
 - executeCustomMethod(methodName: string, ...args: any[]): A function that executes a custom method
 ```
 
+### 5. Speech recognition
+
+- A separate microphone button will appear next to the send button
+- Clicking the microphone button will start recording
+- While recording, the microphone button shows an animated recording indicator
+- Clicking the button again will stop recording and automatically recognize the speech
+- The recognized text will be automatically filled into the input field
+- The original send button remains unchanged and works as before
+- You can then send the message normally or continue editing
+
 
 ## General
 
@@ -698,6 +708,128 @@ export default () => {
 ```
 
 
+
+
+## Speech recognition
+
+```js
+import React from 'react';
+import Chatbox from 'funda-ui/Chatbox';
+import 'funda-ui/Chatbox/index.css';
+
+import CryptoJS from 'crypto-js';
+
+export default () => {
+    const aichatRef = useRef<any>(null);
+
+    return (
+        <Chatbox
+            ...
+            contentRef={aichatRef}
+            // == Voice Input Configuration ==
+            voiceConfig={{
+                enableVoiceInput: true, 
+                holdToTalk: true,
+                voiceInputAppId: "your-app-id",
+                voiceInputApiKey: "your-api-key",
+                voiceInputApiSecret: "your-api-secret",
+                voiceInputSampleRate: 16000,
+                voiceInputFormat: "audio/L16;rate=16000",
+                voiceInputEncoding: "raw",
+                voiceInputIdleTimeoutSeconds: 10,
+                voiceInputEndTimeoutSeconds: 5,
+
+                // Optional configuration items
+                voiceInputHost: "iat-api.xfyun.cn",
+                voiceInputPath: "/v2/iat",
+                voiceInputProtocol: "wss://", // or "ws://"
+                voiceInputHmacAlgorithm: "HMAC",
+                voiceInputHashAlgorithm: "SHA-256",
+
+                // templates
+                voiceInputUrlTemplate: "{protocol}{host}{path}?authorization={signature}&date={date}&host={host}",
+                voiceInputRequestBodyTemplate: `{
+                    "common": {
+                        "app_id": "{appId}"
+                    },
+                    "business": {
+                        "language": "{lang}",
+                        "domain": "iat",
+                        "accent": "mandarin",
+                        "dwa": "wpgs"
+                    },
+                    "data": {
+                        "status": 0,
+                        "format": "{format}",
+                        "encoding": "{encoding}"
+                    }
+                }`,
+                voiceInputAudioBodyTemplate: `{
+                    "data": {
+                        "status": 1,
+                        "format": "{format}",
+                        "encoding": "{encoding}",
+                        "audio": "{audioData}"
+                    }
+                }`,
+                
+                // Path to extract the text from the API JSON response
+                voiceResponseExtractor: "ws[].cw[0].w",
+
+                // Custom signature generator (implementation depends on external crypto libraries)
+                generateVoiceSignature: async (params: {
+                    host: string;
+                    path: string;
+                    date: string;
+                    apiKey: string;
+                    apiSecret: string;
+                }) => {
+                    const { host, path, date, apiKey, apiSecret } = params;
+
+                    const algorithm = "hmac-sha256";
+                    const headers = "host date request-line";
+                    
+                    // Compose the string for signing
+                    const signatureOrigin = `host: ${host}\ndate: ${date}\nGET /v2/iat HTTP/1.1`;
+                    const signatureSha = CryptoJS.HmacSHA256(signatureOrigin, apiSecret);
+                    const signature = CryptoJS.enc.Base64.stringify(signatureSha);
+                    
+                    // Build the authorization string
+                    const authorizationOrigin = `api_key="${apiKey}", algorithm="${algorithm}", headers="${headers}", signature="${signature}"`;
+                    
+                    // Return Base64 encoded authorization string
+                    return btoa(authorizationOrigin);
+                },
+
+                onVoiceInputStart: () => {
+                    console.log('🎤 Recording started...');
+                    // Add UI prompts or visual indicators here
+                },
+                onVoiceInputEnd: (text) => {
+                    console.log('✅ Recording ended. Result:', text);
+
+                    // Automatically submit the message if text is not empty
+                    if (text && text.trim() !== '') {
+                        aichatRef.current?.sendMsg();
+                    }
+                    // 'text' contains the recognized content and is automatically filled into the textarea
+                },
+                onVoiceInputError: (error) => {
+                    console.error('❌ Voice input error:', error);
+                    alert('Speech recognition failed: ' + error.message);
+                },
+                onVoiceInputInterrupt: () => {
+                    console.log('⏹️ Voice input interrupted');
+                },
+                
+            }}
+        />
+    );
+};
+```
+
+
+
 ## ❤️ API
 
 ### Chatbox
@@ -752,6 +884,7 @@ import Chatbox from 'funda-ui/Chatbox';
 | `onInputCallback` | async function  | - | **(It must return a "Promise\<string\>" object)** Return value from `onInputCallback` property to format the data of the control element, which will sanitize input is the process of securing/cleaning/filtering input data. such as `async (input:string)=>{return input.replace(/(\r\n\|\r\|\n)/g, '<br />');}` <br />At the same time it returns the Control Event, you will use this function and use the `return` keyword to return a new value. <blockquote>It fires in real time as the user enters. If return is not set, it will not return.</blockquote> | - |
 | `onChunk` | Function | - | Callback when data processing. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
 | `onComplete` | Function | - | Callback when message sending completes. It returns three values. <br /> <ol><li>The one is method reference of the input HTMLElement (**React.RefObject**) </li><li>The second parameter is the current value (**String**) </li><li>The third parameter is the conversation history (**Array**) </li></ol> | - |
+| `voiceConfig` | VoiceConfig Object | - | Configuration for voice input and output features. See **Voice Configuration** section below for details. | - |
 
 
 
@@ -824,3 +957,49 @@ Array Object configuration properties of the `defaultMessages` (**Array**):
     ...
 ]
 ```
+
+
+
+---
+
+### Voice Configuration
+
+The `voiceConfig` property allows you to enable and configure voice input (speech-to-text) and voice output (text-to-speech) features using third-party voice services. 
+
+> **iFlytek** is recommended by default. Other service providers also need to configure parameters according to the actual situation.
+
+---
+
+JSON Object configuration properties of the `voiceConfig` (**JSON Object**):
+
+
+| Property | Type | Default | Description | Required |
+| --- | --- | --- | --- | --- |
+| `enableVoiceInput` | boolean | false | Enable voice input (speech-to-text) feature. When enabled, a microphone button will appear next to the send button. | ✅ |
+| `holdToTalk` | boolean | true | Enable long press recording. | - |
+| `voiceInputAppId` | string | - | Voice service provider AppID for voice input. | - |
+| `voiceInputApiKey` | string | - | Voice service provider APIKey for voice input. | - |
+| `voiceInputApiSecret` | string | - | Voice service provider APISecret for voice input. Used for signature generation. | - |
+| `voiceInputSampleRate` | number | 16000 | Audio sample rate for voice input (Hz). Default is `16000`. | - |
+| `voiceInputFormat` | string | `audio/L16;rate=16000` | Audio format for voice input. Default is `"audio/L16;rate=16000"`. | - |
+| `voiceInputEncoding` | string | `raw` | Audio encoding format for voice input. Default is `"raw"`. | - |
+| `voiceInputHost` | string | `custom-host.com` | WebSocket host for voice input. | - |
+| `voiceInputPath` | string | `/custom/path` | WebSocket path for voice input. | - |
+| `voiceInputProtocol` | string | `wss://` | WebSocket protocol for voice input (for example `"wss://"` or `"ws://"`). | - |
+| `voiceInputHmacAlgorithm` | string | `HMAC` | HMAC algorithm name used when generating the authorization header. | - |
+| `voiceInputHashAlgorithm` | string | `SHA-256` | Hash algorithm used when generating the authorization header. | - |
+| `voiceInputUrlTemplate` | string | `{protocol}{host}{path}?authorization={signature}&date={date}&host={host}` | WebSocket URL template used to build the final URL. <blockquote>Supports placeholders such as <ol><li>`{protocol}` -> Protocol used for the WebSocket connection, e.g. wss:// or ws://.</li><li>`{host}` -> Domain name of the voice service server, e.g. iat-api.xfyun.cn.</li><li>`{date}` -> Current request time in HTTP Date format, e.g. Wed, 10 Jul 2019 07:35:43 GMT.</li><li>`{path}` -> Request path of the WebSocket endpoint, e.g. /v2/iat.</li><li>`{appId}` -> Voice service provider application ID used to identify your application.</li><li>`{accessKeyId}` -> Access key ID used for authentication in the query parameters (usually your API key).</li><li>`{uuid}` -> Unique identifier for the current voice session or request.</li><li>`{utc}` -> UTC time string in ISO 8601 format with timezone, e.g. 2025-09-04T15:38:07+0800.</li><li>`{format}` -> Audio sampling rate.</li><li>`{encoding}` -> Audio encoding type used in the request, e.g. pcm_s16le.</li><li>`{lang}` -> Language code used for speech recognition, e.g. autodialect, zh_cn, en_us.</li><li>`{samplerate}` -> Audio sample rate in Hz, e.g. 16000.</li><li>`{signature}` -> Calculated authorization signature used for secure authentication.</li></ol></blockquote> | - |
+| `voiceInputRequestBodyTemplate` | string | `{"common":{"app_id":"{appId}"},"business":{"language":"{lang}","domain":"iat","accent":"mandarin","dwa":"wpgs"},"data":{"status":0,"format":"{format}","encoding":"{encoding}"}}` | WebSocket URL template used to build the final URL. <blockquote>Supports placeholders that consistent with `voiceInputUrlTemplate`</blockquote> | - |
+| `voiceInputAudioBodyTemplate` | string | `{"data":{"status":1,"format":"{format}","encoding":"{encoding}","audio":"{audioData}"}}` | Template for each frame of audio data. <blockquote>Supports placeholders that consistent with `voiceInputUrlTemplate`. Furthermore, it has dedicated placeholders, such as <ol><li>`{audioData}` -> To represent the recorded audio data.</li></ol></blockquote> | - |
+| `voiceInputAccessKeyId` | string | - | Explicit `accessKeyId` used in URL parameters. If not provided, `voiceInputApiKey` will be used. | - |
+| `voiceInputUuid` | string | auto-generated | UUID used to identify the voice session. If not provided, a UUID will be generated automatically. | - |
+| `voiceInputLang` | string | `autodialect` | Language parameter for recognition (for example `"zh_cn"`, `"en_us"`). Default is `"autodialect"`. | - |
+| `voiceInputUtc` | string | auto-generated | UTC time string in ISO 8601 format with timezone (e.g. `2025-09-04T15:38:07+0800`). If not provided, it will be generated automatically. | - |
+| `voiceResponseExtractor` | string | - | JSON path used to extract the recognized text from the voice input API response. such as `ws[].cw[0].w` | - |
+| `voiceInputIdleTimeoutSeconds` | number | 10 | Auto-disconnect timeout (in seconds) after recording starts if no content is recognized. After recording starts, if no content is recognized within this time, the connection will be closed automatically (default 10 seconds) | - |
+| `voiceInputEndTimeoutSeconds` | number | 5 | Auto-disconnect timeout (in seconds) after recognition completes if there is no further activity. After recognition results are available, if there is no further operation within this time, the connection will also be closed automatically (default 5 seconds) | - |
+| `generateVoiceSignature` | Function | - | Custom signature generator. Receives `{ host, path, date, apiKey, apiSecret }` and should return a `string` or `Promise<string>` representing the authorization signature. such as `(params:{host:string;path:string;date:string;apiKey:string;apiSecret:string;})=>{const{host,path,date,apiKey,apiSecret}=params;const algorithm="hmac-sha256";const headers="host date request-line";const signatureOrigin="host: " + host + "\n" + "date: " + date + "\n" + "GET /v2/iat HTTP/1.1";const signatureSha=CryptoJS.HmacSHA256(signatureOrigin,apiSecret);const signature=CryptoJS.enc.Base64.stringify(signatureSha);const authorizationOrigin='api_key="' + apiKey + '",algorithm="' + algorithm + '",headers="' + headers + '",signature="' + signature + '"'`;const authorization=btoa(authorizationOrigin);return authorization;}` | - |
+| `onVoiceInputStart` | Function | - | Callback when voice input starts. | - |
+| `onVoiceInputEnd` | Function | - | Callback when voice input ends. Receives the recognized text as parameter: `(text: string) => void`. | - |
+| `onVoiceInputError` | Function | - | Callback when voice input encounters an error. Receives the error as parameter: `(error: Error) => void`. | - |
+| `onVoiceInputInterrupt` | Function | - | Callback when voice input is interrupted. | - |

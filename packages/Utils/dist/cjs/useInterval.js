@@ -140,7 +140,7 @@ var useInterval = function useInterval(fn, delay) {
     }, delay);
   }, [ref]);
   var stopTimer = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(function () {
-    clearInterval(intervalIdRef.current);
+    if (intervalIdRef.current) clearInterval(intervalIdRef.current);
     intervalIdRef.current = null;
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {

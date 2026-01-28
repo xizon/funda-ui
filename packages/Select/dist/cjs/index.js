@@ -3180,6 +3180,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       __nested_webpack_require_993__.r(__webpack_exports__);
       /* harmony export */
       __nested_webpack_require_993__.d(__webpack_exports__, {
+        /* harmony export */"fixAndParseJSON": function fixAndParseJSON() {
+          return (/* binding */_fixAndParseJSON
+          );
+        },
         /* harmony export */"isEmail": function isEmail() {
           return (/* binding */_isEmail
           );
@@ -3271,6 +3275,17 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       // ❌ Invalid JSON with missing quotes
       const errorJson003 = "{'model':'qwen-plus','base_url':'https://dashscope.aliyuncs.com/compatible-mode/v1/','api_key':'sk-0989fb9baab8450682af4d000f5b7cba','message':'{message}','stream':'true','chatId': {chatId}', 'token': '{token}'}";
       
+      // ❌ Invalid JSON with extra commas
+      const errorJson004 = `{
+          "common": { "app_id": "de805836" },
+          "business": {
+              "language": "zh_cn",
+              "domain": "iat",
+              "accent": "mandarin",
+              "dwa": "wpgs",
+          },
+          "data": { "status": 0 }
+      }`;
       
       
       console.log('okJson =>', fixAndParseJSON(okJson));   // Can parse normally  success = true
@@ -3282,12 +3297,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       console.log('errorJson =>', fixAndParseJSON(errorJson001)); // {success: false, error: 'Invalid JSON format', details: 'Invalid object: mismatched braces'}
       console.log('errorJson =>', fixAndParseJSON(errorJson002)); // {success: false, error: 'Invalid JSON format', details: "Expected property name or '}' in JSON at position 2 (line 1 column 3)"}
       console.log('errorJson =>', fixAndParseJSON(errorJson003)); // {success: false, error: 'Invalid JSON format', details: 'Invalid object: mismatched braces'}
+      console.log('errorJson =>', fixAndParseJSON(errorJson004)); // {success: false, error: 'Invalid JSON format', details: 'Trailing comma detected in object'}
       
       */
+      /**
+       * Fix And Parse JSON (Support for handling complex escape JSON strings)
+       * @desc recursively fix top-level key/value (recursively handles when encountering top-level values that are objects/arrays)
+       * @private
+       */
 
       // Type definitions
 
-      function fixAndParseJSON(input) {
+      function _fixAndParseJSON(input) {
         var MAX_DEPTH = 6;
 
         // 1. Quick attempt
@@ -3370,14 +3391,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var inner = str.slice(1, -1);
         var pairs = splitTopLevel(inner);
         var repairedPairs = pairs.map(function (pair) {
-          if (!pair || pair.trim() === '') return '';
-          var idx = findTopLevelColon(pair);
-          if (idx === -1) {
-            return pair; // Non key:value fragment, keep as is (rare case)
-          }
-
-          var rawKey = pair.slice(0, idx).trim();
-          var rawVal = pair.slice(idx + 1);
+          var p = pair.trim();
+          // If the split fragment is empty, there are extra commas (e.g. {"a":1, })
+          if (p === '') throw new Error('Trailing comma detected in object');
+          var idx = findTopLevelColon(p);
+          if (idx === -1) throw new Error('Invalid key-value pair');
+          var rawKey = p.slice(0, idx).trim();
+          var rawVal = p.slice(idx + 1);
           var keyContent = extractKeyContent(rawKey);
           var keyJson = JSON.stringify(keyContent);
           var repairedValue = repairPossiblyQuotedValue(rawVal, depth + 1, MAX_DEPTH);
@@ -3398,17 +3418,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var elements = splitTopLevel(inner);
         var processed = elements.map(function (el) {
           var t = el.trim();
-          if (t === '') return '';
+          // If the split fragment is empty, there are extra commas (e.g. [1, 2, ])
+          if (t === '') throw new Error('Trailing comma detected in array');
           if (t.startsWith('{')) return processTopObject(t, depth + 1, MAX_DEPTH);
           if (t.startsWith('[')) return processTopArray(t, depth + 1, MAX_DEPTH);
           return repairPossiblyQuotedValue(t, depth + 1, MAX_DEPTH);
         });
         return '[' + processed.join(',') + ']';
       }
-
-      // If it's a string wrapped in quotes, extract the inner content and JSON.stringify (safe escaping)
-      // If it's an object/array literal (not wrapped in quotes), recursively process (treat as new outermost layer)
-      // Otherwise return the original fragment directly (numbers/true/false/null or JS expressions)
       function repairPossiblyQuotedValue(rawVal, depth, MAX_DEPTH) {
         var v = rawVal.trim();
         if (v === '') return v;
@@ -3432,7 +3449,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             }
           }
           var inner = lastPos > 0 ? v.slice(1, lastPos) : v.slice(1);
-          return JSON.stringify(inner); // Use JSON.stringify to generate valid JSON string (automatically escape internal quotes, etc.)
+          return JSON.stringify(inner);
         }
 
         // If it's an object or array literal (not wrapped in quotes) -> recursively treat as new outermost layer
@@ -3449,7 +3466,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
       /* --------- Utilities: Split by top-level commas, find top-level colon, extract key --------- */
 
-      // Split by top-level commas (ignore strings, sub-objects, sub-arrays, commas inside parentheses)
       function splitTopLevel(str) {
         var parts = [];
         var buf = '';
@@ -3459,6 +3475,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         var inSingle = false,
           inDouble = false,
           esc = false;
+        var lastCharWasComma = false;
         for (var i = 0; i < str.length; i++) {
           var ch = str[i];
           if (esc) {
@@ -3482,54 +3499,25 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
             continue;
           }
           if (!inSingle && !inDouble) {
-            if (ch === '{') {
-              depthCurly++;
-              buf += ch;
-              continue;
-            }
-            if (ch === '}') {
-              depthCurly--;
-              buf += ch;
-              continue;
-            }
-            if (ch === '[') {
-              depthSquare++;
-              buf += ch;
-              continue;
-            }
-            if (ch === ']') {
-              depthSquare--;
-              buf += ch;
-              continue;
-            }
-            if (ch === '(') {
-              depthParen++;
-              buf += ch;
-              continue;
-            }
-            if (ch === ')') {
-              depthParen--;
-              buf += ch;
-              continue;
-            }
+            if (ch === '{') depthCurly++;else if (ch === '}') depthCurly--;else if (ch === '[') depthSquare++;else if (ch === ']') depthSquare--;else if (ch === '(') depthParen++;else if (ch === ')') depthParen--;
             if (ch === ',' && depthCurly === 0 && depthSquare === 0 && depthParen === 0) {
               parts.push(buf);
               buf = '';
+              lastCharWasComma = true;
               continue;
             }
           }
+          if (!/\s/.test(ch)) lastCharWasComma = false;
           buf += ch;
         }
-
-        // Check for unclosed brackets or quotes
-        if (depthCurly !== 0 || depthSquare !== 0 || depthParen !== 0 || inSingle || inDouble) {
-          throw new Error('Invalid JSON: unclosed brackets or quotes');
+        if (lastCharWasComma || parts.length > 0 && buf.trim() === '') {
+          parts.push("");
+        } else if (buf.trim() !== '' || parts.length === 0) {
+          parts.push(buf);
         }
-        if (buf.trim() !== '') parts.push(buf);
+        if (depthCurly !== 0 || depthSquare !== 0 || depthParen !== 0) throw new Error('Mismatched structure');
         return parts;
       }
-
-      // Find the first "top-level" colon index (ignore inside strings & sub-levels)
       function findTopLevelColon(str) {
         var inSingle = false,
           inDouble = false,
@@ -3587,111 +3575,52 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
         }
         return -1;
       }
-
-      // Extract key content (supports "key", 'key', key), returns pure key string
       function extractKeyContent(rawKey) {
         var r = rawKey.trim();
         if (r.startsWith('"') && r.endsWith('"') || r.startsWith("'") && r.endsWith("'")) {
-          var inner = r.slice(1, -1).replace(/\\"/g, '"').replace(/\\'/g, "'");
-          return inner;
+          return r.slice(1, -1).replace(/\\"/g, '"').replace(/\\'/g, "'");
         }
         return r;
       }
 
-      /**
-       * Determine whether it is in JSON format
-       * @private
-       */
+      /* ---------- Exported Validation Functions ---------- */
+
       function _isJSON(input) {
         if (typeof input === 'string' && input.length > 0) {
-          return fixAndParseJSON(input).success;
+          return _fixAndParseJSON(input).success;
         } else {
-          if (_typeof(input) === 'object' && Object.prototype.toString.call(input) === '[object Object]' && !input.length) {
-            return true;
-          } else {
-            return false;
-          }
+          return _typeof(input) === 'object' && input !== null && Object.prototype.toString.call(input) === '[object Object]' && !Array.isArray(input);
         }
       }
-
-      /**
-       * Check if a string is a valid number
-       * @param str - The string to check
-       * @returns boolean indicating if the string is a valid number
-       */
       function _isValidNumeric(str) {
-        if (typeof str !== "string") return false; // we only process strings!
-        if (!isNaN(Number(str)) &&
-        // use type coercion to parse the _entirety_ of the string
-        !isNaN(parseFloat(str)) // ensure strings of whitespace fail
-        ) {
-          return true;
-        }
-        return false;
+        if (typeof str !== "string") return false;
+        return !isNaN(Number(str)) && !isNaN(parseFloat(str));
       }
-
-      /**
-       * Check if input is empty
-       * @param input - The input to check (string or array of strings)
-       * @returns boolean indicating if the input is empty
-       */
       function _isEmpty(input) {
         if (Array.isArray(input)) {
           return input.some(function (str) {
-            return !str.replace(/\s/g, '').length === true;
+            return !str.replace(/\s/g, '').length;
           });
         }
-        return !input.replace(/\s/g, '').length === true;
+        return !input.replace(/\s/g, '').length;
       }
-
-      /**
-       * Check if input is a valid number
-       * @param input - The input to check
-       * @returns boolean indicating if the input is a valid number
-       */
       function _isNumber(input) {
         var reg = /^[\d|\.|,]+$/;
         return reg.test(input);
       }
-
-      /**
-       * Check if input is a valid integer
-       * @param input - The input to check
-       * @returns boolean indicating if the input is a valid integer
-       */
       function _isInt(input) {
-        if (input === "") {
-          return false;
-        }
+        if (input === "") return false;
         var reg = /\D+/;
         return !reg.test(input);
       }
-
-      /**
-       * Check if input is a valid email address
-       * @param input - The input to check
-       * @returns boolean indicating if the input is a valid email
-       */
       function _isEmail(input) {
         var reg = /^\s*([A-Za-z0-9_-]+(\.\w+)*@(\w+\.)+\w{2,3})\s*$/;
         return reg.test(input);
       }
-
-      /**
-       * Check if input is a valid telephone number
-       * @param input - The input to check
-       * @returns boolean indicating if the input is a valid telephone number
-       */
       function _isTel(input) {
         var reg = /^[0-9- ]{7,20}$/;
         return reg.test(input);
       }
-
-      /**
-       * Check if input is a valid mobile number
-       * @param input - The input to check
-       * @returns boolean indicating if the input is a valid mobile number
-       */
       function _isMobile(input) {
         var reg = /^1[0-9]{10}$/;
         return reg.test(input);
