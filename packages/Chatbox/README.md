@@ -807,11 +807,8 @@ export default () => {
                 },
                 onVoiceInputEnd: (text) => {
                     console.log('✅ Recording ended. Result:', text);
-
-                    // Automatically submit the message if text is not empty
-                    if (text && text.trim() !== '') {
-                        aichatRef.current?.sendMsg();
-                    }
+                    aichatRef.current?.sendMsg();
+                    
                     // 'text' contains the recognized content and is automatically filled into the textarea
                 },
                 onVoiceInputError: (error) => {
