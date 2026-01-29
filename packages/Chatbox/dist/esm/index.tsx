@@ -2052,17 +2052,17 @@ const Chatbox = (props: ChatboxProps) => {
                                         {isVoiceInputActive ? <span></span> : null}
                                         <button
                                             // CSS touch-action is crucial here
-                                            style={{ touchAction: 'none', userSelect: 'none' }}
+                                            style={!holdToTalk ? undefined : { touchAction: 'none', userSelect: 'none' }}
 
                                             // Mobile
-                                            onTouchStart={handleActionStart}
-                                            onTouchEnd={handleActionStop}
-                                            onTouchCancel={handleActionStop} // Handle system interruptions
+                                            onTouchStart={!holdToTalk ? undefined : handleActionStart}
+                                            onTouchEnd={!holdToTalk ? undefined : handleActionStop}
+                                            onTouchCancel={!holdToTalk ? undefined : handleActionStop} // Handle system interruptions
 
                                             // Desktop
-                                            onMouseDown={handleActionStart}
-                                            onMouseUp={handleActionStop}
-                                            onMouseLeave={handleActionStop} // Handle mouse dragging out of button
+                                            onMouseDown={!holdToTalk ? undefined : handleActionStart}
+                                            onMouseUp={!holdToTalk ? undefined : handleActionStop}
+                                            onMouseLeave={!holdToTalk ? undefined : handleActionStop} // Handle mouse dragging out of button
                                             onClick={(e: React.MouseEvent) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
