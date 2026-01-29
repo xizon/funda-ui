@@ -7746,18 +7746,39 @@ var Chatbox = function Chatbox(props) {
             }));
             ws.onmessage = function (e) {
               var jsonData = JSON.parse(e.data);
-              if (jsonData.data && jsonData.data.result) {
-                var data = jsonData.data.result;
-                var path = config.voiceResponseExtractor || "ws[].cw[0].w";
-                var extractedStr = getValueByPath(data, path);
+              if (jsonData.data) {
+                var data = jsonData.data;
+                var extractorTemplate = config.voiceResponseExtractor || "{{if data.result && data.result.pgs === \"apd\"}}resultText += resultTextTemp;{{/if}}{{resultTextTemp = getValueByPath(data, \"result.ws[].cw[0].w\");}}";
 
-                // Only update the temporary variable when content is extracted to prevent it from being overwritten by empty responses
-                if (extractedStr) {
-                  if (data.pgs === "apd") {
-                    resultText += resultTextTemp;
+                // you could use `if (data.result && data.result.pgs === "apd") { resultText += resultTextTemp;} resultTextTemp = data.result.ws.map(w => w.cw[0].w).join("");`
+
+                if (extractorTemplate) {
+                  try {
+                    // Construct the execution function, passing in the context variables
+                    // Syntax Translation: Convert {{if}} to standard JS
+                    // Support: {{if}}, {{else}}, {{/if}}, and direct expressions {{...}}
+                    var jsScript = extractorTemplate.replace(/{{if\s+(.+?)}}/g, 'if ($1) {').replace(/{{else}}/g, '} else {').replace(/{{\/if}}/g, '}').replace(/{{(.+?)}}/g, '$1');
+
+                    /**
+                     * Sandbox Execution Environment
+                     * @param data - The source data (jsonData.data)
+                     * @param resultText - Confirmed text from previous turns
+                     * @param resultTextTemp - Temporary text from the current turn
+                     * @param getValueByPath - Helper for safe property access
+                     */
+                    var resolver = new Function('data', 'resultText', 'resultTextTemp', 'getValueByPath', "\n                                try {\n                                    ".concat(jsScript, "\n                                } catch (e) {\n                                    console.error(\"Voice Template Runtime Error:\", e);\n                                }\n                                // Crucial: Return updated values to synchronize with component scope\n                                return { resultText, resultTextTemp };\n                            "));
+
+                    // Execute and update local variables
+                    var updated = resolver(data, resultText, resultTextTemp, getValueByPath);
+                    resultText = updated.resultText;
+                    resultTextTemp = updated.resultTextTemp;
+                  } catch (err) {
+                    console.error("--> [ERROR] Failed to parse property: [voiceResponseExtractor]");
+                    interruptVoiceInput();
                   }
-                  resultTextTemp = extractedStr;
                 }
+
+                //
                 var currentFullText = resultText + resultTextTemp;
 
                 // Store to Ref for use by stopVoiceInput

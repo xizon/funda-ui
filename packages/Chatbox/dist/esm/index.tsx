@@ -16,6 +16,7 @@ import guid from 'funda-utils/dist/cjs/guid';
 import { uint8arrayToBase64Str } from 'funda-utils/dist/cjs/buffer';
 
 
+
 // loader
 import PureLoader from './PureLoader';
 import TypingEffect from './TypingEffect';
@@ -1582,20 +1583,55 @@ const Chatbox = (props: ChatboxProps) => {
 
             ws.onmessage = (e) => {
                 const jsonData = JSON.parse(e.data);
-                if (jsonData.data && jsonData.data.result) {
-                    const data = jsonData.data.result;
 
-                    const path = config.voiceResponseExtractor || "ws[].cw[0].w";
-                    const extractedStr = getValueByPath(data, path);
-                    
-                    // Only update the temporary variable when content is extracted to prevent it from being overwritten by empty responses
-                    if (extractedStr) {
-                        if (data.pgs === "apd") {
-                            resultText += resultTextTemp;
+                if (jsonData.data) {
+                    const data = jsonData.data;
+                    const extractorTemplate = config.voiceResponseExtractor || `{{if data.result && data.result.pgs === "apd"}}resultText += resultTextTemp;{{/if}}{{resultTextTemp = getValueByPath(data, "result.ws[].cw[0].w");}}`;
+
+                    // you could use `if (data.result && data.result.pgs === "apd") { resultText += resultTextTemp;} resultTextTemp = data.result.ws.map(w => w.cw[0].w).join("");`
+
+
+                    if (extractorTemplate) {
+                        try {
+
+                            // Construct the execution function, passing in the context variables
+                            // Syntax Translation: Convert {{if}} to standard JS
+                            // Support: {{if}}, {{else}}, {{/if}}, and direct expressions {{...}}
+                            let jsScript = extractorTemplate
+                                .replace(/{{if\s+(.+?)}}/g, 'if ($1) {')
+                                .replace(/{{else}}/g, '} else {')
+                                .replace(/{{\/if}}/g, '}')
+                                .replace(/{{(.+?)}}/g, '$1');
+
+                            /**
+                             * Sandbox Execution Environment
+                             * @param data - The source data (jsonData.data)
+                             * @param resultText - Confirmed text from previous turns
+                             * @param resultTextTemp - Temporary text from the current turn
+                             * @param getValueByPath - Helper for safe property access
+                             */
+                            const resolver = new Function('data', 'resultText', 'resultTextTemp', 'getValueByPath', `
+                                try {
+                                    ${jsScript}
+                                } catch (e) {
+                                    console.error("Voice Template Runtime Error:", e);
+                                }
+                                // Crucial: Return updated values to synchronize with component scope
+                                return { resultText, resultTextTemp };
+                            `);
+
+                            // Execute and update local variables
+                            const updated = resolver(data, resultText, resultTextTemp, getValueByPath);
+                            resultText = updated.resultText;
+                            resultTextTemp = updated.resultTextTemp;
+
+                        } catch (err) {
+                            console.error("--> [ERROR] Failed to parse property: [voiceResponseExtractor]");
+                            interruptVoiceInput();
                         }
-                        resultTextTemp = extractedStr;
                     }
 
+                    //
                     const currentFullText = resultText + resultTextTemp;
 
                     // Store to Ref for use by stopVoiceInput
