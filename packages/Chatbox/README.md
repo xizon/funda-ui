@@ -712,6 +712,13 @@ export default () => {
 
 ## Speech recognition
 
+You need to install `crypto-js` first, run following code: 
+
+```sh
+$ npm install crypto-js
+$ npm install --save-dev @types/crypto-js
+```
+
 ```js
 import React from 'react';
 import Chatbox from 'funda-ui/Chatbox';
