@@ -1380,6 +1380,7 @@ const Chatbox = (props: ChatboxProps) => {
     //================================================================
     // Voice Input
     //================================================================
+    const pressStartTimeRef = useRef<number>(0); // Record the time when the button was pressed.
     const DEFAULT_VOICE_REQUEST_BODY_TEMPLATE = `{
         "common": {
             "app_id": "{appId}"
@@ -1730,6 +1731,7 @@ const Chatbox = (props: ChatboxProps) => {
             console.error('--> The voice input failed to start:', error);
             config.onVoiceInputError?.(error as Error);
         }
+
     };
 
     const stopVoiceInput = async () => {
@@ -2065,22 +2067,34 @@ const Chatbox = (props: ChatboxProps) => {
                             if (enableVoiceInput) {
 
                                 // Helper to stop recording safely
-                                const handleActionStop = (e: React.SyntheticEvent) => {
-                                    // Prevent firing both Mouse and Touch events on some devices
-                                    if (e.cancelable) e.preventDefault(); 
-                                    
-                                    if (isVoiceInputActive) {
-                                        stopVoiceInput();
-                                    }
-                                };
-
                                 const handleActionStart = (e: React.SyntheticEvent) => {
                                     if (loading) return;
                                     if (e.cancelable) e.preventDefault();
-
+                                    
+                                    pressStartTimeRef.current = Date.now();
+                                    
                                     if (!isVoiceInputActive) {
                                         startVoiceInput();
                                     }
+                                };
+
+                                const handleActionStop = (e: React.SyntheticEvent) => {
+                                    if (e.cancelable) e.preventDefault(); 
+                                    
+                                    const duration = Date.now() - pressStartTimeRef.current;
+                                
+                                    // If the press time is extremely short (e.g. less than 100ms), 
+                                    // it means that it is a mistakeal touch or extremely fast
+                                    // Add a small delay to execute to ensure that startVoiceInput has finished initializing
+                                    if (duration < 150) { // > 50, < 160
+                                        setTimeout(() => {
+                                            stopVoiceInput();
+                                        }, 100);
+                                        return;
+                                    }
+
+                                    stopVoiceInput();
+
                                 };
 
                                 return (
@@ -2090,15 +2104,13 @@ const Chatbox = (props: ChatboxProps) => {
                                             // CSS touch-action is crucial here
                                             style={!holdToTalk ? undefined : { touchAction: 'none', userSelect: 'none' }}
 
-                                            // Mobile
-                                            onTouchStart={!holdToTalk ? undefined : handleActionStart}
-                                            onTouchEnd={!holdToTalk ? undefined : handleActionStop}
-                                            onTouchCancel={!holdToTalk ? undefined : handleActionStop} // Handle system interruptions
-
-                                            // Desktop
-                                            onMouseDown={!holdToTalk ? undefined : handleActionStart}
-                                            onMouseUp={!holdToTalk ? undefined : handleActionStop}
-                                            onMouseLeave={!holdToTalk ? undefined : handleActionStop} // Handle mouse dragging out of button
+                                            // Mobile & Desktop 
+                                            // (using Pointer to avoid the stop problem caused by mixing Touch and Mouse)
+                                            onPointerDown={holdToTalk ? handleActionStart : undefined}
+                                            onPointerUp={holdToTalk ? handleActionStop : undefined}
+                                            onPointerCancel={holdToTalk ? handleActionStop : undefined}
+                                            onPointerLeave={holdToTalk ? handleActionStop : undefined}
+                                            onContextMenu={(e) => e.preventDefault()}
                                             onClick={(e: React.MouseEvent) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();

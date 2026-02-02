@@ -7525,6 +7525,7 @@ var Chatbox = function Chatbox(props) {
   //================================================================
   // Voice Input
   //================================================================
+  var pressStartTimeRef = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useRef)(0); // Record the time when the button was pressed.
   var DEFAULT_VOICE_REQUEST_BODY_TEMPLATE = "{\n        \"common\": {\n            \"app_id\": \"{appId}\"\n        },\n        \"business\": {\n            \"language\": \"{lang}\",\n            \"domain\": \"iat\",\n            \"accent\": \"mandarin\",\n            \"dwa\": \"wpgs\"\n        },\n        \"data\": {\n            \"status\": 0,\n            \"format\": \"{format}\",\n            \"encoding\": \"{encoding}\"\n        }\n    }";
   var DEFAULT_AUDIO_BODY_TEMPLATE = "{\n        \"data\": {\n            \"status\": 1,\n            \"format\": \"{format}\",\n            \"encoding\": \"{encoding}\",\n            \"audio\": \"{audioData}\"\n        }\n    }";
   var _useState29 = (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useState)(false),
@@ -8214,19 +8215,29 @@ var Chatbox = function Chatbox(props) {
     var holdToTalk = typeof (voiceConfig === null || voiceConfig === void 0 ? void 0 : voiceConfig.holdToTalk) === 'undefined' ? true : voiceConfig.holdToTalk;
     if (enableVoiceInput) {
       // Helper to stop recording safely
-      var handleActionStop = function handleActionStop(e) {
-        // Prevent firing both Mouse and Touch events on some devices
-        if (e.cancelable) e.preventDefault();
-        if (isVoiceInputActive) {
-          stopVoiceInput();
-        }
-      };
       var handleActionStart = function handleActionStart(e) {
         if (loading) return;
         if (e.cancelable) e.preventDefault();
+        pressStartTimeRef.current = Date.now();
         if (!isVoiceInputActive) {
           startVoiceInput();
         }
+      };
+      var handleActionStop = function handleActionStop(e) {
+        if (e.cancelable) e.preventDefault();
+        var duration = Date.now() - pressStartTimeRef.current;
+
+        // If the press time is extremely short (e.g. less than 100ms), 
+        // it means that it is a mistakeal touch or extremely fast
+        // Add a small delay to execute to ensure that startVoiceInput has finished initializing
+        if (duration < 150) {
+          // > 50, < 160
+          setTimeout(function () {
+            stopVoiceInput();
+          }, 100);
+          return;
+        }
+        stopVoiceInput();
       };
       return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("div", {
         className: "".concat(args().prefix || 'custom-', "chatbox-voice-input-btn-wrapper ").concat(isVoiceInputActive ? 'active' : '')
@@ -8237,18 +8248,16 @@ var Chatbox = function Chatbox(props) {
           userSelect: 'none'
         }
 
-        // Mobile
+        // Mobile & Desktop 
+        // (using Pointer to avoid the stop problem caused by mixing Touch and Mouse)
         ,
-        onTouchStart: !holdToTalk ? undefined : handleActionStart,
-        onTouchEnd: !holdToTalk ? undefined : handleActionStop,
-        onTouchCancel: !holdToTalk ? undefined : handleActionStop // Handle system interruptions
-
-        // Desktop
-        ,
-        onMouseDown: !holdToTalk ? undefined : handleActionStart,
-        onMouseUp: !holdToTalk ? undefined : handleActionStop,
-        onMouseLeave: !holdToTalk ? undefined : handleActionStop // Handle mouse dragging out of button
-        ,
+        onPointerDown: holdToTalk ? handleActionStart : undefined,
+        onPointerUp: holdToTalk ? handleActionStop : undefined,
+        onPointerCancel: holdToTalk ? handleActionStop : undefined,
+        onPointerLeave: holdToTalk ? handleActionStop : undefined,
+        onContextMenu: function onContextMenu(e) {
+          return e.preventDefault();
+        },
         onClick: function onClick(e) {
           e.preventDefault();
           e.stopPropagation();

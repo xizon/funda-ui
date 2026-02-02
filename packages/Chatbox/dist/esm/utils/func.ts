@@ -171,7 +171,7 @@ export function extractHtmlTags(html: string): { processedHtml: string; placehol
 };
 
 
-export function toBoolean(val) {
+export function toBoolean(val: any) {
     if (typeof val === "boolean") return val;
     if (typeof val === "string") {
         return val.toLowerCase() === "true";
