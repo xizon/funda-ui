@@ -4456,7 +4456,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'label');
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
             //
@@ -4552,7 +4552,7 @@ var Select = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_react_
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
-            staticOptionsData = (0,object.removeArrDuplicateItems)(staticOptionsData, 'value');
+            staticOptionsData = (0,object.removeArrDuplicateItems)(staticOptionsData, 'label');
             setOptionsData(staticOptionsData); // data must be initialized
 
             //

@@ -673,7 +673,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'label');
 
             setOptionsData(_ORGIN_DATA); // data must be initialized
 
@@ -782,7 +782,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             //
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(staticOptionsData); // prevent the value from being filtered out
-            staticOptionsData = removeArrDuplicateItems(staticOptionsData, 'value');
+            staticOptionsData = removeArrDuplicateItems(staticOptionsData, 'label');
             
 
             setOptionsData(staticOptionsData); // data must be initialized
@@ -1328,7 +1328,7 @@ const Select = forwardRef((props: SelectProps, externalRef: any) => {
             }, 500);
 
         }
-
+    
         if (MANUAL_REQ) {
             // display static data
             setOptionsData(staticOptionsData);

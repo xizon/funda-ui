@@ -217,7 +217,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'label');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -235,7 +235,7 @@ const NativeSelect = forwardRef((props: NativeSelectProps, externalRef: any) => 
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'label');
 
             //
             setDataInit(optionsDataInit); // data must be initialized

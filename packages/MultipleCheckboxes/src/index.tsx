@@ -346,7 +346,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'label');
 
 
             //
@@ -365,7 +365,7 @@ const MultipleCheckboxes = forwardRef((props: MultipleCheckboxesProps, externalR
             
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'label');
 
             //
             initDefaultValue(inputDefault, optionsDataInit); // value must be initialized

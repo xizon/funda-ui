@@ -1458,7 +1458,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(_ORGIN_DATA, 'label');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -1495,7 +1495,7 @@ var Radio = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(funct
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(optionsDataInit, 'value');
+            optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_3__.removeArrDuplicateItems)(optionsDataInit, 'label');
 
             //
             setDataInit(optionsDataInit); // data must be initialized

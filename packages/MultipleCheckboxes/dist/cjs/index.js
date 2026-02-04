@@ -1886,7 +1886,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(_ORGIN_DATA, 'label');
 
             //
             initDefaultValue(inputDefault, _ORGIN_DATA); // value must be initialized
@@ -1900,7 +1900,7 @@ var MultipleCheckboxes = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.forw
           case 16:
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(optionsDataInit, 'value');
+            optionsDataInit = (0,funda_utils_dist_cjs_object__WEBPACK_IMPORTED_MODULE_5__.removeArrDuplicateItems)(optionsDataInit, 'label');
 
             //
             initDefaultValue(inputDefault, optionsDataInit); // value must be initialized

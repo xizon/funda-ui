@@ -3840,7 +3840,7 @@ var MultipleSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonj
             }
 
             // remove Duplicate objects from JSON Array
-            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'label');
 
             // save temporary default value
             setTempDefaultValue(inputDefault);
@@ -3856,7 +3856,7 @@ var MultipleSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonj
             return _context.abrupt("return", _ORGIN_DATA);
           case 16:
             // remove Duplicate objects from JSON Array
-            optionsDataInit = (0,object.removeArrDuplicateItems)(optionsDataInit, 'value');
+            optionsDataInit = (0,object.removeArrDuplicateItems)(optionsDataInit, 'label');
 
             // save temporary default value
             setTempDefaultValue(inputDefault);

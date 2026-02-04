@@ -298,7 +298,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
 
             // remove Duplicate objects from JSON Array
-            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'label');
 
             // save temporary default value
             setTempDefaultValue(inputDefault);
@@ -318,7 +318,7 @@ const MultipleSelect = forwardRef((props: MultipleSelectProps, externalRef: any)
 
       
             // remove Duplicate objects from JSON Array
-            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'label');
 
             // save temporary default value
             setTempDefaultValue(inputDefault);

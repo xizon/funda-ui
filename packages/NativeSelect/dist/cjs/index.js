@@ -1802,7 +1802,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = (0,object.removeArrDuplicateItems)(_ORGIN_DATA, 'label');
 
             //
             setDataInit(_ORGIN_DATA); // data must be initialized
@@ -1816,7 +1816,7 @@ var NativeSelect = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = (0,object.removeArrDuplicateItems)(optionsDataInit, 'value');
+            optionsDataInit = (0,object.removeArrDuplicateItems)(optionsDataInit, 'label');
 
             //
             setDataInit(optionsDataInit); // data must be initialized

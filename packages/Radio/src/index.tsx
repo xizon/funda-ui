@@ -289,7 +289,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(_ORGIN_DATA); // prevent the value from being filtered out
-            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'value');
+            _ORGIN_DATA = removeArrDuplicateItems(_ORGIN_DATA, 'label');
 
 
             //
@@ -334,7 +334,7 @@ const Radio = forwardRef((props: RadioProps, externalRef: any) => {
 
             // remove Duplicate objects from JSON Array
             optionsFormatGroupOpt(optionsDataInit); // prevent the value from being filtered out
-            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'value');
+            optionsDataInit = removeArrDuplicateItems(optionsDataInit, 'label');
 
             //
             setDataInit(optionsDataInit); // data must be initialized
