@@ -463,6 +463,16 @@
   width: 40px;
   height: 40px;
   z-index: 4;
+  pointer-events: all;
+  /* Core: Disable the system popup menu during long press */
+  -webkit-touch-callout: none;
+  /* Disable text selection */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Core: Disable all default browser gestures to ensure touch events are passed directly to JS */
+  touch-action: none;
+  /* Remove the default tap highlight color on iOS for faster response perception */
+  -webkit-tap-highlight-color: transparent;
 }
 .custom-chatbox-container .msgcontrol [class*=chatbox-voice-input-btn] svg path {
   fill: var(--custom-chatbox-primary-text);
