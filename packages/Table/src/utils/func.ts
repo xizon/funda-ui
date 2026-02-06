@@ -67,7 +67,7 @@ export function initRowColProps(rootElem: any) {
     // !!! Important, performance optimization for large data renderings
     // With this protection, it is only performed once
     if (typeof rootElem.dataset.rowColPropsInit !== 'undefined') return;
-    rootElem.dataset.rowColPropsInit = '1';
+    rootElem.dataset.rowColPropsInit = 1;
 
 
     //

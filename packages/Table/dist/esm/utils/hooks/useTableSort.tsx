@@ -161,21 +161,26 @@ function useTableSort({
 
     }
 
+
     useEffect(() => {
-        if (enabled) {
+        if (enabled && spyElement) {
             if (Array.isArray(data)) {
+                // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+                delete spyElement.dataset.customPropsInit;
+                delete spyElement.dataset.rowColPropsInit;
+
+                // 2. Set order for new data items (although this is only in-memory data and has no direct impact on the DOM)
                 data.forEach((item: any, i: number) => {
                     item.order = i;
                 });
 
-
-                // Initialize custom props of table elements
+                // 3. Initialize custom props of table elements
                 initOrderProps(spyElement);
                 initRowColProps(spyElement);
-   
             }
         }
     }, [data, enabled, spyElement, ...deps]);
+
 
     return {
         handleSortList

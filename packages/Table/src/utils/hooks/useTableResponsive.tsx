@@ -64,18 +64,22 @@ function useTableResponsive({
     }
 
     useEffect(() => {
-        if (enabled) {
+        if (enabled && spyElement) {
 
-            // Initialize custom props of table elements
+            // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+            delete spyElement.dataset.customPropsInit;
+            delete spyElement.dataset.rowColPropsInit;
+
+            // 2. Initialize custom props of table elements
             initOrderProps(spyElement);
             initRowColProps(spyElement);
   
-            // With scroll bars
+            // 3. With scroll bars
             let windowWidth = window.innerWidth;
             tableElemScrolledInit(spyElement as never, windowWidth);
 
 
-            // Add function to the element that should be used as the scrollable area.
+            // 4. Add function to the element that should be used as the scrollable area.
             window.removeEventListener('resize', windowResizeUpdate);
             window.addEventListener('resize', windowResizeUpdate);
 

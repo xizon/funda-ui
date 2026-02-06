@@ -579,7 +579,7 @@ function initRowColProps(rootElem) {
   // !!! Important, performance optimization for large data renderings
   // With this protection, it is only performed once
   if (typeof rootElem.dataset.rowColPropsInit !== 'undefined') return;
-  rootElem.dataset.rowColPropsInit = '1';
+  rootElem.dataset.rowColPropsInit = 1;
 
   //
   var _allRows = allRows(rootElem);
@@ -745,16 +745,20 @@ function useTableResponsive(_ref, deps) {
     }
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (enabled) {
-      // Initialize custom props of table elements
+    if (enabled && spyElement) {
+      // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+      delete spyElement.dataset.customPropsInit;
+      delete spyElement.dataset.rowColPropsInit;
+
+      // 2. Initialize custom props of table elements
       initOrderProps(spyElement);
       initRowColProps(spyElement);
 
-      // With scroll bars
+      // 3. With scroll bars
       var _windowWidth = window.innerWidth;
       tableElemScrolledInit(spyElement, _windowWidth);
 
-      // Add function to the element that should be used as the scrollable area.
+      // 4. Add function to the element that should be used as the scrollable area.
       window.removeEventListener('resize', windowResizeUpdate);
       window.addEventListener('resize', windowResizeUpdate);
 
@@ -1320,18 +1324,23 @@ function useTableDraggable(_ref, deps) {
     dragCacheRef.current.lastOverOrder = null;
   }, [sortData, spyElement, data, onRowDrag]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (enabled) {
+    if (enabled && spyElement) {
       if (Array.isArray(data) && data.length > 0) {
+        // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+        delete spyElement.dataset.customPropsInit;
+        delete spyElement.dataset.rowColPropsInit;
+
+        // 2. Set order for new data items (although this is only in-memory data and has no direct impact on the DOM)
         // !!! REQUIRED "data.length > 0" to avoid data-order cannot be assigned when asynchronous data is empty
         data.forEach(function (item, i) {
           item.order = i;
         });
 
-        // Initialize custom props of table elements
+        // 3. Initialize custom props of table elements
         initOrderProps(spyElement);
         initRowColProps(spyElement);
 
-        // Initialize drag & drop data
+        // 4. Initialize drag & drop data
         initDragDropData();
       }
     }
@@ -1401,6 +1410,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
      };
 
      const { handleKeyPressed } = useTableKeyPress({
+         // isCell: true, // Avoid duplicate rendering
          enabled: keyboardFocusable,
          data: [{ a: 1, b: 2, c: 3 }],
          spyElement: rootRef.current,
@@ -1424,7 +1434,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 var useTableKeyPress = function useTableKeyPress(_ref, deps) {
-  var enabled = _ref.enabled,
+  var _ref$isCell = _ref.isCell,
+    isCell = _ref$isCell === void 0 ? false : _ref$isCell,
+    enabled = _ref.enabled,
     data = _ref.data,
     spyElement = _ref.spyElement,
     rootDataInfo = _ref.rootDataInfo,
@@ -1558,12 +1570,17 @@ var useTableKeyPress = function useTableKeyPress(_ref, deps) {
     };
   }(), [focusableCellId, rootDataInfo, data]);
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (enabled) {
-      // Initialize custom props of table elements (only once)
+    if (isCell) return;
+    if (enabled && spyElement) {
+      // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+      delete spyElement.dataset.customPropsInit;
+      delete spyElement.dataset.rowColPropsInit;
+
+      // 2. Initialize custom props of table elements (only once)
       initOrderProps(spyElement);
       initRowColProps(spyElement);
     }
-  }, [enabled, spyElement].concat(useTableKeyPress_toConsumableArray(deps)));
+  }, [enabled, spyElement, isCell].concat(useTableKeyPress_toConsumableArray(deps)));
   return {
     handleKeyPressed: handleKeyPressed,
     /**
@@ -1886,6 +1903,8 @@ var TableCell = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_rea
 
   // key press initialization
   var _useTableKeyPress = hooks_useTableKeyPress({
+      isCell: true,
+      // Avoid duplicate rendering
       enabled: keyboardFocusable,
       data: originData,
       spyElement: rootRef.current,
@@ -2542,13 +2561,18 @@ function useTableSort(_ref, deps) {
     onClick === null || onClick === void 0 ? void 0 : onClick(e);
   }
   (0,external_root_React_commonjs2_react_commonjs_react_amd_react_.useEffect)(function () {
-    if (enabled) {
+    if (enabled && spyElement) {
       if (Array.isArray(data)) {
+        // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+        delete spyElement.dataset.customPropsInit;
+        delete spyElement.dataset.rowColPropsInit;
+
+        // 2. Set order for new data items (although this is only in-memory data and has no direct impact on the DOM)
         data.forEach(function (item, i) {
           item.order = i;
         });
 
-        // Initialize custom props of table elements
+        // 3. Initialize custom props of table elements
         initOrderProps(spyElement);
         initRowColProps(spyElement);
       }
@@ -2587,7 +2611,7 @@ var SortSprite = /*#__PURE__*/(0,external_root_React_commonjs2_react_commonjs_re
       isReverse: isReverse,
       onClick: onClick,
       sortBy: sortBy
-    }, [rootRef]),
+    }, [rootRef, originData]),
     handleSortList = _useTableSort.handleSortList;
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement((external_root_React_commonjs2_react_commonjs_react_amd_react_default()).Fragment, null, colSortable ? /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default().createElement("span", {
     className: className || 'sort-trigger',

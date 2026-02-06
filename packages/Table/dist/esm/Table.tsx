@@ -5,7 +5,6 @@ import useComId from 'funda-utils/dist/cjs/useComId';
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 import { TableProvider } from './TableContext';
 import useTableResponsive from './utils/hooks/useTableResponsive';
 import useTableDraggable from './utils/hooks/useTableDraggable';
@@ -256,6 +255,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
         triggerCellKeyPressed: tableKeyPress.triggerCellKeyPressed
     }), [rootRef, data, rootDataInfo]);
 
+
     return (
         <>
 
@@ -297,11 +297,8 @@ const Table = forwardRef<HTMLDivElement, TableProps>((
                 focusableCellId,
                 setFocusableCellId,
                 onCellKeyPressed,
-                onCellPressEnter,
-
-
+                onCellPressEnter, 
             }}>
-
 
                 {/** Main */}
                 <div

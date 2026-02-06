@@ -2,7 +2,6 @@ import React, { forwardRef, useContext } from 'react';
 
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
-
 import { TableContext } from './TableContext';
 
 import { cellMark, removeCellFocusClassName } from './utils/func';
@@ -55,6 +54,7 @@ const TableCell = forwardRef<HTMLTableCellElement, TableCellProps>((
 
     // key press initialization
     const { handleKeyPressed } = useTableKeyPress({
+        isCell: true, // Avoid duplicate rendering
         enabled: keyboardFocusable,
         data: originData,
         spyElement: rootRef.current,

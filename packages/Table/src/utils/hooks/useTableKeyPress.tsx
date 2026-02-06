@@ -40,6 +40,7 @@
      };
 
      const { handleKeyPressed } = useTableKeyPress({
+         // isCell: true, // Avoid duplicate rendering
          enabled: keyboardFocusable,
          data: [{ a: 1, b: 2, c: 3 }],
          spyElement: rootRef.current,
@@ -65,6 +66,7 @@ import { useEffect, useCallback, KeyboardEvent, useRef } from "react";
 import { initOrderProps, initRowColProps, cellMark, removeCellFocusClassName } from '../func';
 
 export interface UseTableKeyPressProps {
+    isCell?: boolean;
     enabled?: boolean;
     data?: any[];
     spyElement?: any;
@@ -86,6 +88,7 @@ export interface UseTableKeyPressProps {
 }
 
 const useTableKeyPress = ({
+    isCell = false,
     enabled,
     data,
     spyElement,
@@ -190,8 +193,7 @@ const useTableKeyPress = ({
             if (typeof targetCell !== 'undefined') {
                 targetCell.classList.add('cell-focus');
             }
-            
-     
+       
             setFocusableCellId(nextCellSignal);
             // Callback with edge detection
             onCellKeyPressed?.(
@@ -233,12 +235,19 @@ const useTableKeyPress = ({
     }, [focusableCellId, rootDataInfo, data]);
 
     useEffect(() => {
-        if (enabled) {
-            // Initialize custom props of table elements (only once)
+        if (isCell) return;
+
+        if (enabled && spyElement) {
+
+            // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+            delete spyElement.dataset.customPropsInit;
+            delete spyElement.dataset.rowColPropsInit;
+
+            // 2. Initialize custom props of table elements (only once)
             initOrderProps(spyElement);
             initRowColProps(spyElement);
         }
-    }, [enabled, spyElement, ...deps]);
+    }, [enabled, spyElement, isCell, ...deps]);
 
     return {
         handleKeyPressed,

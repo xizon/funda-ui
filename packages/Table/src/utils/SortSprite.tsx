@@ -41,7 +41,7 @@ const SortSprite = forwardRef((props: SortSpriteProps, externalRef: any) => {
         isReverse: isReverse,
         onClick: onClick,
         sortBy: sortBy
-    }, [rootRef]);
+    }, [rootRef, originData]);
 
 
     return (

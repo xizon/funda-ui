@@ -614,18 +614,24 @@ function useTableDraggable({
 
 
     useEffect(() => {
-        if (enabled) {
+        if (enabled && spyElement) {
             if (Array.isArray(data) && data.length > 0) {  
+
+                // 1. Remove the tag to allow initRowColProps to re-execute (!!!REQUIRED)
+                delete spyElement.dataset.customPropsInit;
+                delete spyElement.dataset.rowColPropsInit;
+
+                // 2. Set order for new data items (although this is only in-memory data and has no direct impact on the DOM)
                 // !!! REQUIRED "data.length > 0" to avoid data-order cannot be assigned when asynchronous data is empty
                 data.forEach((item: any, i: number) => {
                     item.order = i;
                 });
 
-                // Initialize custom props of table elements
+                // 3. Initialize custom props of table elements
                 initOrderProps(spyElement);
                 initRowColProps(spyElement);
 
-                // Initialize drag & drop data
+                // 4. Initialize drag & drop data
                 initDragDropData();
                  
 
