@@ -17,7 +17,6 @@ import {
 import { clsWrite, combinedCls } from 'funda-utils/dist/cjs/cls';
 
 
-
 export interface OptionConfig {
     [propName: string]: string | number | boolean;
 }

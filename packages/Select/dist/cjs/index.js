@@ -1765,15 +1765,28 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
        * @param {String} fieldName 
        */
       function _removeArrDuplicateItems(obj, fieldName) {
+        // Ensure input is an array
         if (!Array.isArray(obj)) return [];
+
+        // fieldName must be provided and must exist on at least one item,
+        // otherwise do not perform deduplication
+        if (!fieldName || !obj.some(function (item) {
+          return item && fieldName in item;
+        })) {
+          return obj;
+        }
         var clean = obj.filter(function (item, index, self) {
           return index === self.findIndex(function (t) {
-            return t[fieldName] === item[fieldName];
+            return (
+              // fieldName must be equal
+              t[fieldName] === item[fieldName] &&
+              // Objects must be fully identical to be considered duplicates
+              JSON.stringify(t) === JSON.stringify(item)
+            );
           });
         });
         return clean;
       }
-      ;
 
       /**
        * Deep clone
