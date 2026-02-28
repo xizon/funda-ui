@@ -350,8 +350,35 @@ export default () => {
                     return input.replace(/(\r\n|\r|\n)/g, '<br />');
                 }}
                 renderParser={async (input: string) => {
+                    const formatLatestDisplayContent = (str: string) => {
+                        // Regular expression to match <details> tags and their content
+                        let output = str.replace(/<details class="think"[^>]*>([\s\S]*?)<\/details>/g, (match, content) => {
+                            // Use regex to match the content inside the "div.think-content"
+                            const thinkContentMatch = content.match(/<div class="think-content">([\s\S]*?)<\/div>/);
+                            
+                            if (thinkContentMatch) {
+                                const thinkContent = thinkContentMatch[1].trim(); // Get the content inside "div.think-content" and trim whitespace
+                                
+                                // Check if "div.think-content" is empty
+                                if (thinkContent === '') {
+                                    return ''; // If empty, return an empty string to replace the entire <details> tag
+                                }
+                            }
+                            
+                            return match; // If not empty, return the original matched content
+                        });
+
+                        // Then handle tables without is-init class
+                        output = output.replace(/<table(?![^>]*\bis-init\b)([^>]*)>([\s\S]*?)<\/table>/g, (match, attributes, content) => {
+                            // Add is-init class to table and wrap it in container div
+                            return `<div class="table-container"><table class="is-init"${attributes}>${content}</table></div>`;
+                        });
+                                
+                        return output;
+                    }
+
                     const res = await markedParse(input);
-                    return res;
+                    return formatLatestDisplayContent(res);
                 }}
                 nameFormatter={(input: string) => {
                     return input;

@@ -74,6 +74,19 @@ export default () => {
                 }}
             />
 
+            <Input
+                label="Has Button"
+                value=""
+                iconRight={<>
+                    <button className="btn btn-primary h-100 border-0 rounded-0 rounded-end" type="button" onClick={async (e: React.MouseEvent) => {
+                    e.preventDefault();
+                    alett('ok');
+                }}>Submit</button>
+            </>}
+                controlGroupTextClassName="input-group-text p-0"
+                placeholder="String..."
+            />
+
 
         </>
     );
